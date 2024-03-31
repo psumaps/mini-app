@@ -13,12 +13,17 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/montserrat": "^5.0.12",
+    "@mapbox-controls/helpers": "^1.1.0",
     "@mui/material": "^5.15.7",
+    "@react-buddy/ide-toolbox": "^2.4.0",
+    "@react-buddy/palette-mui": "^5.0.1",
+    "array-equal": "^1.0.2",
+    "debounce": "^2.0.0",
+    "maplibre-gl": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.0",
-    "@react-buddy/ide-toolbox": "^2.4.0",
-    "@react-buddy/palette-mui": "^5.0.1"
+    "react-map-gl": "^7.1.7",
+    "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
     "@types/node": "^20.6.2",

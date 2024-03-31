@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './app/App.tsx'
 import {DevSupport} from "@react-buddy/ide-toolbox";
 import {ComponentPreviews, useInitial} from "~/dev";
+import {MapComponentsProvider} from "@mapcomponents/react-maplibre";
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -10,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <DevSupport ComponentPreviews={ComponentPreviews}
                     useInitialHook={useInitial}
         >
-            <App/>
+        <App/>
         </DevSupport>
     </React.StrictMode>,
 )
