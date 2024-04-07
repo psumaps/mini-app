@@ -4,7 +4,7 @@ import findAllLevels from './levels';
 import LevelControl from './levelControl';
 import loadSprite from './sprite';
 import {VectorTileSource} from "./vectorTileSource";
-import type {MapInstance} from "react-map-gl/maplibre";
+import type {Map} from "maplibre-gl";
 import {IControl} from "react-map-gl/src/types/lib.ts";
 import {LayerSpecification} from "maplibre-gl";
 
@@ -29,25 +29,25 @@ export interface IndoorEqualsProps {
  * @fires IndoorEqual#levelchange
  * @return {IndoorEqual} `this`
  */
-export default class IndoorEqual implements IControl<MapInstance> {
+export default class IndoorEqual implements IControl<Map> {
   private source: VectorTileSource;
-  private map: MapInstance;
+  private map: Map;
   levels: string[];
   level: string;
   private events: {[x:string]:  (() => void)[]};
   private _control?: LevelControl;
   private _updateLevelsDebounce: any;
 
-  constructor(map: MapInstance, options: IndoorEqualsProps) {
+  constructor(map: Map, options: IndoorEqualsProps) {
     const SourceKlass = VectorTileSource;
     const defaultOpts = { heatmap: true};
     const opts = { ...defaultOpts, ...options };
     this.source = new SourceKlass(map, options);
-
     this.map = map;
     this.levels = [];
-    this.level = '0';
+    this.level = '1';
     this.events = {};
+
 
     if (this.map.isStyleLoaded()) {
       this._init();
@@ -146,9 +146,9 @@ export default class IndoorEqual implements IControl<MapInstance> {
    * @param {boolean} [options.update] Update existing image (default false)
    * @return {Promise} It resolves an hash of images.
    */
-  loadSprite(baseUrl: string, options = {}) {
+  loadSprite(options = {}) {
     const opts = { update: false, ...options };
-    return loadSprite(baseUrl)
+    return loadSprite()
       .then((sprite) => {
         for (const id in sprite) {
           const { data, ...options } = sprite[id];
@@ -176,7 +176,7 @@ export default class IndoorEqual implements IControl<MapInstance> {
     this.source.addSource();
     this.source.addLayers();
     this._updateFilters();
-    this._updateLevelsDebounce = debounce(this._updateLevels.bind(this), 1000);
+    this._updateLevelsDebounce = debounce(this._updateLevels.bind(this), 300);
 
     this.map.on('load', this._updateLevelsDebounce);
     this.map.on('data', this._updateLevelsDebounce);
@@ -197,7 +197,7 @@ export default class IndoorEqual implements IControl<MapInstance> {
 
   _refreshAfterLevelsUpdate() {
     if (!this.levels.includes(this.level)) {
-      this.setLevel('0');
+      this.setLevel('1');
     }
   }
 

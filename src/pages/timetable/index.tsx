@@ -3,21 +3,19 @@ import HeaderBar from "~/widgets/header-bar";
 import Layout from "~/shared/ui/layout";
 import NavigationBar from "~/widgets/navigation-bar";
 import 'maplibre-gl/dist/maplibre-gl.css';
-import UserCard from "~/widgets/user-card";
-import EtisCard from "~/widgets/etis-card";
+import ProfileMenu from "~/widgets/profile-menu";
 
-function ProfilePage() {
+function Timetable() {
     return (
         <>
-            <HeaderBar pageName={"Профиль"} />
+            <HeaderBar pageName={"Расписание"} />
             <Layout>
-                <UserCard/>
-                <EtisCard/>
-                {/*<ProfileMenu/>*/}
+                {/*<UserCard/>*/}
+                <ProfileMenu/>
             </Layout>
             <NavigationBar/>
         </>
     );
 }
 
-export default ProfilePage;
+export default Timetable;

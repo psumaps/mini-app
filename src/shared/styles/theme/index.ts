@@ -3,7 +3,8 @@ import { createTheme } from '@mui/material';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#D01F36',
+      main: '#BDBDBD',
+      contrastText: '#333333'
     },
     background: {
       default: '#EBEBEB',
@@ -16,9 +17,30 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'Montserrat',
-    h5: {
+    h1: {
+      fontSize: '21px',
       fontWeight: 700,
     },
+    h2: {
+      fontSize: '18px',
+      fontWeight: 700,
+    },
+    h3: {
+      fontSize: '16px',
+      fontWeight: 700,
+    },
+    h4: {
+      fontSize: '14px',
+      fontWeight: 700,
+    },
+    h5: {
+      fontSize: '12px',
+      fontWeight: 700,
+    },
+/*    text: {
+      fontSize: '16px',
+      fontWeight: 500,
+    },*/
     caption: {
       fontWeight: 700,
     },
@@ -27,6 +49,7 @@ const theme = createTheme({
     },
     body1: {
       fontWeight: 500,
+      fontSize: '16px',
     },
     button: {
       fontWeight: 700,

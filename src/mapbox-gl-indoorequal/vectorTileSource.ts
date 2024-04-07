@@ -1,14 +1,14 @@
-import {layers} from "./layers";
+import {layers, LayerType} from "./layers";
 import {MapInstance} from "react-map-gl/dist/esm/types";
-import {LayerSpecification} from "maplibre-gl";
 import {IndoorEqualsProps} from "~/mapbox-gl-indoorequal/indoorEqual.ts";
 
 export class VectorTileSource {
     private map: MapInstance;
-    private url: string;
-    private apiKey: string;
+    private readonly url: string;
+    private readonly apiKey?: string;
     sourceId: string;
-    layers: LayerSpecification[];
+    layers: LayerType[];
+
     constructor(map: MapInstance, options: IndoorEqualsProps = {}) {
         const defaultOpts = { url: 'https://tiles.indoorequal.org/', layers };
         const opts = { ...defaultOpts, ...options };
@@ -38,8 +38,8 @@ export class VectorTileSource {
 
     remove() {
         this.layers.forEach((layer) => {
-            this.map.removeLayer(layer.id);
+            this.map?.removeLayer(layer.id);
         });
-        this.map.removeSource(this.sourceId);
+        this.map?.removeSource(this.sourceId);
     }
 }

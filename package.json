@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "vite --host",
+    "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -17,6 +17,7 @@
     "@mui/material": "^5.15.7",
     "@react-buddy/ide-toolbox": "^2.4.0",
     "@react-buddy/palette-mui": "^5.0.1",
+    "@vkontakte/vk-bridge": "^2.14.1",
     "array-equal": "^1.0.2",
     "debounce": "^2.0.0",
     "maplibre-gl": "^4.1.0",

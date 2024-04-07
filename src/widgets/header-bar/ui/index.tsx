@@ -1,27 +1,20 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 
-import BackIcon from '~/shared/assets/back.svg?react';
-import MenuIcon from '~/shared/assets/menu-dots.svg?react';
-
-function HeaderBar() {
+function HeaderBar({pageName} : {pageName: string}) {
   const theme = useTheme();
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '1em 1.5em',
-        backgroundColor: theme.palette.background.default,
-      }}
-    >
-      <BackIcon />
-      <Typography variant="h5" color={theme.palette.text.primary}>
-        Название страницы
-      </Typography>
-      <MenuIcon />
-    </Box>
+      <Box
+          sx={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              padding: '2em 1em 0em',
+              backgroundColor: theme.palette.background.default,
+          }}
+      >
+          <Typography variant="h2">{pageName}</Typography>
+      </Box>
   );
 }
 

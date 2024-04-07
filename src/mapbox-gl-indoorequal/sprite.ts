@@ -1,4 +1,8 @@
 import {RGBAImage} from "~/mapbox-gl-indoorequal/RGBAImage.ts";
+import indoorEqualsJSON from "~/shared/assets/sprite/indoorequal.json";
+import indoorEqualsPNG from "~/shared/assets/sprite/indoorequal.png?url";
+import indoorEqualsJSON2X from "~/shared/assets/sprite/indoorequal@2x.json";
+import indoorEqualsPNG2X from "~/shared/assets/sprite/indoorequal@2x.png?url";
 
 function getImageData(img: CanvasImageSource) {
   const canvas = window.document.createElement('canvas');
@@ -12,15 +16,31 @@ function getImageData(img: CanvasImageSource) {
   return context.getImageData(0, 0, img.width, img.height);
 }
 
-export default function(baseUrl: string) {
-  const format = window.devicePixelRatio > 1 ? '@2x' : '';
-  let json: { [x: string]: { width: any; height: any; x: any; y: any; sdf: any; pixelRatio: any; stretchX: any; stretchY: any; content: any; }; }, image: HTMLImageElement;
+export default async function () {
+    let json: {
+        [x: string]: {
+            width: any;
+            height: any;
+            x: any;
+            y: any;
+            sdf: any;
+            pixelRatio: any;
+            stretchX: any;
+            stretchY: any;
+            content: any;
+        };
+    }, image: HTMLImageElement, imgUrl;
 
-  const jsonRequest = fetch(`${baseUrl}${format}.json`)
-        .then(r => r.json())
-        .then(r => json = r)
+    image = new Image();
+    if(window.devicePixelRatio > 1) {
+        json = indoorEqualsJSON2X;
+        imgUrl = indoorEqualsPNG2X;
+    } else {
+        json = indoorEqualsJSON;
+        imgUrl = indoorEqualsPNG
+    }
 
-  const imageRequest = fetch(`${baseUrl}${format}.png`)
+  const imageRequest = fetch(`${imgUrl}`)
         .then(r => r.blob())
         .then(r => {
           image = new Image();
@@ -31,7 +51,7 @@ export default function(baseUrl: string) {
           });
         });
 
-  return Promise.all([jsonRequest, imageRequest])
+  return Promise.all([imageRequest])
     .then(() => {
       const imageData = getImageData(image);
       const result:{[x:string]: {data:RGBAImage, sdf: any; pixelRatio: any; stretchX: any; stretchY: any; content: any;}} = {};

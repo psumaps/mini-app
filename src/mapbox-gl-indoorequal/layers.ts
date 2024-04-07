@@ -58,7 +58,98 @@ const commonPoi = {
 
 const rank2Class = ["waste_basket", "information", "vending_machine", "bench", "photo_booth", "ticket_validator"];
 
-export const layers = [
+export type LayerType =  ({
+  filter: (string | string[])[];
+  paint: {
+    "fill-color": (string | (string | string[] | (string | string[] | (string | string[])[])[])[] | (string | (string | (string | string[] | boolean)[] | (string | string[])[])[] | (string | string[] | (string | string[])[])[])[] | (string | string[])[])[]
+  };
+  id: string;
+  "source-layer": string;
+  type: string
+} | {
+  filter: (string | string[])[];
+  paint: { "fill-color": string };
+  id: string;
+  "source-layer": string;
+  type: string
+} | {
+  filter: (string | string[])[];
+  paint: { "line-width": number; "line-color": string };
+  id: string;
+  "source-layer": string;
+  type: string
+} | {
+  filter: string[];
+  paint: { "line-width": { stops: number[][]; base: number }; "line-dasharray": number[]; "line-color": string };
+  id: string;
+  "source-layer": string;
+  type: string
+} | {
+  filter: (string | string[])[];
+  layout: {
+    "icon-rotation-alignment": string;
+    "symbol-placement": string;
+    "icon-image": (string | string[] | (string | string[])[])[]
+  };
+  id: string;
+  "source-layer": string;
+  type: string
+} | {
+  layout: {
+    "text-max-width": number;
+    "text-field": (string | string[])[];
+    "text-offset": number[];
+    "text-anchor": string;
+    "text-size": number;
+    "text-padding": number;
+    "icon-image": (string | (string | (string | string[])[])[])[]
+  };
+  filter: (string | string[])[];
+  paint: { "text-halo-color": string; "text-halo-blur": number; "text-color": string; "text-halo-width": number };
+  id: string;
+  "source-layer": string;
+  type: string
+} | {
+  layout: {
+    "text-max-width": number;
+    "text-field": (string | string[])[];
+    "text-offset": number[];
+    "text-anchor": string;
+    "text-size": number;
+    "text-padding": number;
+    "icon-image": (string | (string | (string | string[])[])[])[]
+  };
+  filter: (string | string[])[];
+  paint: { "text-halo-color": string; "text-halo-blur": number; "text-color": string; "text-halo-width": number };
+  id: string;
+  "source-layer": string;
+  type: string;
+  minzoom: number
+} | {
+  filter: string[];
+  paint: {
+    "heatmap-color": (string | string[] | number)[];
+    "heatmap-opacity": (string | string[] | number)[];
+    "heatmap-intensity": number;
+    "heatmap-radius": (string | string[] | number)[]
+  };
+  id: string;
+  "source-layer": string;
+  type: string
+} | {
+  filter: string[];
+  layout: {
+    "text-max-width": number;
+    "text-field": (string | (string | string[])[] | string[])[];
+    "text-size": number
+  };
+  paint: { "text-halo-color": string; "text-color": string; "text-halo-width": number };
+  id: string;
+  "source-layer": string;
+  type: string
+});
+
+export const layers: LayerType[] = [
   {
     id: "indoor-polygon",
     type: "fill",
