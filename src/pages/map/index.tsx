@@ -19,15 +19,13 @@ const IndoorControl = () => {
 function MapPage() {
     return (
         <>
-            {/*<HeaderBar pageName={"Интерактивная карта"}/>*/}
-            {/*<Layout>*/}
     <Map
         initialViewState={{
             latitude:  58.007469,
             longitude: 56.187188,
             zoom: 16
         }}
-        style={{width: '100%', height: '80vh'}}
+        style={{width: '100%', height: '92vh'}}
         mapStyle="https://api.maptiler.com/maps/streets/style.json?key=1XfSivF5uaaJV0EiuRS1"
         attributionControl={false}
     >
@@ -35,7 +33,6 @@ function MapPage() {
         <NavigationControl position="bottom-right"/>
         <IndoorControl />
     </Map>
-    {/*</Layout>*/}
     <NavigationBar/>
         </>
     );
