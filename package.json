@@ -1,13 +1,13 @@
 {
-  "name": "psu-maps-frontend",
+  "name": "psumaps-frontend",
   "version": "0.1.0",
   "description": "Client applications of PSU Maps",
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "psumaps team",
+  "license": "MPL-2.0",
   "dependencies": {
     "storybook": "^8.0.9"
   },
