@@ -3,10 +3,10 @@ import arrayEqual from 'array-equal';
 import findAllLevels from './levels';
 import LevelControl from './levelControl';
 import loadSprite from './sprite';
-import {VectorTileSource} from "./vectorTileSource";
-import type {Map} from "maplibre-gl";
-import {IControl} from "react-map-gl/src/types/lib.ts";
-import {LayerSpecification} from "maplibre-gl";
+import { VectorTileSource } from './vectorTileSource';
+import type { Map } from 'maplibre-gl';
+import { IControl } from 'react-map-gl/src/types/lib.ts';
+import { LayerSpecification } from 'maplibre-gl';
 
 export interface IndoorEqualsProps {
   url?: string;
@@ -34,20 +34,19 @@ export default class IndoorEqual implements IControl<Map> {
   private map: Map;
   levels: string[];
   level: string;
-  private events: {[x:string]:  (() => void)[]};
+  private events: { [x: string]: (() => void)[] };
   private _control?: LevelControl;
   private _updateLevelsDebounce: any;
 
   constructor(map: Map, options: IndoorEqualsProps) {
     const SourceKlass = VectorTileSource;
-    const defaultOpts = { heatmap: true};
+    const defaultOpts = { heatmap: true };
     const opts = { ...defaultOpts, ...options };
     this.source = new SourceKlass(map, options);
     this.map = map;
     this.levels = [];
     this.level = '1';
     this.events = {};
-
 
     if (this.map.isStyleLoaded()) {
       this._init();
@@ -95,7 +94,7 @@ export default class IndoorEqual implements IControl<Map> {
     if (!this.events[name]) {
       this.events[name] = [];
     }
-    this.events[name] = this.events[name].filter(cb => cb !== fn);
+    this.events[name] = this.events[name].filter((cb) => cb !== fn);
   }
 
   /**
@@ -103,8 +102,7 @@ export default class IndoorEqual implements IControl<Map> {
    * Used when adding the control via the map instance: map.addControl(indoorEqual)
    */
   onAdd() {
-    if(!this._control)
-      this._control = new LevelControl(this);
+    if (!this._control) this._control = new LevelControl(this);
     return this._control.container;
   }
 
@@ -148,18 +146,17 @@ export default class IndoorEqual implements IControl<Map> {
    */
   loadSprite(options = {}) {
     const opts = { update: false, ...options };
-    return loadSprite()
-      .then((sprite) => {
-        for (const id in sprite) {
-          const { data, ...options } = sprite[id];
-          if (!this.map.hasImage(id)) {
-            this.map.addImage(id, data, options);
-          } else if (opts.update) {
-            this.map.updateImage(id, data);
-          }
+    return loadSprite().then((sprite) => {
+      for (const id in sprite) {
+        const { data, ...options } = sprite[id];
+        if (!this.map.hasImage(id)) {
+          this.map.addImage(id, data, options);
+        } else if (opts.update) {
+          this.map.updateImage(id, data);
         }
-        return sprite;
-      });
+      }
+      return sprite;
+    });
   }
 
   /**
@@ -188,11 +185,13 @@ export default class IndoorEqual implements IControl<Map> {
 
   _updateFilters() {
     this.source.layers
-        .filter(layer => layer.type !== 'heatmap')
-        .forEach((layer) => {
-          this.map.setFilter(layer.id, [...layer["filter"] || ['all'], ['==', 'level', this.level]]);
-        });
-
+      .filter((layer) => layer.type !== 'heatmap')
+      .forEach((layer) => {
+        this.map.setFilter(layer.id, [
+          ...(layer['filter'] || ['all']),
+          ['==', 'level', this.level],
+        ]);
+      });
   }
 
   _refreshAfterLevelsUpdate() {
@@ -203,7 +202,7 @@ export default class IndoorEqual implements IControl<Map> {
 
   _updateLevels() {
     if (this.map.getSource(this.source.sourceId)) {
-      const features = this.map.querySourceFeatures(this.source.sourceId, { sourceLayer: 'area', });
+      const features = this.map.querySourceFeatures(this.source.sourceId, { sourceLayer: 'area' });
       const levels = findAllLevels(features);
       if (!arrayEqual(levels, this.levels)) {
         this.levels = levels;
@@ -223,6 +222,6 @@ export default class IndoorEqual implements IControl<Map> {
   }
 
   _emitEvent(eventName: string, ...args: any[]) {
-    (this.events[eventName] || []).forEach(fn => fn(...args));
+    (this.events[eventName] || []).forEach((fn) => fn(...args));
   }
 }

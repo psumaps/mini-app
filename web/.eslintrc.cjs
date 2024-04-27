@@ -17,23 +17,15 @@ module.exports = {
     sourceType: 'module',
     project: ['./tsconfig.json', './tsconfig.node.json'],
   },
-  plugins: ['react','@typescript-eslint','react-refresh', 'prettier'],
+  plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier'],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     'import/no-extraneous-dependencies': [
       'error',
       {
         devDependencies: false,
       },
     ],
-    'import/extensions': [
-      'off',
-    ]
+    'import/extensions': ['off'],
   },
-}
-
-
-
+};

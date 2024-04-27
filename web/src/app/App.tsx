@@ -7,6 +7,7 @@ import '@fontsource/montserrat/500.css';
 
 import router from '~/app/router.tsx';
 import theme from '~/shared/styles/theme';
+import '../tw.css';
 
 function App() {
   return (
