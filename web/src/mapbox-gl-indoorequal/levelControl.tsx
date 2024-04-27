@@ -1,4 +1,4 @@
-import IndoorEqual from "~/mapbox-gl-indoorequal/indoorEqual.ts";
+import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual.ts';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 export default class LevelControl {
@@ -23,15 +23,15 @@ export default class LevelControl {
   _refresh() {
     this.container.innerHTML = '';
     this.indoorequal.levels.forEach((level) => {
-        const button = document.createElement('button')
-        button.name = level;
-        button.appendChild(document.createTextNode(level));
-        button.title  = button.value = level;
-        button.addEventListener('click', () => {
-            this.indoorequal.setLevel(level)
-        });
-        button.classList.add('maplibregl-ctrl-icon');
-        this.container.appendChild(button)
+      const button = document.createElement('button');
+      button.name = level;
+      button.appendChild(document.createTextNode(level));
+      button.title = button.value = level;
+      button.addEventListener('click', () => {
+        this.indoorequal.setLevel(level);
+      });
+      button.classList.add('maplibregl-ctrl-icon');
+      this.container.appendChild(button);
     });
   }
 }
