@@ -21,18 +21,21 @@
 
 # Запуск
 
-- `npm run storybook`: storybook, из корня
-
-Запуск модулей производистя из их соответствующих папок
+Запускать из корня:
+- `npm run storybook`: storybook
+- `npm run web`: запустит параллельно dev и tailwind:watch скрипты web модуля
+- `npm run native`: запустит start скрипт native модуля
 
 ## Web
 
-- `npm run dev + npm run tailwind:watch`: запускать в разных терминалах
+Запускать из web/
+- `npm run dev`
 - `npm run preview`
 - `npm run build`: сборка
 
 ## Native
 
+Запускать из native/
 - `npm start`
 - `npx expo start`
 - `npx expo run:android`: сборка, требует android SDK и JDK

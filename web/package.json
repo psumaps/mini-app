@@ -9,7 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --host",
     "tailwind": "npx tailwindcss -i ../shared/tailwind/index.css -o ./src/tw.css",
-    "tailwind: watch": "npm run tailwind -- --watch"
+    "tailwind:watch": "npm run tailwind -- --watch"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -29,6 +29,7 @@
     "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
+    "@svgr/core": "^8.1.0",
     "@types/node": "^20.6.2",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

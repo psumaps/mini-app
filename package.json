@@ -3,13 +3,20 @@
   "version": "0.1.0",
   "description": "Client applications of PSU Maps",
   "scripts": {
-    "storybook": "storybook dev -p 6006",
+    "web": "concurrently --kill-others \"npm run dev --prefix web\" \"npm run tailwind:watch --prefix web\"",
+    "native": "npm start --prefix native",
+    "storybook": "concurrently --kill-others \"npm run tailwind:watch --prefix web\" \"storybook dev -p 6006\"",
     "build-storybook": "storybook build"
   },
   "author": "psumaps team",
   "license": "MPL-2.0",
   "dependencies": {
-    "storybook": "^8.0.9"
+    "@mui/base": "^5.0.0-beta.40",
+    "@vitejs/plugin-react-swc": "^3.6.0",
+    "@vkontakte/vk-bridge": "^2.14.1",
+    "storybook": "^8.0.9",
+    "storybook-addon-mock": "^5.0.0",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.3.3",
@@ -21,6 +28,8 @@
     "@storybook/react": "^8.0.9",
     "@storybook/react-vite": "^8.0.9",
     "@storybook/test": "^8.0.9",
+    "@svgr/core": "^8.1.0",
+    "concurrently": "^8.2.2",
     "prettier": "3.2.5",
     "prop-types": "^15.8.1"
   }
