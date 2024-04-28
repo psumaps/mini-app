@@ -1,3 +1,36 @@
+<p align="center">
+  <a href="https://psumaps.tilda.ws/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="shared/assets/icon.svg">
+      <img src="shared/assets/icon.svg" alt="PSUMaps" width="120" />
+    </picture>
+    PSUMaps UI
+  </a>
+</p>
+<p align="center">Репозиторий содержит код интерфейса приложения «PSUMaps – интерактивный университет в кармане»</p>
+<br/>
+<p align="center">
+  <a href="https://github.com/psumaps/mini-app/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/psumaps/mini-app.svg" alt="License" />
+  </a>
+  <br/>
+  <a href="https://t.me/psumaps">
+    <img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white&longCache=true&style=flat" />
+  </a>
+  <a href="https://github.com/PSUMaps/mini-app/graphs/contributors">
+    <img src="https://img.shields.io/github/all-contributors/psumaps/mini-app" alt="Contributors"/>
+  </a>
+</p>
+
+Проект разрабатывается при поддержке
+<a href="https://vk.com/molcentre_psu">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="shared/assets/ypc-icon.svg">
+      <img src="shared/assets/ypc-icon.svg" alt="PSUMaps" width="120" />
+    </picture>
+</a>
+
+
 # Структура
 
 Приложение разбито на три части:
