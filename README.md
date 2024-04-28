@@ -126,3 +126,14 @@ Pull Request (запрос на слияние) должен быть назва
 - в каком модуле
 - какую issue закрывает PR
 - скриншоты, если актуально
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
