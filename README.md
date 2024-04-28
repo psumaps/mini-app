@@ -4,7 +4,6 @@
       <source media="(prefers-color-scheme: dark)" srcset="shared/assets/icon.svg">
       <img src="shared/assets/icon.svg" alt="PSUMaps" width="120" />
     </picture>
-    PSUMaps UI
   </a>
 </p>
 <p align="center">Репозиторий содержит код интерфейса приложения «PSUMaps – интерактивный университет в кармане»</p>
@@ -13,7 +12,6 @@
   <a href="https://github.com/psumaps/mini-app/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/psumaps/mini-app.svg" alt="License" />
   </a>
-  <br/>
   <a href="https://t.me/psumaps">
     <img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white&longCache=true&style=flat" />
   </a>
@@ -22,13 +20,30 @@
   </a>
 </p>
 
-Проект разрабатывается при поддержке
-<a href="https://vk.com/molcentre_psu">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="shared/assets/ypc-icon.svg">
-      <img src="shared/assets/ypc-icon.svg" alt="PSUMaps" width="120" />
-    </picture>
-</a>
+<p align="center">
+    Проект разрабатывается при поддержке
+    <a href="https://vk.com/molcentre_psu">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="shared/assets/ypc-icon.svg">
+          <img src="shared/assets/ypc-icon.svg" alt="PSUMaps" width="120" />
+        </picture>
+    </a>
+</p>
+
+## Содержание
+
+- [Структура](#Структура)
+- 📒 [Стек](#Стек)
+- 🚀 [Запуск](#Запуск)
+    - [Web - Mini App](#Web)
+    - [Native - Mobile app](#Native)
+- [Архитектура](#Архитектура)
+- [Рабочий процесс](#Рабочий-процесс)
+- [Оформление изменений](#Оформление-изменений)
+    - [Ветки](#Ветки)
+    - [Коммиты](#Коммиты)
+    - [PR](#PR)
+- 👨‍💻 [Contributors](#Contributors)
 
 
 # Структура
@@ -160,7 +175,7 @@ Pull Request (запрос на слияние) должен быть назва
 - какую issue закрывает PR
 - скриншоты, если актуально
 
-## Contributors
+# Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
