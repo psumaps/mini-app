@@ -3,8 +3,8 @@ import HeaderBar from '~/widgets/header-bar';
 import Layout from '~/shared/ui/layout';
 import NavigationBar from '~/widgets/navigation-bar';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import UserCard from '~/widgets/user-card';
-import EtisCard from '~/widgets/etis-card';
+import UserCard from '~/../../shared/components/profile/userCard';
+import EtisCard from '~/../../shared/components/profile/etisCard';
 
 function ProfilePage() {
   return (
