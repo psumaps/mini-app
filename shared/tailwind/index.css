@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  h1 { @apply font-montserrat text-xl_ font-bold; }
+  h2 { @apply font-montserrat text-lg font-bold; }
+  h3 { @apply font-montserrat text-base font-bold; }
+  h4 { @apply font-montserrat text-sm font-bold; }
+  h5 { @apply font-montserrat text-xs font-bold; }
+  p { @apply font-montserrat text-base font-medium; }
+  .b1 { @apply font-montserrat text-b font-bold; }
+  .b2 { @apply font-montserrat text-b font-bold; }
+  .b3 { @apply font-montserrat text-xl font-bold; }
+  .b4 { @apply font-montserrat text-lg font-medium; }
+  .c1 { @apply font-montserrat text-sm font-medium; }
+  .c2 { @apply font-montserrat text-xs font-medium; }
+  .c3 { @apply font-montserrat text-xs font-bold; }
+  .c4 { @apply font-montserrat text-xs font-semibold; }
+}
