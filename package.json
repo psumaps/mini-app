@@ -12,6 +12,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "@mui/base": "^5.0.0-beta.40",
+    "@storybook/addon-themes": "^8.0.9",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@vkontakte/vk-bridge": "^2.14.1",
     "storybook": "^8.0.9",
