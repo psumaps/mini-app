@@ -2,7 +2,7 @@ import { RGBAImage } from '~/mapbox-gl-indoorequal/RGBAImage.ts';
 import indoorEqualsJSON from '~/../../shared/assets/sprite/indoorequal.json';
 import indoorEqualsPNG from '~/../../shared/assets/sprite/indoorequal.png?url';
 import indoorEqualsJSON2X from '~/../../shared/assets/sprite/indoorequal@2x.json';
-import indoorEqualsPNG2X from '~/../../shared//assets/sprite/indoorequal@2x.png?url';
+import indoorEqualsPNG2X from '~/../../shared/assets/sprite/indoorequal@2x.png?url';
 
 function getImageData(img: CanvasImageSource) {
   const canvas = window.document.createElement('canvas');
