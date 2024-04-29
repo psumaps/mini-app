@@ -22,6 +22,8 @@
 
 <p align="center">
     Проект разрабатывается при поддержке
+</p>
+<p align="center">
     <a href="https://vk.com/molcentre_psu">
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="shared/assets/ypc-icon.svg">
