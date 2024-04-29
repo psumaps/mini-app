@@ -10,6 +10,8 @@ const config = {
     "@storybook/addon-essentials",
     "@chromatic-com/storybook",
     "@storybook/addon-interactions",
+    "@storybook/addon-themes",
+    'storybook-addon-mock',
   ],
   framework: {
     name: "@storybook/react-vite",
