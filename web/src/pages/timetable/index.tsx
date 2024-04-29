@@ -1,9 +1,8 @@
 import React from 'react';
-import HeaderBar from '~/widgets/header-bar';
-import Layout from '~/shared/ui/layout';
-import NavigationBar from '~/widgets/navigation-bar';
+import HeaderBar from '~/widgets/headerBar';
+import Layout from '~/../../shared/components/common/layout';
+import NavigationBar from '~/widgets/navigationBar';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import ProfileMenu from '~/widgets/profile-menu';
 
 function Timetable() {
   return (
@@ -11,7 +10,7 @@ function Timetable() {
       <HeaderBar pageName={'Расписание'} />
       <Layout>
         {/*<UserCard/>*/}
-        <ProfileMenu />
+        <></>
       </Layout>
       <NavigationBar />
     </>

@@ -20,7 +20,7 @@ function UserCard() {
     []
   );
 
-  const [icon, setIcon] = useState(() => <AvatarIcon className="w-28 h-28" />);
+  const [icon, setIcon] = useState(() => <AvatarIcon className="fill-c_main dark:fill-cd_main w-28 h-28" />);
   useEffect(() => {
     bridge.send("VKWebAppGetUserInfo").then((s) => {
       user.name = s.first_name;
@@ -38,9 +38,9 @@ function UserCard() {
             <h2>
               {user.lastname} {user.name}
             </h2>
-            <h4 className="text-c_secondary dark:text-cd_secondary mt-2 mb-1">{user.status}</h4>
-            <h5 className="text-c_secondary dark:text-cd_secondary">{user.major}</h5>
-            <Line className="text-c_inactive dark:text-cd_inactive w-full mt-4 mb-2"/>
+            <h4 className="mt-2 mb-1">{user.status}</h4>
+            <h5>{user.major}</h5>
+            <Line className="border-c_inactive dark:border-cd_inactive w-full mt-4 mb-2"/>
           </div>
         </div>
         <div className="container flex flex-col">
