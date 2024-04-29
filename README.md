@@ -12,7 +12,6 @@
 
 - [React](https://react.dev)
 - [Storybook](https://storybook.js.org)
-- [MUI](https://mui.com)
 - [Tailwind](https://tailwindcss.com)
 
 Для упрощения работы:

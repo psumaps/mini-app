@@ -12,12 +12,8 @@
     "tailwind:watch": "npm run tailwind -- --watch"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
     "@fontsource/montserrat": "^5.0.12",
     "@mapbox-controls/helpers": "^1.1.0",
-    "@react-buddy/ide-toolbox": "^2.4.0",
-    "@react-buddy/palette-mui": "^5.0.1",
     "@vkontakte/vk-bridge": "^2.14.1",
     "array-equal": "^1.0.2",
     "debounce": "^2.0.0",
