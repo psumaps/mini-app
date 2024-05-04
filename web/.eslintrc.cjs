@@ -10,7 +10,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-type-checked',
     'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'tailwind.config.ts'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -19,6 +19,8 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier'],
   rules: {
+    'no-void': "off",
+    'class-methods-use-this': 'off',
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     'import/no-extraneous-dependencies': [
       'error',
@@ -27,5 +29,13 @@ module.exports = {
       },
     ],
     'import/extensions': ['off'],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "no-underscore-dangle":  ["error", { "allowAfterThis": true }],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
   },
 };
