@@ -1,4 +1,9 @@
-import { RGBAImage } from '~/mapbox-gl-indoorequal/RGBAImage.ts';
+import RGBAImage from '~/mapbox-gl-indoorequal/RGBAImage.ts';
+
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 export function createImage(
   image: RGBAImage,
@@ -17,30 +22,6 @@ export function createImage(
   image.height = height;
   image.data = data;
   return image;
-}
-
-export function resizeImage(image: RGBAImage, { width, height }: RGBAImage, channels) {
-  if (width === image.width && height === image.height) {
-    return;
-  }
-
-  const newImage = createImage({}, { width, height }, channels);
-
-  copyImage(
-    image,
-    newImage,
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    {
-      width: Math.min(image.width, width),
-      height: Math.min(image.height, height),
-    },
-    channels,
-  );
-
-  image.width = width;
-  image.height = height;
-  image.data = newImage.data;
 }
 
 export function copyImage(
@@ -88,4 +69,28 @@ export function copyImage(
     }
   }
   return dstImg;
+}
+
+export function resizeImage(image: RGBAImage, { width, height }: RGBAImage, channels: number) {
+  if (width === image.width && height === image.height) {
+    return;
+  }
+
+  const newImage = createImage({}, { width, height }, channels);
+
+  copyImage(
+    image,
+    newImage,
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    {
+      width: Math.min(image.width, width),
+      height: Math.min(image.height, height),
+    },
+    channels,
+  );
+
+  image.width = width;
+  image.height = height;
+  image.data = newImage.data;
 }

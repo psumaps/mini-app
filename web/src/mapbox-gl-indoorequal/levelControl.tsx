@@ -3,11 +3,14 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 
 export default class LevelControl {
   private indoorequal: IndoorEqual;
+
   public _cbRefresh: () => void;
+
   readonly container: HTMLDivElement;
+
   constructor(indoorequal: IndoorEqual) {
     this.indoorequal = indoorequal;
-    this._cbRefresh = () => this._refresh();
+    this._cbRefresh = () => this.refresh();
     this.indoorequal.on('levelschange', this._cbRefresh);
     this.indoorequal.on('levelchange', this._cbRefresh);
     this.container = document.createElement('div');
@@ -20,13 +23,14 @@ export default class LevelControl {
     this.indoorequal.off('levelchange', this._cbRefresh);
   }
 
-  _refresh() {
+  refresh() {
     this.container.innerHTML = '';
     this.indoorequal.levels.forEach((level) => {
       const button = document.createElement('button');
       button.name = level;
       button.appendChild(document.createTextNode(level));
-      button.title = button.value = level;
+      button.value = level;
+      button.title = level;
       button.addEventListener('click', () => {
         this.indoorequal.setLevel(level);
       });

@@ -14,23 +14,28 @@
   "dependencies": {
     "@fontsource/montserrat": "^5.0.12",
     "@mapbox-controls/helpers": "^1.1.0",
+    "@vitejs/plugin-react-swc": "^3.3.2",
     "@vkontakte/vk-bridge": "^2.14.1",
     "array-equal": "^1.0.2",
     "debounce": "^2.0.0",
     "maplibre-gl": "^4.1.0",
+    "psumaps-frontend": "file:..",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-map-gl": "^7.1.7",
-    "react-router-dom": "^6.22.0"
+    "react-router-dom": "^6.22.0",
+    "tailwindcss": "^3.4.3",
+    "vite": "^4.5.2",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
     "@svgr/core": "^8.1.0",
+    "@types/array-equal": "^1.0.2",
     "@types/node": "^20.6.2",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react-swc": "^3.3.2",
     "eslint": "^8.45.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -40,9 +45,6 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.0.2",
-    "vite": "^4.5.2",
-    "vite-plugin-svgr": "^4.2.0"
+    "typescript": "^5.0.2"
   }
 }
