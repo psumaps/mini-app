@@ -21,7 +21,7 @@ function getImageData(img: CanvasImageSource) {
   return context.getImageData(0, 0, img.width, img.height);
 }
 
-export default async function () {
+export default async function sprite() {
   let json: {
     [x: string]: {
       width: any;
