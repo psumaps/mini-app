@@ -1,9 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './app/App.tsx';
 import bridge from '@vkontakte/vk-bridge';
+import App from './app/App.tsx';
 
-bridge.send('VKWebAppInit', {});
+bridge.send('VKWebAppInit', {}).then(
+  ({ result }) => {
+    if (!result) {
+      console.log('VKWebAppInit failed');
+    }
+  },
+  (reason) => {
+    console.log(`VKWebAppInit failed: ${reason}`);
+  },
+);
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />

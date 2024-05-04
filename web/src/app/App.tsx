@@ -5,7 +5,7 @@ import '@fontsource/montserrat/700.css';
 import '@fontsource/montserrat/500.css';
 
 import router from '~/app/router.tsx';
-import '../tw.css';
+import '~/tw.css';
 
 function App() {
   return (

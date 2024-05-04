@@ -1,12 +1,12 @@
 import debounce from 'debounce';
 import arrayEqual from 'array-equal';
-import findAllLevels from './levels';
-import LevelControl from './levelControl';
-import loadSprite from './sprite';
-import { VectorTileSource } from './vectorTileSource';
 import type { Map } from 'maplibre-gl';
 import { IControl } from 'react-map-gl/src/types/lib.ts';
 import { LayerSpecification } from 'maplibre-gl';
+import findAllLevels from './levels';
+import LevelControl from './levelControl';
+import loadSprite from './sprite';
+import VectorTileSource from './vectorTileSource';
 
 export interface IndoorEqualsProps {
   url?: string;
@@ -31,12 +31,18 @@ export interface IndoorEqualsProps {
  */
 export default class IndoorEqual implements IControl<Map> {
   private source: VectorTileSource;
+
   private map: Map;
+
   levels: string[];
+
   level: string;
+
   private events: { [x: string]: (() => void)[] };
+
   private _control?: LevelControl;
-  private _updateLevelsDebounce: any;
+
+  private _updateLevelsDebounce: debounce.DebouncedFunction<() => void> | undefined;
 
   constructor(map: Map, options: IndoorEqualsProps) {
     const SourceKlass = VectorTileSource;
@@ -52,7 +58,7 @@ export default class IndoorEqual implements IControl<Map> {
       this._init();
       this.setHeatmapVisible(opts.heatmap);
     } else {
-      this.map.once('load', () => {
+      void this.map.once('load', () => {
         this._init();
         this.setHeatmapVisible(opts.heatmap);
       });
@@ -64,6 +70,8 @@ export default class IndoorEqual implements IControl<Map> {
    */
   remove() {
     this.source.remove();
+    if (this._updateLevelsDebounce === undefined)
+      throw new Error('updateLevelsDebounce is undefined');
     this._updateLevelsDebounce.clear();
     this.map.off('load', this._updateLevelsDebounce);
     this.map.off('data', this._updateLevelsDebounce);
@@ -144,17 +152,17 @@ export default class IndoorEqual implements IControl<Map> {
    * @param {boolean} [options.update] Update existing image (default false)
    * @return {Promise} It resolves an hash of images.
    */
-  loadSprite(options = {}) {
-    const opts = { update: false, ...options };
+  loadSprite(optionsArg = {}) {
+    const opts = { update: false, ...optionsArg };
     return loadSprite().then((sprite) => {
-      for (const id in sprite) {
+      Object.keys(sprite).forEach((id) => {
         const { data, ...options } = sprite[id];
         if (!this.map.hasImage(id)) {
           this.map.addImage(id, data, options);
         } else if (opts.update) {
           this.map.updateImage(id, data);
         }
-      }
+      });
       return sprite;
     });
   }
@@ -187,10 +195,7 @@ export default class IndoorEqual implements IControl<Map> {
     this.source.layers
       .filter((layer) => layer.type !== 'heatmap')
       .forEach((layer) => {
-        this.map.setFilter(layer.id, [
-          ...(layer['filter'] || ['all']),
-          ['==', 'level', this.level],
-        ]);
+        this.map.setFilter(layer.id, [...(layer.filter || ['all']), ['==', 'level', this.level]]);
       });
   }
 
@@ -208,7 +213,7 @@ export default class IndoorEqual implements IControl<Map> {
         this.levels = levels;
         this._emitLevelsChange();
         this._refreshAfterLevelsUpdate();
-        this._control?._refresh();
+        this._control?.refresh();
       }
     }
   }
@@ -221,7 +226,9 @@ export default class IndoorEqual implements IControl<Map> {
     this._emitEvent('levelchange', this.level);
   }
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   _emitEvent(eventName: string, ...args: any[]) {
+    // eslint-disable-next-line  @typescript-eslint/no-unsafe-argument
     (this.events[eventName] || []).forEach((fn) => fn(...args));
   }
 }
