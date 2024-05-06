@@ -19,25 +19,22 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ButtonSearch: Story = {
-    args:{
-      typeIcon:"Search"
-    }
+  args: {
+    typeIcon: "Search",
+  },
 };
-export const ButtonFiltr: Story = {
-  args:{
-    typeIcon:"Search"
-  
-  }
+export const ButtonFilter: Story = {
+  args: {
+    typeIcon: "Search",
+  },
 };
 export const ButtonCalendar: Story = {
-  args:{
-    typeIcon:"Calendar"
-  
-  }
+  args: {
+    typeIcon: "Calendar",
+  },
 };
 export const ButtonQR: Story = {
-  args:{
-    typeIcon:"QR"
-  
-  }
+  args: {
+    typeIcon: "QR",
+  },
 };

@@ -8,22 +8,19 @@ interface Props {
   onClick?: () => void;
   isContrast?: boolean;
   typeIcon: IconType;
-  }
+}
 
 export const ButtonIcon = ({
   className,
   onClick,
-  isContrast=false,
+  isContrast = false,
   typeIcon,
   ...props
-  }: Props) => {
-    const mode = isContrast
-    ? "button--dark"
-    : "button--light";
-    return (
-      <button 
-      className={["icon-button ",mode,typeIcon].join(' ')} {...props}>
-        <Icon type={typeIcon} isContrastIcon={isContrast} />
-      </button>
-    );
-  };
+}: Props) => {
+  const mode = isContrast ? "button--dark" : "button--light";
+  return (
+    <button className={["icon-button ", mode, typeIcon].join(" ")} {...props}>
+      <Icon type={typeIcon} isContrastIcon={isContrast} />
+    </button>
+  );
+};

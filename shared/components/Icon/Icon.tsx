@@ -7,11 +7,9 @@ const getIcon = (type: string) => iconTypes.get(type);
 interface Props {
   isContrastIcon?: boolean;
   type: IconType;
-  }
+}
 
-export const Icon = ({isContrastIcon,type}: Props) => {   
-    const mode = isContrastIcon
-    return (
-        <div> {getIcon(type)}</div>
-    );
-  };
+export const Icon = ({ isContrastIcon, type }: Props) => {
+  const mode = isContrastIcon;
+  return <div> {getIcon(type)}</div>;
+};

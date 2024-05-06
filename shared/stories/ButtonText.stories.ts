@@ -24,14 +24,14 @@ export const Online: Story = {
     children: "Онлайн",
   },
 };
-export const Ofline: Story = {
+export const Offline: Story = {
   args: {
-    children: "Oфлайн",
+    children: "Оффлайн",
   },
 };
 export const Search: Story = {
   args: {
-    className:"text-button--search",
+    className: "text-button--search",
     children: "Поиск",
   },
 };
