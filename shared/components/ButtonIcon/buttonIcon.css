@@ -1,0 +1,18 @@
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    border: none;
+}
+.button--dark {
+    background-color: #1a1a1a;
+    color: #fefefe;
+  }
+  
+  .button--light {
+    background-color: #fefefe;
+    color: #1a1a1a;
+  }

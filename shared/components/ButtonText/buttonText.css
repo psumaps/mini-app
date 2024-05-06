@@ -1,0 +1,31 @@
+.text-button{
+  display: flex;
+  border: none;
+  color: #fefefe;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: center;
+  font:500 "Montserrat", sans-serif;
+}
+
+.text-button--dark {
+  background-color: #1a1a1a;
+  color: #fefefe;
+}
+
+.text-button--light {
+  background-color: #fefefe;
+  color: #1a1a1a;
+}
+
+.text-button--status {
+  width: 110px;
+  height: 30px;
+  font-size: 13px;
+  padding: 7px;
+}
+.text-button--search {
+  width: 227px;
+  height: 40px;
+  font-size: 16px;
+}
