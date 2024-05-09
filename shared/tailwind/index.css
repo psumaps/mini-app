@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
+@layer base {
   h1 { @apply font-montserrat text-xl_ font-bold text-c_main dark:text-cd_main; }
   h2 { @apply font-montserrat text-lg font-bold text-c_main dark:text-cd_main; }
   h3 { @apply font-montserrat text-base font-bold text-c_main dark:text-cd_main; }
