@@ -11,7 +11,6 @@
   "author": "psumaps team",
   "license": "MPL-2.0",
   "dependencies": {
-    "@mui/material": "^5.15.16",
     "@storybook/addon-themes": "^8.0.9",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@vkontakte/vk-bridge": "^2.14.1",

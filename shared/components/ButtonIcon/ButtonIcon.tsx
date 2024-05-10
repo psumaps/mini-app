@@ -1,7 +1,6 @@
 import React from "react";
-import { Icon } from "../Icon/Icon";
-import type { IconType } from "../Icon/IconType";
-import "./buttonIcon.css";
+import { Icon } from "../Icon/icon";
+import type { IconType } from "../Icon/iconType";
 
 interface Props {
   className?: string;
@@ -17,10 +16,16 @@ export const ButtonIcon = ({
   typeIcon,
   ...props
 }: Props) => {
-  const mode = isContrast ? "button--dark" : "button--light";
   return (
-    <button className={["icon-button ", mode, typeIcon].join(" ")} {...props}>
-      <Icon type={typeIcon} isContrastIcon={isContrast} />
+    <button
+      className={[
+        "flex justify-center items-center h-10 w-10 rounded-forty ",
+        `${isContrast ? "stroke-c_main fill-c_main bg-cd_main" : " stroke-cd_main fill-cd_main bg-c_main"}`,
+        typeIcon,
+      ].join(" ")}
+      {...props}
+    >
+      <Icon type={typeIcon} />
     </button>
   );
 };

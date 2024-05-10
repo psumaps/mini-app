@@ -1,29 +1,27 @@
 import React, { ReactNode } from "react";
-import "./buttonText.css";
-<style>
-  @import
-  url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,500&display=swap');
-</style>;
 
 interface ButtonProps {
   children?: ReactNode;
   className?: string;
   onClick?: () => void;
   isContrast?: boolean;
-  typeButton?: "status" | "search";
+  typeButton?: "text-xs w-28 h-8" | "h-10 w-56";
 }
 export const ButtonText = ({
   children,
   className,
   onClick,
   isContrast = false,
-  typeButton = "status",
+  typeButton = "text-xs w-28 h-8",
   ...props
 }: ButtonProps) => {
-  const mode = isContrast ? "text-button--dark" : "text-button--light";
   return (
     <button
-      className={[mode, `text-button--${typeButton}`, "text-button"].join(" ")}
+      className={[
+        `${isContrast ? "text-c_main bg-cd_main" : "text-cd_main bg-c_main"}`,
+        `${typeButton}`,
+        "flex justify-center items-center rounded-fifty p",
+      ].join(" ")}
       {...props}
     >
       {children}

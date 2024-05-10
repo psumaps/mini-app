@@ -1,15 +1,14 @@
 import React from "react";
-import type { IconType } from "./IconType";
-import { iconTypes } from "./IconType";
+import type { IconType } from "./iconType";
+import { iconTypes } from "./iconType";
 
 const getIcon = (type: string) => iconTypes.get(type);
 
 interface Props {
-  isContrastIcon?: boolean;
   type: IconType;
+  className?: string;
 }
 
-export const Icon = ({ isContrastIcon, type }: Props) => {
-  const mode = isContrastIcon;
+export const Icon = ({ type }: Props) => {
   return <div> {getIcon(type)}</div>;
 };

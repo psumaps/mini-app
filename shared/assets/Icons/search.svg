@@ -1,17 +1,5 @@
-import React from "react";
-import "../icon.css";
-interface Props {
-  isContrastIconSearch?: boolean;
-}
-
-export const IconSearch = ({ isContrastIconSearch }: Props) => {
-  const mode = isContrastIconSearch ? "dark" : "light";
-  return (
-    <svg
-      className={mode}
+ <svg
       fill="none"
-      width="15"
-      height="15"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -20,5 +8,3 @@ export const IconSearch = ({ isContrastIconSearch }: Props) => {
         fill="rgb(0,0,0)"
       ></path>
     </svg>
-  );
-};

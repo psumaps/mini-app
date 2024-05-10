@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { ButtonText } from "../components/ButtonText/ButtonText";
+import { ButtonText } from "../components/ButtonText/buttonText";
 
 const meta = {
-  title: "Example/ButtonText",
+  title: "Components/ButtonText",
   component: ButtonText,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
@@ -31,7 +31,7 @@ export const Offline: Story = {
 };
 export const Search: Story = {
   args: {
-    className: "text-button--search",
+    className: "h-10 w-56",
     children: "Поиск",
   },
 };
