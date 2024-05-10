@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { ButtonText } from "../components/ButtonText/buttonText";
+import { Button } from "../components/button/button";
+import React from "react";
+import { Icon } from "../components/Icon/icon";
 
 const meta = {
-  title: "Components/ButtonText",
-  component: ButtonText,
+  title: "Components/Button",
+  component: Button,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
@@ -13,17 +14,11 @@ const meta = {
   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: { onClick: fn() },
-} satisfies Meta<typeof ButtonText>;
+} satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Online: Story = {
-  args: {
-    children: "Онлайн",
-  },
-};
 export const Offline: Story = {
   args: {
     children: "Оффлайн",
@@ -31,7 +26,32 @@ export const Offline: Story = {
 };
 export const Search: Story = {
   args: {
-    className: "h-10 w-56",
     children: "Поиск",
+    className: "h-10 w-56 p",
+    styleButton: "h-10 w-56",
+  },
+};
+export const ButtonQR: Story = {
+  args: {
+    children: <Icon type="QR" />,
+    styleButton: "h-10 w-10 rounded-forty",
+  },
+};
+export const ButtonSearch: Story = {
+  args: {
+    children: <Icon type="Search" />,
+    styleButton: "h-10 w-10 rounded-forty",
+  },
+};
+export const ButtonFilter: Story = {
+  args: {
+    children: <Icon type="Filter" />,
+    styleButton: "h-10 w-10 rounded-forty",
+  },
+};
+export const ButtonCalendar: Story = {
+  args: {
+    children: <Icon type="Calendar" />,
+    styleButton: "h-10 w-10 rounded-forty",
   },
 };
