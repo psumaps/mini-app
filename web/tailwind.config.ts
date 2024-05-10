@@ -41,6 +41,7 @@ module.exports = {
         'c_bg-secondary': '#DADADA1A',
         c_shadow: '#DFDFDF',
         c_border: '#EBEBEB',
+        'c_border-secondary': '#DADADA',
         // dark mode
         cd_main: '#FEFEFE',
         cd_secondary: '#979797',
@@ -49,8 +50,9 @@ module.exports = {
         cd_bg: '#282828',
         'cd_bg-block': '#202020',
         'cd_bg-secondary': '#2525251A',
-        cd_border: '#141414',
         cd_shadow: '#262626',
+        cd_border: '#383838',
+        'cd_border-secondary': '#545454',
       },
     },
   },

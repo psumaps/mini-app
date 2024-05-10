@@ -5,18 +5,75 @@
 @tailwind utilities;
 
 @layer base {
+  body { @apply bg-c_bg dark:bg-cd_bg; }
   h1 { @apply font-montserrat text-xl_ font-bold text-c_main dark:text-cd_main; }
   h2 { @apply font-montserrat text-lg font-bold text-c_main dark:text-cd_main; }
   h3 { @apply font-montserrat text-base font-bold text-c_main dark:text-cd_main; }
   h4 { @apply font-montserrat text-sm font-bold text-c_secondary dark:text-cd_secondary; }
   h5 { @apply font-montserrat text-xs font-bold text-c_secondary dark:text-cd_secondary; }
   p { @apply font-montserrat text-base font-medium text-c_main dark:text-cd_main; }
+  abbr { @apply c3; }
   .b1 { @apply font-montserrat text-b font-bold text-c_main dark:text-cd_main; }
-  .b2 { @apply font-montserrat text-b font-bold text-c_main dark:text-cd_main; }
+  .b2 { @apply font-montserrat text-b font-medium text-c_main dark:text-cd_main; }
   .b3 { @apply font-montserrat text-xl font-bold text-c_main dark:text-cd_main; }
   .b4 { @apply font-montserrat text-lg font-medium text-c_main dark:text-cd_main; }
   .c1 { @apply font-montserrat text-sm font-medium text-c_main dark:text-cd_main; }
   .c2 { @apply font-montserrat text-xs font-medium text-c_main dark:text-cd_main; }
   .c3 { @apply font-montserrat text-xs font-bold text-c_main dark:text-cd_main; }
   .c4 { @apply font-montserrat text-xs font-semibold text-c_main dark:text-cd_main; }
+}
+
+
+
+/* --------------------------------------------------------- */
+/* ------------------------ Calendar ----------------------- */
+/* --------------------------------------------------------- */
+
+.react-calendar__tile {
+  @apply duration-300 ease-in-out h-8;
+  transition-property: opacity, transform, height, padding;
+}
+
+.react-calendar__tile--showed-minified.react-calendar__tile--range {
+  @apply rounded-t-none;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  @apply text-c_inactive dark:text-cd_inactive capitalize decoration-transparent;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth abbr {
+  @apply text-c_inactive dark:text-cd_inactive;
+}
+
+.react-calendar__tile--range {
+  @apply border-solid border-l-0 border-r-0 border-c_accent bg-c_accent;
+}
+
+.react-calendar__tile--range abbr {
+  @apply text-c_bg;
+}
+
+.react-calendar__tile--rangeEnd {
+  @apply rounded-r-full border-r-2;
+}
+
+.react-calendar__tile--rangeStart {
+  @apply rounded-l-full border-l-2;
+}
+
+.react-calendar__tile--now:not(.react-calendar__tile--range) {
+  @apply border-2 border-solid border-c_accent rounded-full;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  @apply pb-1 rounded-full;
+}
+
+.react-calendar__month-view__weekdays__weekday--active-minified {
+  @apply border-solid border-c_accent bg-c_accent rounded-b-none;
+}
+
+.react-calendar__month-view__weekdays__weekday--active-minified abbr {
+  @apply text-c_bg;
 }

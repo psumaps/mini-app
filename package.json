@@ -6,7 +6,8 @@
     "web": "concurrently --kill-others \"npm run dev --prefix web\" \"npm run tailwind:watch --prefix web\"",
     "native": "npm start --prefix native",
     "storybook": "concurrently --kill-others \"npm run tailwind:watch --prefix web\" \"storybook dev -p 6006\"",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "vitest"
   },
   "author": "psumaps team",
   "license": "MPL-2.0",
@@ -14,6 +15,7 @@
     "@storybook/addon-themes": "^8.0.9",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@vkontakte/vk-bridge": "^2.14.1",
+    "react-calendar": "^5.0.0",
     "storybook": "^8.0.9",
     "storybook-addon-mock": "^5.0.0",
     "vite-plugin-svgr": "^4.2.0"
@@ -31,6 +33,7 @@
     "@svgr/core": "^8.1.0",
     "concurrently": "^8.2.2",
     "prettier": "3.2.5",
-    "prop-types": "^15.8.1"
+    "prop-types": "^15.8.1",
+    "vitest": "^1.6.0"
   }
 }
