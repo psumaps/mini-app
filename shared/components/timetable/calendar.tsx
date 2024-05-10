@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import Calendar from "react-calendar";
 import CalendarDropdown from "./calendarDropdown";
 import { Value, getWeek, weekdays } from "./calendarUtils";
-import { nodes } from "../../utils/selector";
+import { nodes, node } from "../../utils/selector";
 
 const CustomCalendar = ({ className }: { className?: string }) => {
   const today = useMemo(() => new Date(), []);
@@ -32,6 +32,22 @@ const CustomCalendar = ({ className }: { className?: string }) => {
         el.classList.remove(
           "react-calendar__month-view__weekdays__weekday--active-minified"
         );
+
+      if (
+        (el.childNodes[0] as HTMLSpanElement).getAttribute("aria-label") ===
+          weekdays[((today as Date).getDay() + 6) % 7] && // getDay() returns 0 for Sunday
+        isMinified &&
+        node(
+          ".react-calendar__tile--showed-minified.react-calendar__tile--now"
+        ) != null
+      )
+        el.classList.add(
+          "react-calendar__month-view__weekdays__weekday--now-minified"
+        );
+      else
+        el.classList.remove(
+          "react-calendar__month-view__weekdays__weekday--now-minified"
+        );
     });
   }, [value, isMinified]);
 
@@ -41,8 +57,8 @@ const CustomCalendar = ({ className }: { className?: string }) => {
     const curr = new Date(date);
     curr.setSeconds(1); // 00:00:00 != 00:00:00 for some reason
     if (week[0] <= curr && week[1] >= curr)
-      return "-translate-y-[0.3rem] react-calendar__tile--showed-minified";
-    return "translate-y-[-100%] opacity-0 [height:0_!important] [padding:0_!important]";
+      return "-translate-y-[0.2rem] react-calendar__tile--showed-minified";
+    return "translate-y-[-100%] opacity-0 [height:0_!important] [padding:0_!important] [border:0_!important]";
   };
 
   const handleChange = (value: Value) => {
@@ -64,11 +80,12 @@ const CustomCalendar = ({ className }: { className?: string }) => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className={`max-w-[19rem] flex flex-col ${className}`}>
       <button
         type="button"
         onClick={() => setIsMinified(!isMinified)}
         className="bg-c_main dark:bg-cd_main w-fit py-[calc(0.75rem_-_0.13rem)] px-[0.75rem] rounded-full mx-auto shadow-xl mb-2"
+        title="Свернуть календарь"
       >
         <svg
           className="w-4 h-[1.15rem] dark:fill-cd_bg-block fill-c_bg-block"
@@ -97,7 +114,7 @@ const CustomCalendar = ({ className }: { className?: string }) => {
           />
         </svg>
       </button>
-      <div className="flex flex-row justify-between px-2 mb-1 items-center">
+      <div className="flex flex-row justify-between w-[90%] mx-auto mb-1 items-center">
         <CalendarDropdown
           date={
             activeStartDate! instanceof Date
@@ -110,6 +127,7 @@ const CustomCalendar = ({ className }: { className?: string }) => {
           type="button"
           className="flex-row flex gap-2 items-center"
           onClick={handleReset}
+          title="Сбросить дату"
         >
           <h5 className="c3 text-c_inactive dark:text-cd_inactive">
             {today.toLocaleDateString("ru-RU")}
@@ -125,7 +143,7 @@ const CustomCalendar = ({ className }: { className?: string }) => {
         </button>
       </div>
       <Calendar
-        className={`${className} text-center text-c_main dark:text-cd_main`}
+        className="text-center text-c_main dark:text-cd_main"
         activeStartDate={activeStartDate}
         value={value}
         tileClassName={tileClassName}

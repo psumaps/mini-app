@@ -29,9 +29,29 @@
 /* ------------------------ Calendar ----------------------- */
 /* --------------------------------------------------------- */
 
+:root {
+  --tile-flex-basis: 13%;
+}
+
+.react-calendar__month-view__days, .react-calendar__month-view__weekdays {
+  @apply justify-evenly;
+}
+
 .react-calendar__tile {
-  @apply duration-300 ease-in-out h-8;
-  transition-property: opacity, transform, height, padding;
+  @apply duration-300 ease-in-out h-10 border-solid border-2 border-transparent pb-1 transition-all;
+  flex: 0 0 var(--tile-flex-basis) !important;
+}
+
+.react-calendar__tile:not(.react-calendar__tile--now) {
+  animation: border-color-instant 0.01s forwards;
+}
+
+@keyframes border-color-instant {
+  100% { border-color: transparent; }
+}
+
+.react-calendar__tile--showed-minified {
+  @apply h-10 pb-3;
 }
 
 .react-calendar__tile--showed-minified.react-calendar__tile--range {
@@ -46,32 +66,37 @@
   @apply text-c_inactive dark:text-cd_inactive;
 }
 
-.react-calendar__tile--range {
-  @apply border-solid border-l-0 border-r-0 border-c_accent bg-c_accent;
-}
-
 .react-calendar__tile--range abbr {
   @apply text-c_bg;
 }
 
-.react-calendar__tile--rangeEnd {
-  @apply rounded-r-full border-r-2;
-}
-
-.react-calendar__tile--rangeStart {
-  @apply rounded-l-full border-l-2;
+.react-calendar__tile--range {
+  @apply rounded-full border-c_accent bg-c_accent;
 }
 
 .react-calendar__tile--now:not(.react-calendar__tile--range) {
-  @apply border-2 border-solid border-c_accent rounded-full;
+  @apply border-c_accent rounded-full;
+}
+
+.react-calendar__tile--showed-minified.react-calendar__tile--now {
+  @apply rounded-t-none border-t-transparent;
 }
 
 .react-calendar__month-view__weekdays__weekday {
-  @apply pb-1 rounded-full;
+  @apply pb-1 rounded-full border-2 border-solid border-transparent h-11 pt-2 transition-all;
+  flex: 0 0 var(--tile-flex-basis) !important;
+}
+
+.react-calendar__month-view__weekdays__weekday--now-minified {
+  @apply border-c_accent border-b-transparent rounded-b-none;
+}
+
+.react-calendar__month-view__weekdays__weekday--now-minified abbr {
+  @apply text-c_main dark:text-cd_main;
 }
 
 .react-calendar__month-view__weekdays__weekday--active-minified {
-  @apply border-solid border-c_accent bg-c_accent rounded-b-none;
+  @apply border-c_accent bg-c_accent rounded-b-none;
 }
 
 .react-calendar__month-view__weekdays__weekday--active-minified abbr {

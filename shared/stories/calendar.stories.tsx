@@ -16,6 +16,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    className: "w-60"
+    className: "w-60 mx-auto",
+  }
+};
+
+export const Mobile: Story = {
+  args: {
+    className: "mx-auto absolute top-0 left-0 right-0 mt-1",
   }
 };

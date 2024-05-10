@@ -16,7 +16,6 @@ const CalendarDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
-  const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
   const toggleDropdown = () => {
@@ -26,11 +25,10 @@ const CalendarDropdown = ({
     }
 
     setIsOpen(!isOpen);
-    const { top, left, width, height } =
+    const { top, left, height } =
       dropdownTargetRef.current?.getBoundingClientRect()!;
     setTop(top);
     setLeft(left);
-    setWidth(width);
     setHeight(height);
   };
 
@@ -42,8 +40,9 @@ const CalendarDropdown = ({
         ref={dropdownTargetRef}
         className="text-center flex flex-row gap-1 items-center"
         onClick={toggleDropdown}
+        title="Сменить месяц"
       >
-        <h5 className="c3 [text-transform:capitalize]">
+        <h5 className="c3 capitalize">
           {`${date.getFullYear()} ${date.toLocaleDateString("ru-RU", { month: "long" })}`}
         </h5>
         <svg
@@ -51,7 +50,7 @@ const CalendarDropdown = ({
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          className="w-3 h-3 stroke-c_main dark:stroke-cd_main"
+          className={`w-3 h-3 stroke-c_main dark:stroke-cd_main ${isOpen ? "rotate-180" : ""}`}
         >
           <path
             strokeLinecap="round"
@@ -62,14 +61,14 @@ const CalendarDropdown = ({
       </button>
       {isOpen && (
         <div
-          className="absolute top-0 left-0 right-0 bottom-0 z-10"
+          className="fixed top-0 left-0 right-0 bottom-0 z-10"
           onClick={toggleDropdown}
         >
           <div
-            className="relative -translate-x-1/2 w-fit"
-            style={{ top: top + height, left: left + width / 2 }}
+            className="relative w-fit -translate-x-[10%]"
+            style={{ top: top + height, left }}
           >
-            <div className="flex flex-col bg-c_bg dark:bg-cd_bg [--tw-bg-opacity:0.25_!important] backdrop-blur-xl rounded-xl border border-solid border-c_border dark:border-cd_border">
+            <div className="flex flex-col bg-c_bg dark:bg-cd_bg bg-opacity-[0.25_!important] backdrop-blur-xl rounded-xl border border-solid border-c_border dark:border-cd_border">
               <h4
                 className="b2 py-3 px-5 rounded-t-xl"
                 onClick={(e) => e.stopPropagation()}
@@ -90,7 +89,10 @@ const CalendarDropdown = ({
                   key={i}
                 >
                   <p
-                    className={`b2 ${date.getMonth() === index && "relative after:content-[''] after:size-[0.4rem] after:bg-c_accent after:rounded-full after:absolute after:right-2 after:bottom-[50%] after:translate-y-[50%]"}`}
+                    className={`b2 ${
+                      date.getMonth() === index &&
+                      "relative after:content-[''] after:size-[0.4rem] after:bg-c_accent after:rounded-full after:absolute after:right-2 after:bottom-[50%] after:translate-y-[50%]"
+                    }`}
                   >
                     {name}
                   </p>

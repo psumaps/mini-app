@@ -4,7 +4,6 @@ import {
   getWeek,
   monthRangeBackward,
   monthRangeForward,
-  monthLockBackward,
 } from "../shared/components/timetable/calendarUtils";
 
 test("sliceMonths() without lock", () => {
