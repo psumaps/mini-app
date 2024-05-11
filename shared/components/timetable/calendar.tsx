@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Calendar from "react-calendar";
 import CalendarDropdown from "./calendarDropdown";
 import {
@@ -18,12 +18,7 @@ import { nodes, node } from "../../utils/selector";
 
 const CustomCalendar = ({ className }: { className?: string }) => {
   const today = useMemo(() => new Date(), []);
-  const startDate = useMemo(() => {
-    const d = new Date();
-    d.setDate(1);
-    return d;
-  }, []);
-  const [activeStartDate, setActiveStartDate] = useState(startDate);
+  const [activeStartDate, setActiveStartDate] = useState(today);
   const [value, setValue] = useState<Value>(today);
   const [isMinified, setIsMinified] = useState(false);
   const [showNowDiv, setShowNowDiv] = useState(true);
