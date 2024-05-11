@@ -12,7 +12,7 @@ import {
   divActiveId,
   divNowId,
   getWeek,
-  weekdays,
+  weekdaysEqual,
 } from "./calendarUtils";
 import { nodes, node } from "../../utils/selector";
 
@@ -34,17 +34,12 @@ const CustomCalendar = ({ className }: { className?: string }) => {
   const assignClasses = () => {
     const weekdayElements = nodes(`.${classWeekday}`);
     weekdayElements.forEach((el) => {
-      if (
-        (el.childNodes[0] as HTMLSpanElement).getAttribute("aria-label") ===
-          weekdays[((value as Date).getDay() + 6) % 7] && // getDay() returns 0 for Sunday
-        isMinified
-      )
+      if (weekdaysEqual(el, value as Date) && isMinified)
         el.classList.add(`${classWeekday}--active-minified`);
       else el.classList.remove(`${classWeekday}--active-minified`);
 
       if (
-        (el.childNodes[0] as HTMLSpanElement).getAttribute("aria-label") ===
-          weekdays[((today as Date).getDay() + 6) % 7] && // getDay() returns 0 for Sunday
+        weekdaysEqual(el, today) &&
         isMinified &&
         node(`.${classTile}--showed-minified.${classTile}--now`) != null
       )

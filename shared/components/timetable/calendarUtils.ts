@@ -114,6 +114,20 @@ export const sliceMonths = (
   return ret;
 };
 
+/**
+ * Проверяет, совпадает ли день недели с заданной датой.
+ *
+ * @param {Element} weekday - День недели для сравнения.
+ * @param {Date} date - Дата для сравнения.
+ * @return {boolean} Возвращает true, если день недели совпадает с датой, в противном случае возвращает false.
+ */
+export const weekdaysEqual = (weekday: Element, date: Date) => {
+  return (
+    (weekday.childNodes[0] as HTMLSpanElement).getAttribute("aria-label") ===
+    weekdays[((date as Date).getDay() + 6) % 7] // getDay() returns 0 for Sunday
+  );
+};
+
 export const divNowId = "divNow";
 export const divActiveId = "divActive";
 
@@ -144,10 +158,10 @@ export const calculateActiveDiv = () => {
   const activeDiv = node(`#${divActiveId}`);
   const tileActive = node(".react-calendar__tile--active");
   const tileActiveRect = tileActive.getBoundingClientRect();
-    activeDiv.setAttribute(
-      "style",
-      `top: ${tileActiveRect.top}px; left: ${tileActiveRect.left + tileActiveRect.width / 2}px; width: ${tileActiveRect.width}px; height: ${tileActiveRect.width}px;`
-    );
+  activeDiv.setAttribute(
+    "style",
+    `top: ${tileActiveRect.top}px; left: ${tileActiveRect.left + tileActiveRect.width / 2}px; width: ${tileActiveRect.width}px; height: ${tileActiveRect.width}px;`
+  );
 };
 
 export const calculateActiveDivMinified = () => {
