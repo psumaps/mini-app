@@ -4,6 +4,8 @@ import {
   getWeek,
   monthRangeBackward,
   monthRangeForward,
+  calculateSide,
+  calculateRectCenter,
 } from "../shared/components/timetable/calendarUtils";
 
 test("sliceMonths() without lock", () => {
@@ -45,7 +47,7 @@ test("sliceMonths() without lock", () => {
   expect(slicedDec[expectedLength - 1].year).toBe(2025);
 });
 
-test('sliceMonths() with lock', () => {
+test("sliceMonths() with lock", () => {
   const fw = 2;
   const bw = 2;
   const cfg = {
@@ -53,7 +55,7 @@ test('sliceMonths() with lock', () => {
     monthRangeBackward: bw,
     monthLockForward: fw,
     monthLockBackward: bw,
-  }
+  };
   const lowerMonth = (initial: number) =>
     initial - cfg.monthRangeBackward < 0
       ? initial - cfg.monthRangeBackward + 12
@@ -64,10 +66,16 @@ test('sliceMonths() with lock', () => {
       : initial + cfg.monthRangeForward;
 
   const slicedToday = sliceMonths(new Date(), cfg);
-  expect(slicedToday.length).toBe(cfg.monthLockBackward + cfg.monthLockForward + 1);
-  expect(slicedToday[0].index).toBe(lowerMonth((new Date()).getMonth()));
-  expect(slicedToday[cfg.monthRangeBackward].year).toBe((new Date()).getFullYear());
-  expect(slicedToday[slicedToday.length - 1].index).toBe(upperMonth((new Date()).getMonth()));
+  expect(slicedToday.length).toBe(
+    cfg.monthLockBackward + cfg.monthLockForward + 1
+  );
+  expect(slicedToday[0].index).toBe(lowerMonth(new Date().getMonth()));
+  expect(slicedToday[cfg.monthRangeBackward].year).toBe(
+    new Date().getFullYear()
+  );
+  expect(slicedToday[slicedToday.length - 1].index).toBe(
+    upperMonth(new Date().getMonth())
+  );
 });
 
 test("getWeek()", () => {
@@ -100,4 +108,19 @@ test("getWeek()", () => {
     new Date("2024-05-06 00:00:00"),
     new Date("2024-05-12 23:59:59"),
   ]);
+});
+
+test("calculateRectCenter()", () => {
+  const rect = new DOMRect(0, 0, 100, 100);
+  expect(calculateRectCenter(rect)).toEqual({ x: 50, y: 50 });
+  rect.x = 100;
+  expect(calculateRectCenter(rect)).toEqual({ x: 150, y: 50 });
+});
+
+test("calculateSide()", () => {
+  const rect = new DOMRect(0, 0, 100, 100);
+  expect(calculateSide(rect)).toBe(100); // когда стороны равны, возвращаем сторону
+  rect.height = 200;
+  expect(calculateSide(rect)).toBe(125);
+  // когда высота больше ширины, возвращаем ширину + (высота - ширина) * (0.5 / (высота / ширина))
 });

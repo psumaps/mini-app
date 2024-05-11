@@ -131,14 +131,34 @@ export const weekdaysEqual = (weekday: Element, date: Date) => {
 export const divNowId = "divNow";
 export const divActiveId = "divActive";
 
+export const calculateRectCenter = (rect: DOMRect) => {
+  return {
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2,
+  }
+}
+
+export const calculateSide = (rect: DOMRect) => {
+  const greater_side = Math.max(rect.width, rect.height);
+  const lesser_side = Math.min(rect.width, rect.height);
+  const interpolation_coefficient = 0.5 / (greater_side / lesser_side);
+
+  const interpolate = (from: number, to: number) => {
+    return from + (to - from) * interpolation_coefficient;
+  }
+  return interpolate(lesser_side, greater_side);
+}
+
 export const calculateNowDiv = () => {
   const tileNow = node(`.${classTile}--now`);
   const nowDiv = node(`#${divNowId}`);
-
   const tileNowRect = tileNow.getBoundingClientRect();
+
+  const side = calculateSide(tileNowRect);
+  const center = calculateRectCenter(tileNowRect);
   nowDiv.setAttribute(
     "style",
-    `top: ${tileNowRect.top}px; left: ${tileNowRect.left + tileNowRect.width / 2}px; width: ${tileNowRect.width}px; height: ${tileNowRect.width}px;`
+    `top: ${center.y}px; left: ${center.x}px; width: ${side}px; height: ${side}px;`
   );
 };
 
@@ -149,9 +169,12 @@ export const calculateNowDivMinified = () => {
   if (!weekdayNow) return;
   const nowDiv = node(`#${divNowId}`);
   const weekdayNowRect = weekdayNow.getBoundingClientRect();
+
+  const side = calculateSide(weekdayNowRect);
+  const center = calculateRectCenter(weekdayNowRect);
   nowDiv.setAttribute(
     "style",
-    `top: ${weekdayNowRect.top}px; left: ${weekdayNowRect.left + weekdayNowRect.width / 2}px; width: ${weekdayNowRect.width}px;`
+    `top: ${center.y}px; left: ${center.x}px; width: ${side}px;`
   );
 };
 
@@ -159,9 +182,12 @@ export const calculateActiveDiv = () => {
   const activeDiv = node(`#${divActiveId}`);
   const tileActive = node(`.${classTile}--active`);
   const tileActiveRect = tileActive.getBoundingClientRect();
+
+  const side = calculateSide(tileActiveRect);
+  const center = calculateRectCenter(tileActiveRect);
   activeDiv.setAttribute(
     "style",
-    `top: ${tileActiveRect.top}px; left: ${tileActiveRect.left + tileActiveRect.width / 2}px; width: ${tileActiveRect.width}px; height: ${tileActiveRect.width}px;`
+    `top: ${center.y}px; left: ${center.x}px; width: ${side}px; height: ${side}px;`
   );
 };
 
@@ -172,8 +198,11 @@ export const calculateActiveDivMinified = () => {
   if (!weekdayActive) return;
   const activeDiv = node(`#${divActiveId}`);
   const weekdayActiveRect = weekdayActive.getBoundingClientRect();
+
+  const side = calculateSide(weekdayActiveRect);
+  const center = calculateRectCenter(weekdayActiveRect);
   activeDiv.setAttribute(
     "style",
-    `top: ${weekdayActiveRect.top}px; left: ${weekdayActiveRect.left + weekdayActiveRect.width / 2}px; width: ${weekdayActiveRect.width}px;`
+    `top: ${center.y}px; left: ${center.x}px; width: ${side}px;`
   );
 };

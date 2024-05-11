@@ -127,17 +127,17 @@ const CustomCalendar = ({ className }: { className?: string }) => {
     activeInterval = setInterval(activeDivFn, 10);
     setIsMinified(!isMinified);
   };
-
+  
   return (
-    <div className={`max-w-[19rem] flex flex-col ${className}`}>
+    <div className={`flex flex-col ${className}`}>
       <div className="fixed top-0 left-0 right-0 bottom-0 z-[-100]">
         <div
           id={divNowId}
-          className={`absolute border-2 border-solid border-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20" : ""} ${showNowDiv ? "opacity-100" : "opacity-0"}`}
+          className={`absolute border-2 border-solid border-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20 -translate-y-5" : "-translate-y-1/2"} ${showNowDiv ? "opacity-100" : "opacity-0"}`}
         />
         <div
           id={divActiveId}
-          className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20" : ""}`}
+          className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2  z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20 -translate-y-5" : "-translate-y-1/2"}`}
         />
       </div>
       <button
