@@ -6,7 +6,7 @@ import {
   monthRangeForward,
   calculateSide,
   calculateRectCenter,
-} from "../shared/components/timetable/calendarUtils";
+} from "../shared/components/timetable/calendar/calendarUtils";
 
 test("sliceMonths() without lock", () => {
   const cfg = {

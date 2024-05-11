@@ -1,4 +1,4 @@
-import { node } from "../../utils/selector";
+import { node } from "../../../utils/selector";
 
 export const classWeekday = "react-calendar__month-view__weekdays__weekday";
 export const classTile = "react-calendar__tile";

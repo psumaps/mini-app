@@ -14,7 +14,7 @@ import {
   getWeek,
   weekdaysEqual,
 } from "./calendarUtils";
-import { nodes, node } from "../../utils/selector";
+import { nodes, node } from "../../../utils/selector";
 
 const CustomCalendar = ({ className, onChange }: { className?: string, onChange: (value: Value) => void }) => {
   const today = useMemo(() => new Date(), []);
