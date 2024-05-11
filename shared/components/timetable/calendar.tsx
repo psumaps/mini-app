@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import Calendar from "react-calendar";
 import CalendarDropdown from "./calendarDropdown";
 import {
@@ -27,6 +27,7 @@ const CustomCalendar = ({ className }: { className?: string }) => {
   const [value, setValue] = useState<Value>(today);
   const [isMinified, setIsMinified] = useState(false);
   const [showNowDiv, setShowNowDiv] = useState(true);
+  const [resetIconAnimation, setResetIconAnimation] = useState(false);
 
   var activeInterval: NodeJS.Timeout;
   var nowInterval: NodeJS.Timeout;
@@ -107,6 +108,8 @@ const CustomCalendar = ({ className }: { className?: string }) => {
   const handleReset = () => {
     setValue(today);
     setActiveStartDate(today);
+    setResetIconAnimation(true);
+    setTimeout(() => setResetIconAnimation(false), 500);
   };
 
   const handleMinify = () => {
@@ -143,7 +146,7 @@ const CustomCalendar = ({ className }: { className?: string }) => {
       <button
         type="button"
         onClick={handleMinify}
-        className="bg-c_main dark:bg-cd_main w-fit py-[calc(0.75rem_-_0.13rem)] px-[0.75rem] rounded-full mx-auto shadow-xl mb-2"
+        className="bg-c_main rotat dark:bg-cd_main w-fit py-[calc(0.75rem_-_0.13rem)] px-[0.75rem] rounded-full mx-auto shadow-xl mb-2"
         title="Свернуть календарь"
       >
         <svg
@@ -192,7 +195,7 @@ const CustomCalendar = ({ className }: { className?: string }) => {
             {today.toLocaleDateString("ru-RU")}
           </h5>
           <svg
-            className="w-4 h-4 fill-c_inactive dark:fill-cd_inactive"
+            className={`w-4 h-4 fill-c_inactive dark:fill-cd_inactive transition-transform ${resetIconAnimation ? "rotate-[360deg] duration-500" : "duration-0"}`}
             viewBox="0 0 14 17"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
