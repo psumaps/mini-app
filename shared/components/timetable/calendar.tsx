@@ -16,7 +16,7 @@ import {
 } from "./calendarUtils";
 import { nodes, node } from "../../utils/selector";
 
-const CustomCalendar = ({ className }: { className?: string }) => {
+const CustomCalendar = ({ className, onChange }: { className?: string, onChange: (value: Value) => void }) => {
   const today = useMemo(() => new Date(), []);
   const [activeStartDate, setActiveStartDate] = useState(today);
   const [value, setValue] = useState<Value>(today);
@@ -92,6 +92,8 @@ const CustomCalendar = ({ className }: { className?: string }) => {
   const handleChange = (value: Value) => {
     if (!(value instanceof Date)) setValue(value?.at[0]);
     else setValue(value);
+
+    onChange(value);
   };
 
   const handleSelect = (month: number, year: number) => {
