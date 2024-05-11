@@ -44,6 +44,12 @@ export type SliceMonthConfig = {
   monthLockBackward: number;
 };
 
+/**
+ * Возвращает начальную и конечную даты недели, содержащей указанную дату.
+ *
+ * @param {Date} date - Дата, для которой необходимо вычислить неделю.
+ * @return {Value} Массив из двух элементов, содержащий начальную и конечную даты недели.
+ */
 export const getWeek = (date: Date): Value => {
   var first = date.getDate() - ((date.getDay() + 6) % 7); // getDay() returns 0 for Sunday;
 
@@ -58,6 +64,17 @@ export const getWeek = (date: Date): Value => {
   return [firstday, lastday];
 };
 
+/**
+ * Вырезает массив объектов MonthInfo на основе заданной даты и конфигурации.
+ *
+ * @param {Date} date - Дата, для которой осуществляется вырезка месяцев.
+ * @param {SliceMonthConfig} [cfg] - Объект конфигурации для вырезки месяцев.
+ * @param {number} [cfg.monthRangeForward] - Количество месяцев для вырезки вперед от заданной даты.
+ * @param {number} [cfg.monthRangeBackward] - Количество месяцев для вырезки назад от заданной даты.
+ * @param {number} [cfg.monthLockForward] - Количество месяцев для блокировки вперед от текущего месяца.
+ * @param {number} [cfg.monthLockBackward] - Количество месяцев для блокировки назад от текущего месяца.
+ * @return {MonthInfo[]} Массив объектов `MonthInfo`, представляющих вырезку месяцев.
+ */
 export const sliceMonths = (
   date: Date,
   cfg?: SliceMonthConfig
