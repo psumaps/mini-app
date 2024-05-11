@@ -60,6 +60,8 @@ const CustomCalendar = ({ className }: { className?: string }) => {
         if (!showNowDiv) setShowNowDiv(true);
         calculateNowDiv();
       }
+    } else {
+      setShowNowDiv(false);
     }
 
     if (tileActive) {
