@@ -1,3 +1,8 @@
+import { node } from "../../utils/selector";
+
+export const classWeekday = "react-calendar__month-view__weekdays__weekday";
+export const classTile = "react-calendar__tile";
+
 export type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
 export type MonthInfo = { name: string; index: number; year: number };
@@ -90,4 +95,52 @@ export const sliceMonths = (
     ret.push({ name: months[curI], index: curI, year: curY });
   }
   return ret;
+};
+
+export const divNowId = "divNow";
+export const divActiveId = "divActive";
+
+export const calculateNowDiv = () => {
+  const tileNow = node(".react-calendar__tile--now");
+  const nowDiv = node(`#${divNowId}`);
+
+  const tileNowRect = tileNow.getBoundingClientRect();
+  nowDiv.setAttribute(
+    "style",
+    `top: ${tileNowRect.top}px; left: ${tileNowRect.left + tileNowRect.width / 2}px; width: ${tileNowRect.width}px; height: ${tileNowRect.width}px;`
+  );
+};
+
+export const calculateNowDivMinified = () => {
+  const weekdayNow = node(
+    ".react-calendar__month-view__weekdays__weekday--now-minified"
+  );
+  const nowDiv = node(`#${divNowId}`);
+  const weekdayNowRect = weekdayNow.getBoundingClientRect();
+  nowDiv.setAttribute(
+    "style",
+    `top: ${weekdayNowRect.top}px; left: ${weekdayNowRect.left + weekdayNowRect.width / 2}px; width: ${weekdayNowRect.width}px;`
+  );
+};
+
+export const calculateActiveDiv = () => {
+  const activeDiv = node(`#${divActiveId}`);
+  const tileActive = node(".react-calendar__tile--active");
+  const tileActiveRect = tileActive.getBoundingClientRect();
+    activeDiv.setAttribute(
+      "style",
+      `top: ${tileActiveRect.top}px; left: ${tileActiveRect.left + tileActiveRect.width / 2}px; width: ${tileActiveRect.width}px; height: ${tileActiveRect.width}px;`
+    );
+};
+
+export const calculateActiveDivMinified = () => {
+  const weekdayActive = node(
+    ".react-calendar__month-view__weekdays__weekday--active-minified"
+  );
+  const activeDiv = node(`#${divActiveId}`);
+  const weekdayActiveRect = weekdayActive.getBoundingClientRect();
+  activeDiv.setAttribute(
+    "style",
+    `top: ${weekdayActiveRect.top}px; left: ${weekdayActiveRect.left + weekdayActiveRect.width / 2}px; width: ${weekdayActiveRect.width}px;`
+  );
 };

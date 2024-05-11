@@ -38,24 +38,8 @@
 }
 
 .react-calendar__tile {
-  @apply duration-300 ease-in-out h-10 border-solid border-2 border-transparent pb-1 transition-all;
+  @apply duration-300 ease-in-out h-10 pb-1 transition-all z-0 will-change-transform;
   flex: 0 0 var(--tile-flex-basis) !important;
-}
-
-.react-calendar__tile:not(.react-calendar__tile--now) {
-  animation: border-color-instant 0.01s forwards;
-}
-
-@keyframes border-color-instant {
-  100% { border-color: transparent; }
-}
-
-.react-calendar__tile--showed-minified {
-  @apply h-10 pb-3;
-}
-
-.react-calendar__tile--showed-minified.react-calendar__tile--range {
-  @apply rounded-t-none;
 }
 
 .react-calendar__month-view__weekdays__weekday abbr {
@@ -70,33 +54,17 @@
   @apply text-c_bg;
 }
 
-.react-calendar__tile--range {
-  @apply rounded-full border-c_accent bg-c_accent;
-}
-
-.react-calendar__tile--now:not(.react-calendar__tile--range) {
-  @apply border-c_accent rounded-full;
-}
-
 .react-calendar__tile--showed-minified.react-calendar__tile--now {
   @apply rounded-t-none border-t-transparent;
 }
 
 .react-calendar__month-view__weekdays__weekday {
-  @apply pb-1 rounded-full border-2 border-solid border-transparent h-11 pt-2 transition-all;
+  @apply rounded-full pb-[0.4rem] pt-2 z-0;
   flex: 0 0 var(--tile-flex-basis) !important;
-}
-
-.react-calendar__month-view__weekdays__weekday--now-minified {
-  @apply border-c_accent border-b-transparent rounded-b-none;
 }
 
 .react-calendar__month-view__weekdays__weekday--now-minified abbr {
   @apply text-c_main dark:text-cd_main;
-}
-
-.react-calendar__month-view__weekdays__weekday--active-minified {
-  @apply border-c_accent bg-c_accent rounded-b-none;
 }
 
 .react-calendar__month-view__weekdays__weekday--active-minified abbr {

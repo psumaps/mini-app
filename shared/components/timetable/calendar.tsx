@@ -1,7 +1,19 @@
 import React, { useState, useMemo, useEffect } from "react";
 import Calendar from "react-calendar";
 import CalendarDropdown from "./calendarDropdown";
-import { Value, getWeek, weekdays } from "./calendarUtils";
+import {
+  Value,
+  calculateActiveDiv,
+  calculateActiveDivMinified,
+  calculateNowDiv,
+  calculateNowDivMinified,
+  classTile,
+  classWeekday,
+  divActiveId,
+  divNowId,
+  getWeek,
+  weekdays,
+} from "./calendarUtils";
 import { nodes, node } from "../../utils/selector";
 
 const CustomCalendar = ({ className }: { className?: string }) => {
@@ -14,41 +26,64 @@ const CustomCalendar = ({ className }: { className?: string }) => {
   const [activeStartDate, setActiveStartDate] = useState(startDate);
   const [value, setValue] = useState<Value>(today);
   const [isMinified, setIsMinified] = useState(false);
+  const [showNowDiv, setShowNowDiv] = useState(true);
 
-  useEffect(() => {
-    const weekdayElements = nodes(
-      ".react-calendar__month-view__weekdays__weekday"
-    );
+  var activeInterval: NodeJS.Timeout;
+  var nowInterval: NodeJS.Timeout;
+
+  const assignClasses = () => {
+    const weekdayElements = nodes(`.${classWeekday}`);
     weekdayElements.forEach((el) => {
       if (
         (el.childNodes[0] as HTMLSpanElement).getAttribute("aria-label") ===
           weekdays[((value as Date).getDay() + 6) % 7] && // getDay() returns 0 for Sunday
         isMinified
       )
-        el.classList.add(
-          "react-calendar__month-view__weekdays__weekday--active-minified"
-        );
-      else
-        el.classList.remove(
-          "react-calendar__month-view__weekdays__weekday--active-minified"
-        );
+        el.classList.add(`${classWeekday}--active-minified`);
+      else el.classList.remove(`${classWeekday}--active-minified`);
 
       if (
         (el.childNodes[0] as HTMLSpanElement).getAttribute("aria-label") ===
           weekdays[((today as Date).getDay() + 6) % 7] && // getDay() returns 0 for Sunday
         isMinified &&
-        node(
-          ".react-calendar__tile--showed-minified.react-calendar__tile--now"
-        ) != null
+        node(`.${classTile}--showed-minified.${classTile}--now`) != null
       )
-        el.classList.add(
-          "react-calendar__month-view__weekdays__weekday--now-minified"
-        );
-      else
-        el.classList.remove(
-          "react-calendar__month-view__weekdays__weekday--now-minified"
-        );
+        el.classList.add(`${classWeekday}--now-minified`);
+      else el.classList.remove(`${classWeekday}--now-minified`);
     });
+  };
+
+  const manageDivs = () => {
+    const tileNow = node(`.${classTile}--now`);
+    const tileActive = node(`.${classTile}--active`);
+    const weekdayNow = node(`.${classWeekday}--now-minified`);
+    const weekdayActive = node(`.${classWeekday}--active-minified`);
+
+    if (tileNow) {
+      if (weekdayNow) {
+        if (!showNowDiv) setShowNowDiv(true);
+        clearInterval(nowInterval);
+        calculateNowDivMinified();
+      } else if (isMinified) setShowNowDiv(false);
+      else {
+        if (!showNowDiv) setShowNowDiv(true);
+        calculateNowDiv();
+      }
+    }
+
+    if (tileActive) {
+      if (weekdayActive) {
+        clearInterval(activeInterval);
+        calculateActiveDivMinified();
+      } else calculateActiveDiv();
+    }
+
+    if (tileActive === tileNow) setShowNowDiv(false);
+  };
+
+  useEffect(() => {
+    assignClasses();
+    manageDivs();
   }, [value, isMinified]);
 
   const tileClassName = ({ date }: { date: Date }) => {
@@ -57,8 +92,8 @@ const CustomCalendar = ({ className }: { className?: string }) => {
     const curr = new Date(date);
     curr.setSeconds(1); // 00:00:00 != 00:00:00 for some reason
     if (week[0] <= curr && week[1] >= curr)
-      return "-translate-y-[0.2rem] react-calendar__tile--showed-minified";
-    return "translate-y-[-100%] opacity-0 [height:0_!important] [padding:0_!important] [border:0_!important]";
+      return `${classTile}--showed-minified`;
+    return "translate-y-[-100%] opacity-0 h-[0_!important] p-[0_!important]";
   };
 
   const handleChange = (value: Value) => {
@@ -79,11 +114,40 @@ const CustomCalendar = ({ className }: { className?: string }) => {
     setActiveStartDate(today);
   };
 
+  const handleMinify = () => {
+    var nowDivFn: () => void;
+    var activeDivFn: () => void;
+
+    if (isMinified) {
+      nowDivFn = calculateNowDiv;
+      activeDivFn = calculateActiveDiv;
+    } else {
+      nowDivFn = calculateNowDivMinified;
+      activeDivFn = calculateActiveDivMinified;
+    }
+
+    setTimeout(() => clearInterval(activeInterval), 300);
+    setTimeout(() => clearInterval(nowInterval), 300); // 300ms is the animation duration of calendar minification
+    nowInterval = setInterval(nowDivFn, 10); // 100 fps
+    activeInterval = setInterval(activeDivFn, 10);
+    setIsMinified(!isMinified);
+  };
+
   return (
     <div className={`max-w-[19rem] flex flex-col ${className}`}>
+      <div className="fixed top-0 left-0 right-0 bottom-0 z-[-100]">
+        <div
+          id={divNowId}
+          className={`absolute border-2 border-solid border-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20" : ""} ${showNowDiv ? "opacity-100" : "opacity-0"}`}
+        />
+        <div
+          id={divActiveId}
+          className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20" : ""}`}
+        />
+      </div>
       <button
         type="button"
-        onClick={() => setIsMinified(!isMinified)}
+        onClick={handleMinify}
         className="bg-c_main dark:bg-cd_main w-fit py-[calc(0.75rem_-_0.13rem)] px-[0.75rem] rounded-full mx-auto shadow-xl mb-2"
         title="Свернуть календарь"
       >
