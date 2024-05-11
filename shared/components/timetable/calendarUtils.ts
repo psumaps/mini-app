@@ -132,7 +132,7 @@ export const divNowId = "divNow";
 export const divActiveId = "divActive";
 
 export const calculateNowDiv = () => {
-  const tileNow = node(".react-calendar__tile--now");
+  const tileNow = node(`.${classTile}--now`);
   const nowDiv = node(`#${divNowId}`);
 
   const tileNowRect = tileNow.getBoundingClientRect();
@@ -144,8 +144,9 @@ export const calculateNowDiv = () => {
 
 export const calculateNowDivMinified = () => {
   const weekdayNow = node(
-    ".react-calendar__month-view__weekdays__weekday--now-minified"
+    `.${classWeekday}--now-minified`
   );
+  if (!weekdayNow) return;
   const nowDiv = node(`#${divNowId}`);
   const weekdayNowRect = weekdayNow.getBoundingClientRect();
   nowDiv.setAttribute(
@@ -156,7 +157,7 @@ export const calculateNowDivMinified = () => {
 
 export const calculateActiveDiv = () => {
   const activeDiv = node(`#${divActiveId}`);
-  const tileActive = node(".react-calendar__tile--active");
+  const tileActive = node(`.${classTile}--active`);
   const tileActiveRect = tileActive.getBoundingClientRect();
   activeDiv.setAttribute(
     "style",
@@ -166,8 +167,9 @@ export const calculateActiveDiv = () => {
 
 export const calculateActiveDivMinified = () => {
   const weekdayActive = node(
-    ".react-calendar__month-view__weekdays__weekday--active-minified"
+    `.${classWeekday}--active-minified`
   );
+  if (!weekdayActive) return;
   const activeDiv = node(`#${divActiveId}`);
   const weekdayActiveRect = weekdayActive.getBoundingClientRect();
   activeDiv.setAttribute(
