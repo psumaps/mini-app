@@ -48,9 +48,9 @@ export type SliceMonthConfig = {
  * Возвращает начальную и конечную даты недели, содержащей указанную дату.
  *
  * @param {Date} date - Дата, для которой необходимо вычислить неделю.
- * @return {Value} Массив из двух элементов, содержащий начальную и конечную даты недели.
+ * @return {[Date, Date]} Массив из двух элементов, содержащий начальную и конечную даты недели.
  */
-export const getWeek = (date: Date): Value => {
+export const getWeek = (date: Date): [Date, Date] => {
   var first = date.getDate() - ((date.getDay() + 6) % 7); // getDay() returns 0 for Sunday;
 
   var firstday = new Date(new Date(date).setDate(first));

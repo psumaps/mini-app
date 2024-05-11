@@ -83,7 +83,7 @@ const CustomCalendar = ({ className }: { className?: string }) => {
 
   const tileClassName = ({ date }: { date: Date }) => {
     if (!isMinified) return "";
-    const week = getWeek(value as Date)!;
+    const week = getWeek(value as Date);
     const curr = new Date(date);
     curr.setSeconds(1); // 00:00:00 != 00:00:00 for some reason
     if (week[0] <= curr && week[1] >= curr)
