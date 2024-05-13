@@ -1,8 +1,8 @@
 /// <reference types="vite-plugin-svgr/client" />
-import CalendarIcon from "../../assets/Icons/calendar.svg?react";
-import FilterIcon from "../../assets/Icons/filter.svg?react";
-import QRIcon from "../../assets/Icons/qr.svg?react";
-import SearchIcon from "../../assets/Icons/search.svg?react";
+import CalendarIcon from "../../assets/icons/calendar.svg?react";
+import FilterIcon from "../../assets/icons/filter.svg?react";
+import QRIcon from "../../assets/icons/qr.svg?react";
+import SearchIcon from "../../assets/icons/search.svg?react";
 import React from "react";
 
 export type IconType = "QR" | "Calendar" | "Filter" | "Search";
