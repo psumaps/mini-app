@@ -22,36 +22,36 @@ type Story = StoryObj<typeof meta>;
 export const Offline: Story = {
   args: {
     children: "Оффлайн",
+    className: "text-b w-28 h-8 rounded-fifty",
   },
 };
 export const Search: Story = {
   args: {
     children: "Поиск",
-    className: "h-10 w-56 p",
-    styleButton: "h-10 w-56",
+    className: "h-10 w-56 p rounded-fifty",
   },
 };
 export const ButtonQR: Story = {
   args: {
     children: <Icon type="QR" />,
-    styleButton: "h-10 w-10 rounded-forty",
+    className: "h-10 w-10 rounded-forty",
   },
 };
 export const ButtonSearch: Story = {
   args: {
     children: <Icon type="Search" />,
-    styleButton: "h-10 w-10 rounded-forty",
+    className: "h-10 w-10 rounded-forty",
   },
 };
 export const ButtonFilter: Story = {
   args: {
     children: <Icon type="Filter" />,
-    styleButton: "h-10 w-10 rounded-forty",
+    className: "h-10 w-10 rounded-forty",
   },
 };
 export const ButtonCalendar: Story = {
   args: {
     children: <Icon type="Calendar" />,
-    styleButton: "h-10 w-10 rounded-forty",
+    className: "h-10 w-10 rounded-forty",
   },
 };
