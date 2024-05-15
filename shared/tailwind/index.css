@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
+@layer base {
+  body { @apply bg-c_bg dark:bg-cd_bg; }
   h1 { @apply font-montserrat text-xl_ font-bold text-c_main dark:text-cd_main; }
   h2 { @apply font-montserrat text-lg font-bold text-c_main dark:text-cd_main; }
   h3 { @apply font-montserrat text-base font-bold text-c_main dark:text-cd_main; }

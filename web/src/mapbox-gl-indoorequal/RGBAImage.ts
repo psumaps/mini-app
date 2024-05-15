@@ -2,12 +2,19 @@
 // UNPACK_PREMULTIPLY_ALPHA_WEBGL must be used when uploading to a texture.
 import { copyImage, createImage, resizeImage } from '~/mapbox-gl-indoorequal/image.ts';
 
-export class RGBAImage {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+class RGBAImage {
   data: any;
+
   width: number;
+
   height: number;
 
-  constructor(size: { width?: number; height?: number }, data: Uint8Array | undefined) {
+  constructor(size: { width?: number; height?: number }, data?: Uint8Array) {
     createImage(this, size, 4, data);
   }
 
@@ -42,3 +49,5 @@ export class RGBAImage {
     copyImage(srcImg, dstImg, srcPt, dstPt, size, 4);
   }
 }
+
+export default RGBAImage;
