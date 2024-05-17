@@ -23,21 +23,28 @@ function EventCard() {
       description: "Присоединяйтесь к нам и прославите яркую энергию весны на нашем ежегодном университетском концерте «Малая весна». Целью этого мероприятия",
       id: 106,
       tag: "Технологии и инновации",
-      event_date: "2024-05-15T00:01:00",
+      event_date: new Date('2024-05-15T00:01:00'),
       location: "Большой зал СДК ПГНИУ, 7 корп.",
       number_on_site: null,
       event_images: null
 
     }),
+
     []
   );
+  const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+  const options = {
+    month: 'long',
+    day: 'numeric',
+    timezone: 'UTC',
+  };
 
 
 
 
   return (
     <Block className={"p-[0_!important]"}>
-      <div className="flex flex-col w-full bg-white ">
+      <div className="flex flex-col w-full">
 
         <div className="flex relative flex-col w-full aspect-[2.13] ">
           <div className="flex flex-col relative font-bold   ">
@@ -57,26 +64,26 @@ function EventCard() {
           </div>
         </div>
 
-        <div className="flex flex-col px-4 mt-4 font-bold text-zinc-800">
+        <div className="flex flex-col px-4 mt-4 font-bold dark:text-cd_main text-zinc-800">
 
-          <div className="flex gap-3 self-start text-sm text-center">
-            <WatchIcon/>
-            <div className="my-auto">2 ч. 30 м.</div>
-          </div>
+          {/* <div className="flex gap-3 self-start text-sm text-center"> */}
+          {/*   <WatchIcon/> */}
+          {/*   <div className="my-auto ">2 ч. 30 м.</div> */}
+          {/* </div> */}
 
-          <div className="mt-1.5 text-xl">{event.title}</div>
+          <h1 className="mt-1.5">{event.title}</h1>
           <div className="mt-3">
-            <span className="text-lg text-black">16:00 </span>
-            <span className="text-base text-zinc-500">- 19:30</span>
+            <span className="text-lg ">Начало: {event.event_date.toLocaleTimeString().slice(0, -3)} </span>
+            {/* <span className="text-base text-zinc-500">- 19:30</span> */}
           </div>
-          <div className=" text-sm text-zinc-500">{event.event_date}</div>
-          <div className=" mt-4 leading-4 text-sm">
+          <div className=" text-sm text-zinc-500">{event.event_date.toLocaleString("ru", options)+', '+days[event.event_date.getDay()]}</div>
+          <div className="mt-4 leading-4 text-sm">
             <span className=" ">Место: </span>
             <span className="font-medium ">
             {event.location}
           </span>
           </div>
-          <div className="mt-2 leading-5 text-base text-black">
+          <div className="mt-2 leading-5 text-base ">
             Статус: <span className="text-zinc-500">Ожидание</span>
           </div>
 
@@ -84,8 +91,8 @@ function EventCard() {
           <ViewTheMapCard />
           <DetailsCard link={event.registration_link} />
 
-          <div className="mt-8 text-lg text-neutral-700">О мероприятии:</div>
-          <div className="mt-4 text-base font-medium leading-5 text-neutral-700">
+          <div className="mt-6 text-lg ">О мероприятии:</div>
+          <div className="mt-2.5 text-base font-medium leading-5">
             {event.description}
           </div>
           <ContactsCard/>

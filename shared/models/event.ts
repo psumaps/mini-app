@@ -1,13 +1,15 @@
 export type Event = {
-  name: string;
-  tag: string;
-  status: string;
-  date: string;
-  description: string;
-  place: string;
-  link: string;
-  photo: string;
-  start_time: string;
-  end_time: string;
-  person: boolean;
+  organizer?: string,
+  title: string,
+  registration_close_datetime?: string,
+  registration_link?: string,
+  cover_image?: string,
+  description: string,
+  id: number,
+  tag?: string,
+  event_date: Date,
+  location: string,
+  number_on_site?: string,
+  event_images?: string
+
 };
