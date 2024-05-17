@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Event } from "../../models/event";
-//import HeartIcon from '~/../../assets/heart.svg?react';
 
 import Block from "../common/block";
 import HeartButton from '../common/heartButton';
@@ -12,22 +11,22 @@ import DetailsCard from './detailsCard';
 import ContactsCard from './contactsCard';
 
 
+
 function EventCard() {
   const event: Event = useMemo(
     () => ({
-      name: "Малая весна ПГНИУ",
-      tag: "Концерт",
-      status: "Ожидание",
-      date: "22.05.2022",
+      organizer: "PSU-TOOLS TEAM",
+      title: "Малая весна ПГНИУ",
+      registration_close_datetime: null,
+      registration_link: null,
+      cover_image: "https://res.cloudinary.com/practicaldev/image/fetch/s--xG1gcsyJ--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://thepracticaldev.s3.amazonaws.com/i/h68x0up43hmknl5tjcww.jpg",
       description: "Присоединяйтесь к нам и прославите яркую энергию весны на нашем ежегодном университетском концерте «Малая весна». Целью этого мероприятия",
-      place: "Большой зал СДК ПГНИУ, 7 корп.",
-      link: "https://vk.com",
-      photo: "https://i.ytimg.com/vi/jgk4G5_lxdE/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGH8gRygrMA8=&amp;rs=AOn4CLCRnG-K3f-2RzIa8GaZFlxnUnVPrQ",
-      start_time: "10:00",
-      end_time: "11:00",
-      person: false,
-      //photo: "https://cdn.builder.io/api/v1/image/assets/TEMP/0e575b494c2d52f5259d586603e5ff6a2ce262e1fd87f845be7f4030da8a58bc?apiKey=35bf9e9c9b564d7eb448254e081630e5&",
-
+      id: 106,
+      tag: "Технологии и инновации",
+      event_date: "2024-05-15T00:01:00",
+      location: "Большой зал СДК ПГНИУ, 7 корп.",
+      number_on_site: null,
+      event_images: null
 
     }),
     []
@@ -35,65 +34,67 @@ function EventCard() {
 
 
 
-  return (
-    <Block>
-      <div className="flex flex-col py-px mt-2.5 w-full bg-white ">
 
-        <div className="flex overflow-hidden relative flex-col px-px pt-2 w-full aspect-[2.13] ">
-          <div className="flex flex-col h-3/4 px-4 font-bold   ">
+  return (
+    <Block className={"p-[0_!important]"}>
+      <div className="flex flex-col w-full bg-white ">
+
+        <div className="flex relative flex-col w-full aspect-[2.13] ">
+          <div className="flex flex-col relative font-bold   ">
             <img
               loading="lazy"
-              src={event.photo}
+              src={event.cover_image}
               className="object-cover size-full rounded-t-lg"
             />
-          </div>
-          <div className="flex absolute bottom-0 gap-5 justify-between items-start pt-0.5 pr-2.5 pl-5 w-full ">
             <div
-              className="justify-center px-4 py-2 mt-1 text-xs font-bold text-center text-white whitespace-nowrap rounded-2xl border-2 border-white border-solid">
-              {event.tag}
+              className="justify-center absolute bottom-4 left-4 py-px w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
+              <p className="text-white text-center text-wrap c3">{event.tag}</p>
             </div>
-            <div className="flex gap-2 mt-5">
-              <HeartButton person={event.person} />
-              <LinkButton link={event.link} />
+            <div className=" absolute bottom-0 right-0 translate-y-1/2  ">
+              <HeartButton person={false} />
+              <LinkButton link={event.registration_link} />
             </div>
           </div>
-
         </div>
-        <div className="flex flex-col px-4 mt-4 font-bold text-zinc-500">
-          <div className="flex gap-3 self-start text-sm text-center text-zinc-800">
 
-            <WatchIcon className="fill-zinc-800 w-[25px]" />
+        <div className="flex flex-col px-4 mt-4 font-bold text-zinc-800">
+
+          <div className="flex gap-3 self-start text-sm text-center">
+            <WatchIcon/>
             <div className="my-auto">2 ч. 30 м.</div>
+          </div>
 
+          <div className="mt-1.5 text-xl">{event.title}</div>
+          <div className="mt-3">
+            <span className="text-lg text-black">16:00 </span>
+            <span className="text-base text-zinc-500">- 19:30</span>
           </div>
-          <div className="mt-3 text-xl text-zinc-800">{event.name}</div>
-          <div className="mt-4 text-base">
-            <span className="text-lg text-black">{event.start_time} - {event.end_time}</span>
-          </div>
-          <div className=" text-sm">{event.date}</div>
-          <div className=" mt-4 text-base text-zinc-800">
-            <span className="text-zinc-800">Место:</span>{' '}
-            <span className="text-sm font-medium leading-4">
-            {event.place}
+          <div className=" text-sm text-zinc-500">{event.event_date}</div>
+          <div className=" mt-4 leading-4 text-sm">
+            <span className=" ">Место: </span>
+            <span className="font-medium ">
+            {event.location}
           </span>
           </div>
-          <div className="mt-2 text-base text-black">
-            Статус: <span className="text-zinc-500">{event.status}</span>
+          <div className="mt-2 leading-5 text-base text-black">
+            Статус: <span className="text-zinc-500">Ожидание</span>
           </div>
+
           <SignUpCard />
           <ViewTheMapCard />
-          <DetailsCard link={event.link} />
+          <DetailsCard link={event.registration_link} />
 
           <div className="mt-8 text-lg text-neutral-700">О мероприятии:</div>
-          <div className="mt-4 text-base font-medium text-neutral-700">
+          <div className="mt-4 text-base font-medium leading-5 text-neutral-700">
             {event.description}
           </div>
-
           <ContactsCard/>
+
         </div>
       </div>
     </Block>
   );
 }
+
 
 export default EventCard;
