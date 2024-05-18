@@ -9,14 +9,11 @@ function EventDescription() {
     <>
       <HeaderBar pageName={'Мероприятие'} />
       <Layout>
-        <EventCard/>
-
-
-    </Layout>
-  <NavigationBar />
-</>
-)
-  ;
+        <EventCard />
+      </Layout>
+      <NavigationBar />
+    </>
+  );
 }
 
 export default EventDescription;
