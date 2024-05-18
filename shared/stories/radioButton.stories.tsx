@@ -8,6 +8,9 @@ import { StoryFn as Story, Meta } from "@storybook/react";
 export default {
   title: "Components/RadioButton",
   component: RadioButton,
+  parameters: {
+    layout: "centered",
+  },
 } as Meta;
 
 const Template: Story<RadioButtonProps> = (args) => <RadioButton {...args} />;

@@ -1,18 +1,14 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
 interface ButtonProps {
-  children?: ReactNode;
-  className?: string;
-  onClick?: () => void;
   isContrast?: boolean;
+  accept?: string;
+  type?: "submit" | "reset" | "button";
 }
-export const Button = ({
-  children,
-  className,
-  onClick,
-  isContrast = false,
-  ...props
-}: ButtonProps) => {
+export const Button = (
+  props: React.InputHTMLAttributes<HTMLButtonElement> & ButtonProps
+) => {
+  const { isContrast = false, className, children, ...rest } = props;
   return (
     <button
       className={[
@@ -22,7 +18,7 @@ export const Button = ({
           : "text-cd_main dark:text-c_main bg-c_main dark:bg-cd_main stroke-cd_main dark:stroke-c_main fill-cd_main dark:fill-c_main",
         "flex justify-center items-center",
       ].join(" ")}
-      {...props}
+      {...rest}
     >
       {children}
     </button>
