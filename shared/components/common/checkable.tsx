@@ -6,13 +6,29 @@ export interface CheckableProps
   classNameLabel?: string;
 }
 
+/**
+ * Alias для checkable с указанным типом radio.
+ */
 export const Radio = (props: CheckableProps) => (
   <Checkable type="radio" {...props} />
 );
+/**
+ * Alias для checkable с указанным типом checkbox.
+ */
 export const Checkbox = (props: CheckableProps) => (
   <Checkable type="checkbox" {...props} />
 );
 
+/**
+ * Компонент, имеющий два возможных состояния. Может функционировать как radio или как checkbox.
+ *
+ * @param {string} [props.name] - Атрибут name для элемента input.
+ * @param {string} [props.type="radio"] - Тип.
+ * @param {string} [props.id] - Атрибут id для элемента input. Если не указан, будет сгенерирован на основе типа и имени.
+ * @param {string} [props.label] - Текст метки для элемента input.
+ * @param {string} [props.classNameLabel="c3"] - Стили для элемента label.
+ * @param {React.InputHTMLAttributes<HTMLInputElement>} [props...] - Дополнительные параметры, которые будут распространены на элемент input.
+ */
 const Checkable = (props: CheckableProps) => {
   const {
     name,
