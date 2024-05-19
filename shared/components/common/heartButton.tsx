@@ -1,5 +1,7 @@
+/// <reference types="vite-plugin-svgr/client" />
 import React, {useState} from "react";
-import HeartIcon from '~/../../shared/assets/heart.svg?react';
+import HeartIcon from '../../assets/heart.svg?react';
+
 
 const HeartButton = (props: { person: any; }) => {
     const [person, setPerson] = useState(props.person)

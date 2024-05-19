@@ -1,5 +1,6 @@
+/// <reference types="vite-plugin-svgr/client" />
 import React from "react";
-import LinkIcon from '~/../../shared/assets/link.svg?react';
+import LinkIcon from '../../assets/link.svg?react';
 
 const LinkButton = (props: { link: any; }) => {
     return (

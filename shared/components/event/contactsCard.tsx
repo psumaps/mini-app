@@ -1,5 +1,5 @@
 import React from "react";
-import AvatarIcon from "~/../../shared/assets/avatar.svg?react";
+import AvatarIcon from "../../assets/avatar.svg?react";
 
 function ContactsCard() {
   return (
