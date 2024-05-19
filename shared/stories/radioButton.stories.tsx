@@ -1,12 +1,12 @@
 import {
   RadioButton,
   RadioButtonProps,
-} from "../components/button/radioButton";
+} from "../components/common/radioButton";
 import React from "react";
 import { StoryFn as Story, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/RadioButton",
+  title: "Common/Radio button",
   component: RadioButton,
   parameters: {
     layout: "centered",

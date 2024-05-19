@@ -21,7 +21,7 @@ export const RadioButton = (
         name={name}
         checked={checked}
         onChange={handleChange}
-        className=" accent-c_accent w-3.5 h-3.5"
+        className="accent-c_accent w-3.5 h-3.5"
       />
     </div>
   );

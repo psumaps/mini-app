@@ -1,30 +1,30 @@
 import {
-  CheckBoxButton,
-  CheckBoxButtonProps,
-} from "../components/button/checkBoxButton";
+  CheckBox,
+  CheckBoxProps,
+} from "../components/common/checkBox";
 import React from "react";
 import { StoryFn as Story, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/CheckBoxButton",
-  component: CheckBoxButton,
+  title: "Common/Checkbox",
+  component: CheckBox,
   parameters: {
     layout: "centered",
   },
 } as Meta;
 
-const Template: Story<CheckBoxButtonProps> = (args) => (
-  <CheckBoxButton {...args} />
+const Template: Story<CheckBoxProps> = (args) => (
+  <CheckBox {...args} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
   name: "checkbox",
 };
-const Templatee: Story<CheckBoxButtonProps> = (args) => (
+const Templatee: Story<CheckBoxProps> = (args) => (
   <div>
-    <CheckBoxButton {...args} />
-    <CheckBoxButton {...args} />
+    <CheckBox {...args} />
+    <CheckBox {...args} />
   </div>
 );
 

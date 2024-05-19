@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-export interface CheckBoxButtonProps {
+export interface CheckBoxProps {
   name: string;
   onClick: () => void;
 }
 
-export const CheckBoxButton = (
-  props: React.InputHTMLAttributes<HTMLButtonElement> & CheckBoxButtonProps
+export const CheckBox = (
+  props: React.InputHTMLAttributes<HTMLButtonElement> & CheckBoxProps
 ) => {
   const { name, onClick } = props;
   const [checked, setChecked] = useState(false);
