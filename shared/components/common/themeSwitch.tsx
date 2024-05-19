@@ -37,7 +37,7 @@ const ThemeSwitch = <T extends IStorage>({
 
   return (
     <button
-      className={className + "w-fit h-fit py-4 px-2 relative"}
+      className={className + " w-fit h-fit py-4 px-2 relative"}
       onClick={toggleTheme}
       title={isDark ? "Light mode" : "Dark mode"}
       type="button"
