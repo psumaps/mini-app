@@ -1,9 +1,9 @@
-import { CheckBox } from "../components/common/checkBoxButton";
+import { CheckBox } from "../components/common/checkBox";
 import React from "react";
 import { StoryFn as Story, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/CheckBox",
+  title: "Common/CheckBox",
   component: CheckBox,
   parameters: {
     layout: "centered",
