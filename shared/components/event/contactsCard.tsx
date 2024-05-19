@@ -1,7 +1,7 @@
 import React from "react";
 import AvatarIcon from "../../assets/avatar.svg?react";
 
-function ContactsCard() {
+function ContactsCard(props: any, ) {
   return (
     <div>
       <div className="mt-7 text-lg ">Контакты:</div>
@@ -12,7 +12,7 @@ function ContactsCard() {
           <h4 className="mt-2 mb-1 dark:text-cd_main text-neutral-700">
             Организатор
           </h4>
-          <p className="c1">Описание</p>
+          <p className="c1">{props.organizer? props.organizer : "Неизвестно"}</p>
         </div>
       </div>
     </div>
