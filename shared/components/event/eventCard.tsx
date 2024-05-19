@@ -21,7 +21,8 @@ function EventCard() {
       organizer: "PSU-TOOLS TEAM",
       title: "Малая весна ПГНИУ",
       registration_close_datetime: undefined,
-      registration_link: undefined,
+      registration_link: "https://github.com/PSUMaps",
+      map_link: "https://github.com/PSUMaps",
       cover_image:
         "https://res.cloudinary.com/practicaldev/image/fetch/s--xG1gcsyJ--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://thepracticaldev.s3.amazonaws.com/i/h68x0up43hmknl5tjcww.jpg",
       description:
@@ -84,15 +85,15 @@ function EventCard() {
             Статус: <span className="text-zinc-500">Ожидание</span>
           </div>
 
-          <SignUpCard />
-          <ViewMapCard />
+          <SignUpCard link={event.registration_link} />
+          <ViewMapCard link={event.map_link} />
           <DetailsCard link={event.registration_link} />
 
           <div className="mt-6 text-lg ">О мероприятии:</div>
           <div className="mt-2.5 text-base font-medium leading-5">
             {event.description}
           </div>
-          <ContactsCard />
+          <ContactsCard organizer={event.organizer} />
         </div>
       </div>
     </Block>

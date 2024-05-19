@@ -3,6 +3,7 @@ export type Event = {
   title: string,
   registration_close_datetime?: string,
   registration_link?: string,
+  map_link?: string,
   cover_image?: string,
   description: string,
   id: number,
