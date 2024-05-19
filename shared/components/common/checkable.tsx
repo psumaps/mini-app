@@ -1,19 +1,19 @@
 import React, { useMemo } from "react";
 
-export interface CheckableButtonProps
+export interface CheckableProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   classNameLabel?: string;
 }
 
-export const Radio = (props: CheckableButtonProps) => (
-  <CheckableButton type="radio" {...props} />
+export const Radio = (props: CheckableProps) => (
+  <Checkable type="radio" {...props} />
 );
-export const Checkbox = (props: CheckableButtonProps) => (
-  <CheckableButton type="checkbox" {...props} />
+export const Checkbox = (props: CheckableProps) => (
+  <Checkable type="checkbox" {...props} />
 );
 
-const CheckableButton = (props: CheckableButtonProps) => {
+const Checkable = (props: CheckableProps) => {
   const {
     name,
     type = "radio",
@@ -38,11 +38,13 @@ const CheckableButton = (props: CheckableButtonProps) => {
         />
         <div className="z-[1] rounded-full border-solid border border-c_accent absolute inset-0 bg-transparent peer-checked:after:scale-100 after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:size-2/3 after:rounded-full after:scale-0 after:transition-transform after:duration-200 after:ease-in-out after:bg-c_accent"></div>
       </div>
-      <label htmlFor={id} className={classNameLabel}>
-        {label}
-      </label>
+      {label && (
+        <label htmlFor={id} className={classNameLabel}>
+          {label}
+        </label>
+      )}
     </div>
   );
 };
 
-export default CheckableButton;
+export default Checkable;
