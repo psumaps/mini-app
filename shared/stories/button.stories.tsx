@@ -1,7 +1,8 @@
+/// <reference types="vite-plugin-svgr/client" />
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../components/common/button";
 import React from "react";
-import { Icon } from "../components/icon/icon";
+import SearchIcon from "../assets/search.svg?react";
 
 const meta = {
   title: "Common/Button",
@@ -22,36 +23,18 @@ type Story = StoryObj<typeof meta>;
 export const Offline: Story = {
   args: {
     children: "Оффлайн",
-    className: "text-b w-28 h-8 rounded-fifty",
+    className: "w-28 h-8 rounded-fifty",
   },
 };
 export const Search: Story = {
   args: {
     children: "Поиск",
-    className: "h-10 w-56 p rounded-fifty",
+    className: "h-10 w-56 rounded-fifty",
   },
 };
-export const ButtonQR: Story = {
+export const Icon: Story = {
   args: {
-    children: <Icon type="QR" />,
-    className: "h-10 w-10 rounded-forty",
-  },
-};
-export const ButtonSearch: Story = {
-  args: {
-    children: <Icon type="Search" />,
-    className: "h-10 w-10 rounded-forty",
-  },
-};
-export const ButtonFilter: Story = {
-  args: {
-    children: <Icon type="Filter" />,
-    className: "h-10 w-10 rounded-forty",
-  },
-};
-export const ButtonCalendar: Story = {
-  args: {
-    children: <Icon type="Calendar" />,
+    children: <SearchIcon />,
     className: "h-10 w-10 rounded-forty",
   },
 };

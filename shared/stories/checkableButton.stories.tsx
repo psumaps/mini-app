@@ -10,6 +10,7 @@ export default {
   parameters: {
     layout: "centered",
   },
+  tags: ["autodocs"],
   argTypes: {
     type: {
       options: ["radio", "checkbox"],
