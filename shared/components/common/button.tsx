@@ -1,13 +1,11 @@
 import React from "react";
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isContrast?: boolean;
   accept?: string;
   type?: "submit" | "reset" | "button";
 }
-export const Button = (
-  props: React.InputHTMLAttributes<HTMLButtonElement> & ButtonProps
-) => {
+export const Button = (props: ButtonProps) => {
   const { isContrast = false, className, children, ...rest } = props;
   return (
     <button
