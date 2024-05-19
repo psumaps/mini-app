@@ -8,6 +8,12 @@ import SignUpCard from "./signupCard";
 import ViewMapCard from "./viewMapCard";
 import DetailsCard from "./detailsCard";
 import ContactsCard from "./contactsCard";
+const days = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
+const options = {
+    month: "long",
+    day: "numeric",
+    timezone: "UTC",
+};
 
 function EventCard() {
   const event: Event = useMemo(
@@ -30,12 +36,7 @@ function EventCard() {
 
     [],
   );
-  const days = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
-  const options = {
-    month: "long",
-    day: "numeric",
-    timezone: "UTC",
-  };
+
 
   return (
     <Block className={"p-[0_!important]"}>
@@ -47,7 +48,7 @@ function EventCard() {
               src={event.cover_image}
               className="object-cover size-full rounded-t-lg"
             />
-            <div className="justify-center absolute bottom-4 left-4 py-px w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
+            <div className="justify-center absolute  bottom-4 left-4 py-0.5 px-0.5 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
               <p className="text-white text-center text-wrap c3">{event.tag}</p>
             </div>
             <div className=" absolute bottom-0 right-0 translate-y-1/2  ">
