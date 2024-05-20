@@ -21,6 +21,8 @@ module.exports = {
     extend: {
       borderRadius: {
         half: '50%',
+        fifty: '3.125rem',
+        forty: '2.5rem'
       },
       fontSize: {
         xl_: '1.31rem',

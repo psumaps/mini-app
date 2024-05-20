@@ -1,8 +1,12 @@
 import React from "react";
 
-function Line({ className }: { className?: string }) {
+function Line(props: React.HTMLAttributes<HTMLHRElement>) {
+  const { className, ...rest } = props;
   return (
-    <hr className={`border-solid border rounded-sm w-full ${className}`} />
+    <hr
+      className={`border-solid border rounded-sm w-full ${className}`}
+      {...rest}
+    />
   );
 }
 
