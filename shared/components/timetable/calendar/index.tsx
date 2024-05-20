@@ -1,3 +1,4 @@
+/// <reference types="vite-plugin-svgr/client" />
 import React, { useState, useMemo, useEffect } from "react";
 import Calendar from "react-calendar";
 import CalendarDropdown from "./calendarDropdown";
@@ -15,6 +16,8 @@ import {
   weekdaysEqual,
 } from "./calendarUtils";
 import { nodes, node } from "../../../utils/selector";
+import Button from "../../common/button";
+import CalendarIcon from "../../../assets/calendar.svg?react";
 
 const CustomCalendar = ({ className, onChange }: { className?: string, onChange: (value: Value) => void }) => {
   const today = useMemo(() => new Date(), []);
@@ -142,39 +145,14 @@ const CustomCalendar = ({ className, onChange }: { className?: string, onChange:
           className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2  z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20 -translate-y-5" : "-translate-y-1/2"}`}
         />
       </div>
-      <button
+      <Button
         type="button"
         onClick={handleMinify}
-        className="bg-c_main rotat dark:bg-cd_main w-fit py-[calc(0.75rem_-_0.13rem)] px-[0.75rem] rounded-full mx-auto shadow-xl mb-2"
+        className="bg-c_main dark:bg-cd_main size-10 rounded-full mx-auto shadow-xl mb-2 group"
         title="Свернуть календарь"
       >
-        <svg
-          className="w-4 h-[1.15rem] dark:fill-cd_bg-block fill-c_bg-block"
-          viewBox="0 0 16 18"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M2.4 3.27273C1.95817 3.27273 1.6 3.63904 1.6 4.09091V15.5455C1.6 15.9973 1.95817 16.3636 2.4 16.3636H13.6C14.0418 16.3636 14.4 15.9973 14.4 15.5455V4.09091C14.4 3.63904 14.0418 3.27273 13.6 3.27273H2.4ZM0 4.09091C0 2.7353 1.07452 1.63636 2.4 1.63636H13.6C14.9255 1.63636 16 2.7353 16 4.09091V15.5455C16 16.9011 14.9255 18 13.6 18H2.4C1.07452 18 0 16.9011 0 15.5455V4.09091Z"
-          />
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M11.2 0C11.6418 0 12 0.366312 12 0.818182V4.09091C12 4.54278 11.6418 4.90909 11.2 4.90909C10.7582 4.90909 10.4 4.54278 10.4 4.09091V0.818182C10.4 0.366312 10.7582 0 11.2 0Z"
-          />
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M4.8 0C5.24183 0 5.6 0.366312 5.6 0.818182V4.09091C5.6 4.54278 5.24183 4.90909 4.8 4.90909C4.35817 4.90909 4 4.54278 4 4.09091V0.818182C4 0.366312 4.35817 0 4.8 0Z"
-          />
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M0 7.36364C0 6.91177 0.358172 6.54545 0.8 6.54545H15.2C15.6418 6.54545 16 6.91177 16 7.36364C16 7.81551 15.6418 8.18182 15.2 8.18182H0.8C0.358172 8.18182 0 7.81551 0 7.36364Z"
-          />
-        </svg>
-      </button>
+        <CalendarIcon className="size-5 group-active:size-4 transition-all duration-75 stroke-c_bg dark:stroke-cd_bg [stroke-width:0.005rem] fill-c_bg dark:fill-cd_bg" />
+      </Button>
       <div className="flex flex-row justify-between w-[90%] mx-auto mb-1 items-center">
         <CalendarDropdown
           date={
