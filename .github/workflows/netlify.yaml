@@ -10,9 +10,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./web
     steps:
       - uses: actions/checkout@v4
 
@@ -22,7 +19,12 @@ jobs:
           node-version: 20
           cache: "npm"
 
-      - name: Install Dependencies & Build
+      - name: Install Dependencies & Build root
+        run: |
+         npm ci
+
+      - name: Install Dependencies & Build web
+        working-directory: ./web
         run: |
          npm ci
          npm run build
