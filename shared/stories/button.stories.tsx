@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "../components/common/button";
+import Button from "../components/common/button";
 import React from "react";
 import SearchIcon from "../assets/search.svg?react";
 
