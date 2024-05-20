@@ -6,7 +6,7 @@ import Button from "./button";
 const ShareButton = (props: { id: any; }) => {
     return (
         <Button
-            className="h-10 w-10 rounded-forty shrink-0 aspect-square"
+            className={`h-10 w-10 rounded-full  hover:scale-110 bg-amber-50`}
             onClick={() => {
                 bridge.send('VKWebAppShare', {
                     link: "https://vk.com/app/" + props.id + "?"
@@ -22,16 +22,7 @@ const ShareButton = (props: { id: any; }) => {
                     });
             }}
         >
-
-            <div
-                className={` w-[40px] h-[40px] hover:scale-110`}
-            >
-                <div
-                    className={`w-[40px] h-[40px] rounded-full  bg-amber-50`}
-                >
-                    <LinkIcon/>
-                </div>
-            </div>
+            <LinkIcon/>
 
         </Button>
     )
