@@ -4,7 +4,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isContrast?: boolean;
   accept?: string;
 }
-export const Button = (props: ButtonProps) => {
+
+const Button = (props: ButtonProps) => {
   const { isContrast = false, className, children, ...rest } = props;
   return (
     <button
@@ -19,3 +20,5 @@ export const Button = (props: ButtonProps) => {
     </button>
   );
 };
+
+export default Button;
