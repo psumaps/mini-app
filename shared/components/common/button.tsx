@@ -11,8 +11,8 @@ export const Button = (props: ButtonProps) => {
     <button
       className={`${className} ${
         isContrast
-          ? "text-c_bg dark:text-cd_bg bg-c_main dark:bg-cd_main stroke-c_bg dark:stroke-cd_bg fill-c_bg dark:fill-cd_bg"
-          : "text-c_main dark:text-cd_main bg-c_bg dark:bg-cd_bg stroke-c_main dark:stroke-cd_main fill-c_main dark:fill-cd_main"
+          ? "text-c_bg-block dark:text-cd_bg-block bg-c_main dark:bg-cd_main stroke-c_bg-block dark:stroke-cd_bg-block fill-c_bg-block dark:fill-cd_bg-block"
+          : "text-c_main dark:text-cd_main bg-c_bg-block dark:bg-cd_bg-block stroke-c_main dark:stroke-cd_main fill-c_main dark:fill-cd_main"
       } flex justify-center items-center`}
       {...rest}
     >
