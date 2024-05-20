@@ -3,7 +3,7 @@ import { Event } from "../../models/event";
 
 import Block from "../common/block";
 import HeartButton from "../common/heartButton";
-import LinkButton from "../common/linkButton";
+import ShareButton from "../common/shareButton";
 import SignUpCard from "./signupCard";
 import ViewMapCard from "./viewMapCard";
 import DetailsCard from "./detailsCard";
@@ -54,7 +54,7 @@ function EventCard() {
             </div>
             <div className=" absolute bottom-0 right-0 translate-y-1/2  ">
               <HeartButton person={false} />
-              <LinkButton link={event.registration_link} />
+              <ShareButton id={event.id} />
             </div>
           </div>
         </div>
