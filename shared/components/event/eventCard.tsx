@@ -52,7 +52,7 @@ function EventCard() {
             <div className="justify-center absolute  bottom-4 left-4 py-0.5 px-0.5 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
               <p className="text-white text-center text-wrap c3">{event.tag}</p>
             </div>
-            <div className=" absolute bottom-0 right-0 translate-y-1/2  ">
+            <div className=" absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2  ">
               <HeartButton person={false} />
               <ShareButton id={event.id} />
             </div>

@@ -1,11 +1,12 @@
 import React from "react";
 import LinkIcon from '../../assets/link.svg?react';
 import bridge from "@vkontakte/vk-bridge";
+import Button from "./button";
 
 const ShareButton = (props: { id: any; }) => {
     return (
-        <button
-            className="w-[53px] h-[53px] shrink-0 aspect-square"
+        <Button
+            className="h-10 w-10 rounded-forty shrink-0 aspect-square"
             onClick={() => {
                 bridge.send('VKWebAppShare', {
                     link: "https://vk.com/app/" + props.id + "?"
@@ -32,7 +33,7 @@ const ShareButton = (props: { id: any; }) => {
                 </div>
             </div>
 
-        </button>
+        </Button>
     )
 }
 
