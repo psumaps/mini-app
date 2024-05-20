@@ -9,13 +9,11 @@ export const Button = (props: ButtonProps) => {
   const { isContrast = false, className, children, ...rest } = props;
   return (
     <button
-      className={[
-        className,
+      className={`${className} ${
         isContrast
-          ? "text-c_main dark:text-cd_main bg-cd_main dark:bg-c_main stroke-c_main dark:stroke-cd_main fill-c_main dark:fill-cd_main"
-          : "text-cd_main dark:text-c_main bg-c_main dark:bg-cd_main stroke-cd_main dark:stroke-c_main fill-cd_main dark:fill-c_main",
-        "flex justify-center items-center",
-      ].join(" ")}
+          ? "text-c_bg dark:text-cd_bg bg-c_main dark:bg-cd_main stroke-c_bg dark:stroke-cd_bg fill-c_bg dark:fill-cd_bg"
+          : "text-c_main dark:text-cd_main bg-c_bg dark:bg-cd_bg stroke-c_main dark:stroke-cd_main fill-c_main dark:fill-cd_main"
+      } flex justify-center items-center`}
       {...rest}
     >
       {children}
