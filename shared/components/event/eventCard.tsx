@@ -29,7 +29,7 @@ function EventCard() {
         "Присоединяйтесь к нам и прославите яркую энергию весны на нашем ежегодном университетском концерте «Малая весна». Целью этого мероприятия",
       id: 106,
       tag: "Технологии и инновации",
-      event_date: new Date("2024-05-15T00:01:00"),
+      event_date: new Date("2023-09-14T16:00:00"),
       location: "Большой зал СДК ПГНИУ, 7 корп.",
       number_on_site: undefined,
       event_images: undefined,
@@ -49,50 +49,49 @@ function EventCard() {
               src={event.cover_image}
               className="object-cover size-full rounded-t-lg"
             />
-            <div className="justify-center absolute  bottom-4 left-4 py-0.5 px-0.5 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
-              <p className="text-white text-center text-wrap c3">{event.tag}</p>
+            <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
+              <p className="c3 text-white text-center text-wrap">{event.tag}</p>
             </div>
-            <div className=" absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2  ">
+            <div className="absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2">
               <HeartButton person={false} />
               <ShareButton id={event.id} />
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col px-4 mt-4 font-bold dark:text-cd_main text-zinc-800">
+        <div className="flex flex-col px-4 mt-4">
           {/* <div className="flex gap-3 self-start text-sm text-center"> */}
           {/*   <WatchIcon/> */}
           {/*   <div className="my-auto ">2 ч. 30 м.</div> */}
           {/* </div> */}
 
-          <h1 className="mt-1.5">{event.title}</h1>
+          <h1 >{event.title}</h1>
           <div className="mt-3">
-            <span className="text-lg ">
+            <h2>
               Начало: {event.event_date.toLocaleTimeString().slice(0, -3)}{" "}
-            </span>
+            </h2>
             {/* <span className="text-base text-zinc-500">- 19:30</span> */}
           </div>
-          <div className=" text-sm text-zinc-500">
+          <h4 className="text-zinc-500">
             {event.event_date.toLocaleString("ru", options) +
               ", " +
               days[event.event_date.getDay()]}
-          </div>
-          <div className="mt-4 leading-4 text-sm">
-            <span className=" ">Место: </span>
-            <span className="font-medium ">{event.location}</span>
-          </div>
-          <div className="mt-2 leading-5 text-base ">
+          </h4>
+          <p className="mt-4 b1 leading-4">
+            Место:<span className="font-medium"> {event.location}</span>
+          </p>
+          <h3 className="mt-2 leading-5">
             Статус: <span className="text-zinc-500">Ожидание</span>
-          </div>
+          </h3>
 
-          <SignUpCard link={event.registration_link} />
+          <SignUpCard link={event.registration_link}/>
           <ViewMapCard link={event.map_link} />
           <DetailsCard link={event.registration_link} />
 
-          <div className="mt-6 text-lg ">О мероприятии:</div>
-          <div className="mt-2.5 text-base font-medium leading-5">
+          <h2 className="mt-6">О мероприятии:</h2>
+          <p className="mt-2.5 c1">
             {event.description}
-          </div>
+          </p>
           <ContactsCard organizer={event.organizer} />
         </div>
       </div>
