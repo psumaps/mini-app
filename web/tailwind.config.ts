@@ -44,6 +44,8 @@ module.exports = {
         c_shadow: '#DFDFDF',
         c_border: '#EBEBEB',
         'c_border-secondary': '#DADADA',
+        c_sub: '#444444',
+
         // dark mode
         cd_main: '#FEFEFE',
         cd_secondary: '#979797',

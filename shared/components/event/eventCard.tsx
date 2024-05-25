@@ -18,18 +18,18 @@ const options = {
 function EventCard() {
   const event: Event = useMemo(
     () => ({
-      organizer: "PSU-TOOLS TEAM",
-      title: "Малая весна ПГНИУ",
-      registration_close_datetime: undefined,
-      registration_link: "https://github.com/PSUMaps",
-      map_link: "https://github.com/PSUMaps",
-      cover_image:
-        "https://res.cloudinary.com/practicaldev/image/fetch/s--xG1gcsyJ--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://thepracticaldev.s3.amazonaws.com/i/h68x0up43hmknl5tjcww.jpg",
-      description:
-        "Присоединяйтесь к нам и прославите яркую энергию весны на нашем ежегодном университетском концерте «Малая весна». Целью этого мероприятия",
-      id: 106,
-      tag: "Технологии и инновации",
-      event_date: new Date("2023-09-14T16:00:00"),
+               organizer: "PSU-TOOLS TEAM",
+               title: "Малая весна ПГНИУ",
+               registration_close_datetime: undefined,
+               registration_link: "https://github.com/PSUMaps",
+               map_link: "https://github.com/PSUMaps",
+               cover_image:
+               "https://res.cloudinary.com/practicaldev/image/fetch/s--xG1gcsyJ--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://thepracticaldev.s3.amazonaws.com/i/h68x0up43hmknl5tjcww.jpg",
+               description:
+               "Присоединяйтесь к нам и прославите яркую энергию весны на нашем ежегодном университетском концерте «Малая весна». Целью этого мероприятия",
+               id: 106,
+               tag: "Технологии и инновации",
+               event_date: new Date("2023-09-14T16:00:00"),
       location: "Большой зал СДК ПГНИУ, 7 корп.",
       number_on_site: undefined,
       event_images: undefined,
@@ -43,7 +43,7 @@ function EventCard() {
     <Block className={"p-[0_!important]"}>
       <div className="flex flex-col w-full">
         <div className="flex relative flex-col w-full aspect-[2.13] ">
-          <div className="flex flex-col relative font-bold   ">
+          <div className="flex flex-col relative">
             <img
               loading="lazy"
               src={event.cover_image}
@@ -60,28 +60,28 @@ function EventCard() {
         </div>
 
         <div className="flex flex-col px-4 mt-4">
-          {/* <div className="flex gap-3 self-start text-sm text-center"> */}
-          {/*   <WatchIcon/> */}
-          {/*   <div className="my-auto ">2 ч. 30 м.</div> */}
-          {/* </div> */}
+           {/*<div className="flex gap-3 self-start c1 text-center">*/}
+           {/*  <WatchIcon/> */}
+           {/*  <div className="my-auto ">2 ч. 30 м.</div>*/}
+           {/*</div>*/}
 
           <h1 >{event.title}</h1>
           <div className="mt-3">
             <h2>
-              Начало: {event.event_date.toLocaleTimeString().slice(0, -3)}{" "}
+              Начало: {event.event_date.toLocaleTimeString("ru").slice(0, -3)}{" "}
             </h2>
             {/* <span className="text-base text-zinc-500">- 19:30</span> */}
           </div>
-          <h4 className="text-zinc-500">
+          <h4>
             {event.event_date.toLocaleString("ru", options) +
               ", " +
               days[event.event_date.getDay()]}
           </h4>
-          <p className="mt-4 b1 leading-4">
-            Место:<span className="font-medium"> {event.location}</span>
-          </p>
-          <h3 className="mt-2 leading-5">
-            Статус: <span className="text-zinc-500">Ожидание</span>
+          <h3 className="mt-4 leading-4">
+            Место:<span className="c1"> {event.location}</span>
+          </h3>
+          <h3 className="mt-2">
+            Статус: <span className="text-c_secondary dark:text-cd_secondary">Ожидание</span>
           </h3>
 
           <SignUpCard link={event.registration_link}/>

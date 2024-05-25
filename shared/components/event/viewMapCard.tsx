@@ -4,15 +4,15 @@ import Button from "../common/button";
 function ViewMapCard(props: any) {
     if (props.link) {
         return  (
-    <Button className="bg-gray-200 dark:bg-neutral-700 rounded-3xl dark:text-cd_bg items-center justify-center flex h-12 w-full"
-            onClick={() =>
-                window.open(props.link, '_blank')
-            }
-    >
-      <p className=" text-neutral-700 dark:text-c_bg text-xs font-bold">
-        Посмотреть на карте
-      </p>
-    </Button>
+            <Button className="bg-c_border dark:bg-cd_border rounded-3xl items-center justify-center flex h-12 w-full"
+                    onClick={() =>
+                        window.open(props.link, '_blank')
+                    }
+            >
+              <p className="text-c_sub dark:text-cd_main c3">
+                Посмотреть на карте
+              </p>
+            </Button>
         );
     }
 }
