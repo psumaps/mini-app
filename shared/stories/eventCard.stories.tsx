@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import eventCard from "../components/event/eventCard";
+import {reactRouterParameters, withRouter} from "storybook-addon-remix-react-router";
 
 
 const meta: Meta<typeof eventCard> = {
@@ -9,6 +10,15 @@ const meta: Meta<typeof eventCard> = {
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
+    decorators: [withRouter],
+    parameters: {
+      reactRouter: reactRouterParameters({
+        location: {
+          pathParams: { eventId: '101' },
+        },
+        routing: { path: '/event/:eventId' },
+      }),
+    },
   },
   argTypes: {
     organizer: {

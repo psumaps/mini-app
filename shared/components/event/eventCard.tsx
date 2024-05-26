@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { Event } from "../../models/event";
+import React from "react";
+import {useLoaderData} from "react-router-dom";
 
 import Block from "../common/block";
 import HeartButton from "../common/heartButton";
@@ -8,6 +8,7 @@ import SignUpCard from "./signupCard";
 import ViewMapCard from "./viewMapCard";
 import DetailsCard from "./detailsCard";
 import ContactsCard from "./contactsCard";
+
 const days = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
 const options = {
     month: "long",
@@ -16,7 +17,9 @@ const options = {
 };
 
 function EventCard() {
-  const event: Event = useMemo(
+    const {event} = useLoaderData();
+    event.event_date = new Date(event.event_date);
+    /*const event: Event = useMemo(
     () => ({
                organizer: "PSU-TOOLS TEAM",
                title: "Малая весна ПГНИУ",
@@ -36,7 +39,7 @@ function EventCard() {
     }),
 
     [],
-  );
+  );*/
     return (
         <Block className={"p-[0_!important]"}>
             <div className="flex flex-col w-full">
