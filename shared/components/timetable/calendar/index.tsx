@@ -20,7 +20,13 @@ import Button from "../../common/button";
 import CalendarIcon from "../../../assets/calendar.svg?react";
 import ResetIcon from "../../../assets/reset.svg?react";
 
-const CustomCalendar = ({ className, onChange }: { className?: string, onChange: (value: Value) => void }) => {
+const CustomCalendar = ({
+  className,
+  onChange,
+}: {
+  className?: string;
+  onChange: (value: Value) => void;
+}) => {
   const today = useMemo(() => new Date(), []);
   const [activeStartDate, setActiveStartDate] = useState(today);
   const [value, setValue] = useState<Value>(today);
@@ -28,8 +34,8 @@ const CustomCalendar = ({ className, onChange }: { className?: string, onChange:
   const [showNowDiv, setShowNowDiv] = useState(true);
   const [resetIconAnimation, setResetIconAnimation] = useState(false);
 
-  var activeInterval: NodeJS.Timeout;
-  var nowInterval: NodeJS.Timeout;
+  let activeInterval: NodeJS.Timeout;
+  let nowInterval: NodeJS.Timeout;
 
   const assignClasses = () => {
     const weekdayElements = nodes(`.${classWeekday}`);
@@ -116,8 +122,12 @@ const CustomCalendar = ({ className, onChange }: { className?: string, onChange:
   };
 
   const handleMinify = () => {
-    var nowDivFn: () => void;
-    var activeDivFn: () => void;
+    const nowDiv = node(`#${divNowId}`);
+    const activeDiv = node(`#${divActiveId}`);
+    if (!nowDiv || !activeDiv) return;
+
+    let nowDivFn: () => void;
+    let activeDivFn: () => void;
 
     if (isMinified) {
       nowDivFn = calculateNowDiv;
@@ -127,13 +137,19 @@ const CustomCalendar = ({ className, onChange }: { className?: string, onChange:
       activeDivFn = calculateActiveDivMinified;
     }
 
-    setTimeout(() => clearInterval(activeInterval), 300);
-    setTimeout(() => clearInterval(nowInterval), 300); // 300ms is the animation duration of calendar minification
+    // .transitionDuration returns seconds
+    const nowDuration =
+      parseFloat(window.getComputedStyle(nowDiv).transitionDuration) * 1000;
+    const activeDuration =
+      parseFloat(window.getComputedStyle(activeDiv).transitionDuration) * 1000;
+
+    setTimeout(() => clearInterval(activeInterval), activeDuration);
+    setTimeout(() => clearInterval(nowInterval), nowDuration);
     nowInterval = setInterval(nowDivFn, 10); // 100 fps
     activeInterval = setInterval(activeDivFn, 10);
     setIsMinified(!isMinified);
   };
-  
+
   return (
     <div className={`flex flex-col ${className}`}>
       <div className="fixed top-0 left-0 right-0 bottom-0 z-[-100]">
@@ -157,6 +173,7 @@ const CustomCalendar = ({ className, onChange }: { className?: string, onChange:
       <div className="flex flex-row justify-between w-[90%] mx-auto mb-1 items-center">
         <CalendarDropdown
           date={
+            // возвращаем дату или первую дату периода
             activeStartDate! instanceof Date
               ? activeStartDate
               : activeStartDate![0]!
