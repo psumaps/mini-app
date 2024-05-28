@@ -21,9 +21,10 @@ jobs:
 
 
       - name: Install Dependencies & Build web
-        working-directory: ./web
         run: |
-         npm run build
+          npm run build --prefix web
+        env:
+          VITE_PSU_TOOLS_KEY: ${{ secrets.VITE_PSU_TOOLS_KEY }}
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
