@@ -172,8 +172,8 @@ const CustomCalendar = ({ className, onChange }: { className?: string, onChange:
             {today.toLocaleDateString("ru-RU")}
           </h5>
           <svg
-            className={`w-4 h-4 fill-c_inactive dark:fill-cd_inactive transition-transform ${resetIconAnimation ? "rotate-[360deg] duration-500" : "duration-0"}`}
-            viewBox="0 0 14 17"
+            className={`w-5 h-5 fill-c_inactive dark:fill-cd_inactive transition-transform ${resetIconAnimation ? "rotate-[360deg] duration-500" : "duration-0"}`}
+            viewBox="-1 -1 16 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
