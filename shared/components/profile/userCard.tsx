@@ -31,7 +31,7 @@ function UserCard() {
 
   return (
     <Block>
-      <div>
+      <>
         <div className="container flex flex-row flex-nowrap items-center">
           <div className="rounded-half h-full w-auto">{icon}</div>
           <div className="mt-2 ml-2 mr-2 w-full">
@@ -47,7 +47,7 @@ function UserCard() {
           <h3 className="my-4 font-bold">О себе</h3>
           <p>{user.description}</p>
         </div>
-      </div>
+      </>
     </Block>
   );
 }
