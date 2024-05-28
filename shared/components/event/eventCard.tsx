@@ -1,5 +1,6 @@
 import React from "react";
 import {useLoaderData} from "react-router-dom";
+import {Event} from "../../models/event";
 
 import Block from "../common/block";
 import HeartButton from "../common/heartButton";
@@ -16,30 +17,9 @@ const options = {
     timezone: "UTC",
 };
 
-function EventCard() {
-    const {event} = useLoaderData();
-    event.event_date = new Date(event.event_date);
-    /*const event: Event = useMemo(
-    () => ({
-               organizer: "PSU-TOOLS TEAM",
-               title: "Малая весна ПГНИУ",
-               registration_close_datetime: undefined,
-               registration_link: "https://github.com/PSUMaps",
-               map_link: "https://github.com/PSUMaps",
-               cover_image:
-               "https://res.cloudinary.com/practicaldev/image/fetch/s--xG1gcsyJ--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://thepracticaldev.s3.amazonaws.com/i/h68x0up43hmknl5tjcww.jpg",
-               description:
-               "Присоединяйтесь к нам и прославите яркую энергию весны на нашем ежегодном университетском концерте «Малая весна». Целью этого мероприятия",
-               id: 106,
-               tag: "Технологии и инновации",
-               event_date: new Date("2023-09-14T16:00:00"),
-      location: "Большой зал СДК ПГНИУ, 7 корп.",
-      number_on_site: undefined,
-      event_images: undefined,
-    }),
-
-    [],
-  );*/
+function EventCard({ event }: { event: Event }) {
+    //const {event} = useLoaderData();
+    //event.event_date = new Date(event.event_date);
     return (
         <Block className={"p-[0_!important]"}>
             <div className="flex flex-col w-full">
@@ -48,7 +28,7 @@ function EventCard() {
                         <img
                             loading="lazy"
                             src={event.cover_image}
-                            className="object-cover size-full rounded-t-lg"
+                            className="object-cover h-[161px] rounded-t-lg"
                         />
                         {
                             (event.tag) ?
