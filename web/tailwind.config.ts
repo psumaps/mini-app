@@ -22,7 +22,7 @@ module.exports = {
       borderRadius: {
         half: '50%',
         fifty: '3.125rem',
-        forty: '2.5rem'
+        forty: '2.5rem',
       },
       fontSize: {
         xl_: '1.31rem',
@@ -43,6 +43,7 @@ module.exports = {
         'c_bg-secondary': '#DADADA1A',
         c_shadow: '#DFDFDF',
         c_border: '#EBEBEB',
+        c_textFilter: '#444444',
         'c_border-secondary': '#DADADA',
         // dark mode
         cd_main: '#FEFEFE',
