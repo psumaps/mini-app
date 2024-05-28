@@ -1,8 +1,8 @@
 import React from 'react';
-import HeaderBar from '~/widgets/headerBar.tsx';
-import Layout from '../../../../shared/components/common/layout.tsx';
-import NavigationBar from '~/widgets/navigationBar.tsx';
-import EventCard from '../../../../shared/components/timetable/eventCard.tsx';
+import HeaderBar from '~/widgets/headerBar';
+import Layout from '~/../../shared/components/common/layout';
+import NavigationBar from '~/widgets/navigationBar';
+import EventCard from '~/../../shared/components/event/eventCard.tsx';
 
 function EventDescription() {
   return (
