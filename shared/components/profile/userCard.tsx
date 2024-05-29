@@ -30,7 +30,8 @@ const UserCard = () => {
       // eslint-disable-next-line jsx-a11y/alt-text
       setIcon(<img className="w-28 h-28" src={s.photo_100} />);
     });
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Block>
