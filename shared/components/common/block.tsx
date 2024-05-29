@@ -1,6 +1,8 @@
-import React from "react";
+import React from 'react';
 
-function Block(props: React.HTMLAttributes<HTMLDivElement>) {
+const Block = (
+  props: React.HTMLAttributes<HTMLDivElement> & { className?: string },
+) => {
   const { children, className, ...rest } = props;
   return (
     <div
@@ -10,6 +12,6 @@ function Block(props: React.HTMLAttributes<HTMLDivElement>) {
       {children}
     </div>
   );
-}
+};
 
 export default Block;

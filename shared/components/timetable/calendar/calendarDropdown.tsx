@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react';
 import {
   monthRangeBackward,
   monthRangeForward,
   sliceMonths,
-} from "./calendarUtils";
+} from './calendarUtils';
 
 const CalendarDropdown = ({
   date,
@@ -25,11 +25,19 @@ const CalendarDropdown = ({
     }
 
     setIsOpen(!isOpen);
-    const { top, left, height } =
-      dropdownTargetRef.current?.getBoundingClientRect()!;
-    setTop(top);
-    setLeft(left);
-    setHeight(height);
+    const dropdownTarget = dropdownTargetRef.current;
+
+    if (dropdownTarget) {
+      const {
+        top: targetTop,
+        left: targetLeft,
+        height: targetHeight,
+      } = dropdownTarget.getBoundingClientRect();
+
+      setTop(targetTop);
+      setLeft(targetLeft);
+      setHeight(targetHeight);
+    }
   };
 
   return (
@@ -43,14 +51,14 @@ const CalendarDropdown = ({
         title="Сменить месяц"
       >
         <h5 className="c3 capitalize">
-          {`${date.getFullYear()} ${date.toLocaleDateString("ru-RU", { month: "long" })}`}
+          {`${date.getFullYear()} ${date.toLocaleDateString('ru-RU', { month: 'long' })}`}
         </h5>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          className={`w-3 h-3 stroke-c_main dark:stroke-cd_main ${isOpen ? "rotate-180" : ""}`}
+          className={`w-3 h-3 stroke-c_main dark:stroke-cd_main ${isOpen ? 'rotate-180' : ''}`}
         >
           <path
             strokeLinecap="round"
@@ -81,12 +89,12 @@ const CalendarDropdown = ({
                       ${
                         date.getMonth() - monthRangeBackward + i <
                         date.getMonth() + monthRangeForward
-                          ? ""
-                          : "rounded-b-xl"
+                          ? ''
+                          : 'rounded-b-xl'
                       }`}
                   type="button"
                   onClick={() => onSelect(index, year)}
-                  key={i}
+                  key={index}
                 >
                   <p
                     className={`b2 ${

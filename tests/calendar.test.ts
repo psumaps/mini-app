@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, test } from 'vitest';
 import {
   sliceMonths,
   getWeek,
@@ -6,9 +6,9 @@ import {
   monthRangeForward,
   calculateSide,
   calculateRectCenter,
-} from "../shared/components/timetable/calendar/calendarUtils";
+} from '../shared/components/timetable/calendar/calendarUtils';
 
-test("sliceMonths() without lock", () => {
+test('sliceMonths() without lock', () => {
   const cfg = {
     monthRangeForward,
     monthRangeBackward,
@@ -25,21 +25,21 @@ test("sliceMonths() without lock", () => {
       ? initial + monthRangeForward - 12
       : initial + monthRangeForward;
 
-  const slicedMay = sliceMonths(new Date("2024-05-01"), cfg);
+  const slicedMay = sliceMonths(new Date('2024-05-01'), cfg);
   expect(slicedMay).toHaveLength(expectedLength);
   expect(slicedMay[0].index).toBe(lowerMonth(4));
   expect(slicedMay[0].year).toBe(2024);
   expect(slicedMay[expectedLength - 1].index).toBe(upperMonth(4));
   expect(slicedMay[expectedLength - 1].year).toBe(2024);
 
-  const slicedJan = sliceMonths(new Date("2024-01-01"), cfg);
+  const slicedJan = sliceMonths(new Date('2024-01-01'), cfg);
   expect(slicedJan).toHaveLength(expectedLength);
   expect(slicedJan[0].index).toBe(lowerMonth(0));
   expect(slicedJan[0].year).toBe(2023);
   expect(slicedJan[expectedLength - 1].index).toBe(upperMonth(0));
   expect(slicedJan[expectedLength - 1].year).toBe(2024);
 
-  const slicedDec = sliceMonths(new Date("2024-12-01"), cfg);
+  const slicedDec = sliceMonths(new Date('2024-12-01'), cfg);
   expect(slicedDec).toHaveLength(expectedLength);
   expect(slicedDec[0].index).toBe(lowerMonth(11));
   expect(slicedDec[0].year).toBe(2024);
@@ -47,7 +47,7 @@ test("sliceMonths() without lock", () => {
   expect(slicedDec[expectedLength - 1].year).toBe(2025);
 });
 
-test("sliceMonths() with lock", () => {
+test('sliceMonths() with lock', () => {
   const fw = 2;
   const bw = 2;
   const cfg = {
@@ -67,57 +67,57 @@ test("sliceMonths() with lock", () => {
 
   const slicedToday = sliceMonths(new Date(), cfg);
   expect(slicedToday.length).toBe(
-    cfg.monthLockBackward + cfg.monthLockForward + 1
+    cfg.monthLockBackward + cfg.monthLockForward + 1,
   );
   expect(slicedToday[0].index).toBe(lowerMonth(new Date().getMonth()));
   expect(slicedToday[cfg.monthRangeBackward].year).toBe(
-    new Date().getFullYear()
+    new Date().getFullYear(),
   );
   expect(slicedToday[slicedToday.length - 1].index).toBe(
-    upperMonth(new Date().getMonth())
+    upperMonth(new Date().getMonth()),
   );
 });
 
-test("getWeek()", () => {
-  var week = getWeek(new Date("2024-05-01"));
+test('getWeek()', () => {
+  let week = getWeek(new Date('2024-05-01'));
   expect(week).toEqual([
-    new Date("2024-04-29 00:00:00"),
-    new Date("2024-05-05 23:59:59"),
+    new Date('2024-04-29 00:00:00'),
+    new Date('2024-05-05 23:59:59'),
   ]);
 
-  week = getWeek(new Date("2024-05-30"));
+  week = getWeek(new Date('2024-05-30'));
   expect(week).toEqual([
-    new Date("2024-05-27 00:00:00"),
-    new Date("2024-06-02 23:59:59"),
+    new Date('2024-05-27 00:00:00'),
+    new Date('2024-06-02 23:59:59'),
   ]);
 
-  week = getWeek(new Date("2024-05-16"));
+  week = getWeek(new Date('2024-05-16'));
   expect(week).toEqual([
-    new Date("2024-05-13 00:00:00"),
-    new Date("2024-05-19 23:59:59"),
+    new Date('2024-05-13 00:00:00'),
+    new Date('2024-05-19 23:59:59'),
   ]);
 
-  week = getWeek(new Date("2024-05-13"));
+  week = getWeek(new Date('2024-05-13'));
   expect(week).toEqual([
-    new Date("2024-05-13 00:00:00"),
-    new Date("2024-05-19 23:59:59"),
+    new Date('2024-05-13 00:00:00'),
+    new Date('2024-05-19 23:59:59'),
   ]);
 
-  week = getWeek(new Date("2024-05-12"));
+  week = getWeek(new Date('2024-05-12'));
   expect(week).toEqual([
-    new Date("2024-05-06 00:00:00"),
-    new Date("2024-05-12 23:59:59"),
+    new Date('2024-05-06 00:00:00'),
+    new Date('2024-05-12 23:59:59'),
   ]);
 });
 
-test("calculateRectCenter()", () => {
+test('calculateRectCenter()', () => {
   const rect = new DOMRect(0, 0, 100, 100);
   expect(calculateRectCenter(rect)).toEqual({ x: 50, y: 50 });
   rect.x = 100;
   expect(calculateRectCenter(rect)).toEqual({ x: 150, y: 50 });
 });
 
-test("calculateSide()", () => {
+test('calculateSide()', () => {
   const rect = new DOMRect(0, 0, 100, 100);
   expect(calculateSide(rect)).toBe(100); // когда стороны равны, возвращаем сторону
   rect.height = 200;

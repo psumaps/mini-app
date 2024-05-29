@@ -1,7 +1,7 @@
 /// <reference types="vite-plugin-svgr/client" />
-import React, { useState, useMemo, useEffect } from "react";
-import Calendar from "react-calendar";
-import CalendarDropdown from "./calendarDropdown";
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import Calendar from 'react-calendar';
+import CalendarDropdown from './calendarDropdown';
 import {
   Value,
   calculateActiveDiv,
@@ -14,18 +14,18 @@ import {
   divNowId,
   getWeek,
   weekdaysEqual,
-} from "./calendarUtils";
-import { nodes, node } from "../../../utils/selector";
-import Button from "../../common/button";
-import CalendarIcon from "../../../assets/calendar.svg?react";
-import ResetIcon from "../../../assets/reset.svg?react";
+} from './calendarUtils';
+import { nodes, node } from '../../../utils/selector';
+import Button from '../../common/button';
+import CalendarIcon from '../../../assets/calendar.svg?react';
+import ResetIcon from '../../../assets/reset.svg?react';
 
 const CustomCalendar = ({
   className,
   onChange,
 }: {
   className?: string;
-  onChange: (value: Value) => void;
+  onChange?: (value: Value) => void;
 }) => {
   const today = useMemo(() => new Date(), []);
   const [activeStartDate, setActiveStartDate] = useState(today);
@@ -34,10 +34,10 @@ const CustomCalendar = ({
   const [showNowDiv, setShowNowDiv] = useState(true);
   const [resetIconAnimation, setResetIconAnimation] = useState(false);
 
-  let activeInterval: NodeJS.Timeout;
-  let nowInterval: NodeJS.Timeout;
+  let activeInterval: NodeJS.Timeout | null = null;
+  let nowInterval: NodeJS.Timeout | null = null;
 
-  const assignClasses = () => {
+  const assignClasses = useCallback(() => {
     const weekdayElements = nodes(`.${classWeekday}`);
     weekdayElements.forEach((el) => {
       if (weekdaysEqual(el, value as Date) && isMinified)
@@ -52,9 +52,9 @@ const CustomCalendar = ({
         el.classList.add(`${classWeekday}--now-minified`);
       else el.classList.remove(`${classWeekday}--now-minified`);
     });
-  };
+  }, [isMinified, today, value]);
 
-  const manageDivs = () => {
+  const manageDivs = useCallback(() => {
     const tileNow = node(`.${classTile}--now`);
     const tileActive = node(`.${classTile}--active`);
     const weekdayNow = node(`.${classWeekday}--now-minified`);
@@ -63,7 +63,7 @@ const CustomCalendar = ({
     if (tileNow) {
       if (weekdayNow) {
         if (!showNowDiv) setShowNowDiv(true);
-        clearInterval(nowInterval);
+        if (nowInterval) clearInterval(nowInterval);
         calculateNowDivMinified();
       } else if (isMinified) setShowNowDiv(false);
       else {
@@ -76,34 +76,34 @@ const CustomCalendar = ({
 
     if (tileActive) {
       if (weekdayActive) {
-        clearInterval(activeInterval);
+        if (activeInterval) clearInterval(activeInterval);
         calculateActiveDivMinified();
       } else calculateActiveDiv();
     }
 
     if (tileActive === tileNow) setShowNowDiv(false);
-  };
+  }, [activeInterval, isMinified, nowInterval, showNowDiv]);
 
   useEffect(() => {
     assignClasses();
     manageDivs();
-  }, [value, isMinified]);
+  }, [value, isMinified, assignClasses, manageDivs]);
 
   const tileClassName = ({ date }: { date: Date }) => {
-    if (!isMinified) return "";
+    if (!isMinified) return '';
     const week = getWeek(value as Date);
     const curr = new Date(date);
     curr.setSeconds(1); // 00:00:00 != 00:00:00 for some reason
     if (week[0] <= curr && week[1] >= curr)
       return `${classTile}--showed-minified`;
-    return "translate-y-[-100%] opacity-0 h-[0_!important] p-[0_!important]";
+    return 'translate-y-[-100%] opacity-0 h-[0_!important] p-[0_!important]';
   };
 
-  const handleChange = (value: Value) => {
-    if (!(value instanceof Date)) setValue(value?.at[0]);
-    else setValue(value);
+  const handleChange = (newValue: Value) => {
+    if (!(newValue instanceof Date)) setValue(newValue?.at(0) as Date);
+    else setValue(newValue);
 
-    onChange(value);
+    if (onChange) onChange(newValue);
   };
 
   const handleSelect = (month: number, year: number) => {
@@ -143,8 +143,8 @@ const CustomCalendar = ({
     const activeDuration =
       parseFloat(window.getComputedStyle(activeDiv).transitionDuration) * 1000;
 
-    setTimeout(() => clearInterval(activeInterval), activeDuration);
-    setTimeout(() => clearInterval(nowInterval), nowDuration);
+    setTimeout(() => clearInterval(activeInterval!), activeDuration);
+    setTimeout(() => clearInterval(nowInterval!), nowDuration);
     nowInterval = setInterval(nowDivFn, 10); // 100 fps
     activeInterval = setInterval(activeDivFn, 10);
     setIsMinified(!isMinified);
@@ -155,11 +155,11 @@ const CustomCalendar = ({
       <div className="fixed top-0 left-0 right-0 bottom-0 z-[-100]">
         <div
           id={divNowId}
-          className={`absolute border-2 border-solid border-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20 -translate-y-5" : "-translate-y-1/2"} ${showNowDiv ? "opacity-100" : "opacity-0"}`}
+          className={`absolute border-2 border-solid border-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? 'h-20 -translate-y-5' : '-translate-y-1/2'} ${showNowDiv ? 'opacity-100' : 'opacity-0'}`}
         />
         <div
           id={divActiveId}
-          className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2  z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? "h-20 -translate-y-5" : "-translate-y-1/2"}`}
+          className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2  z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? 'h-20 -translate-y-5' : '-translate-y-1/2'}`}
         />
       </div>
       <Button
@@ -174,9 +174,9 @@ const CustomCalendar = ({
         <CalendarDropdown
           date={
             // возвращаем дату или первую дату периода
-            activeStartDate! instanceof Date
+            activeStartDate instanceof Date
               ? activeStartDate
-              : activeStartDate![0]!
+              : activeStartDate[0]
           }
           onSelect={handleSelect}
         />
@@ -187,10 +187,10 @@ const CustomCalendar = ({
           title="Сбросить дату"
         >
           <h5 className="c3 text-c_inactive dark:text-cd_inactive">
-            {today.toLocaleDateString("ru-RU")}
+            {today.toLocaleDateString('ru-RU')}
           </h5>
           <ResetIcon
-            className={`w-5 h-5 fill-c_inactive dark:fill-cd_inactive transition-transform ${resetIconAnimation ? "rotate-[360deg] duration-500" : "duration-0"}`}
+            className={`w-5 h-5 fill-c_inactive dark:fill-cd_inactive transition-transform ${resetIconAnimation ? 'rotate-[360deg] duration-500' : 'duration-0'}`}
           />
         </button>
       </div>

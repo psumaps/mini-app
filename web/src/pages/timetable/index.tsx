@@ -4,7 +4,7 @@ import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-function Timetable() {
+const Timetable = () => {
   return (
     <>
       <HeaderBar pageName="Расписание" />
@@ -15,6 +15,6 @@ function Timetable() {
       <NavigationBar />
     </>
   );
-}
+};
 
 export default Timetable;
