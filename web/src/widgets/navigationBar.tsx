@@ -8,7 +8,7 @@ import TimetableIcon from 'psumaps-frontend/shared/assets/timetable.svg?react';
 import AccountIcon from 'psumaps-frontend/shared/assets/account.svg?react';
 import Storage from '~/app/storage';
 
-function NavigationBar() {
+const NavigationBar = () => {
   const location = useLocation();
 
   useEffect(() => {
@@ -40,6 +40,6 @@ function NavigationBar() {
       </a>
     </div>
   );
-}
+};
 
 export default NavigationBar;

@@ -1,5 +1,3 @@
-import { afterEach } from 'vitest'
+import { afterEach } from 'vitest';
 
-afterEach(() => {
-
-});
+afterEach(() => {});

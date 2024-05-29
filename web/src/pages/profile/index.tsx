@@ -8,7 +8,7 @@ import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 import Storage from '~/app/storage';
 
-function ProfilePage() {
+const ProfilePage = () => {
   return (
     <div className="h-[92vh]">
       {/* nav is 8vh */}
@@ -24,6 +24,6 @@ function ProfilePage() {
       <NavigationBar />
     </div>
   );
-}
+};
 
 export default ProfilePage;

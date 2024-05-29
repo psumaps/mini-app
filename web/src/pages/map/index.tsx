@@ -1,24 +1,30 @@
 import React from 'react';
-import Map, { GeolocateControl, NavigationControl, useControl } from 'react-map-gl/maplibre';
+import Map, {
+  GeolocateControl,
+  NavigationControl,
+  useControl,
+} from 'react-map-gl/maplibre';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 
 import NavigationBar from '~/widgets/navigationBar';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual.ts';
 
-function IndoorControl() {
+const IndoorControl = () => {
   useControl(
     (context: MapContextValue) => {
       // @ts-expect-error no types for this
-      const indoorEqual = new IndoorEqual(context.map.getMap(), { url: 'https://tiles.ijo42.ru/' });
+      const indoorEqual = new IndoorEqual(context.map.getMap(), {
+        url: 'https://tiles.ijo42.ru/',
+      });
       void indoorEqual.loadSprite({ update: true });
       return indoorEqual;
     },
     { position: 'bottom-right' },
   );
   return null;
-}
-function MapPage() {
+};
+const MapPage = () => {
   return (
     <>
       <Map
@@ -38,6 +44,6 @@ function MapPage() {
       <NavigationBar />
     </>
   );
-}
+};
 
 export default MapPage;
