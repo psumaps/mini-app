@@ -30,15 +30,12 @@ const EventCard = ({ event }: { event: Event }) => {
               className="object-cover h-40 rounded-t-lg"
               alt=""
             />
-            {event.tag ? (
+            {event.tag && (
               <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
                 <p className="c3 text-white text-center text-wrap">
                   {event.tag}
                 </p>
               </div>
-            ) : (
-              // eslint-disable-next-line react/jsx-no-useless-fragment
-              <></>
             )}
 
             <div className="absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2">
