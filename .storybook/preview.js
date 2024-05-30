@@ -1,6 +1,5 @@
 import { withThemeByClassName } from "@storybook/addon-themes";
 import '../web/src/tw.css';
-import {MemoryRouter} from "react-router-dom";
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
@@ -21,12 +20,7 @@ export const decorators = [
       dark: "dark",
     },
     defaultTheme: "light",
-  }),
-  (Story) => (
-      <MemoryRouter initialEntries={['/']}>
-        <Story />
-      </MemoryRouter>
-  ),
+  })
 ];
 
 export default preview;

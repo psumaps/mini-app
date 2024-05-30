@@ -12,7 +12,6 @@ const config = {
     "@storybook/addon-interactions",
     "@storybook/addon-themes",
     'storybook-addon-mock',
-    'storybook-addon-remix-react-router'
   ],
   framework: {
     name: "@storybook/react-vite",
