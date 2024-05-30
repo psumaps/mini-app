@@ -2,6 +2,7 @@
   "name": "psumaps-frontend",
   "version": "0.2.0",
   "description": "Client applications of PSU Maps",
+  "type":"module",
   "scripts": {
     "web": "concurrently --kill-others \"npm run dev --prefix web\" \"npm run tailwind:watch --prefix web\"",
     "native": "npm start --prefix native",
