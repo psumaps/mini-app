@@ -28,11 +28,6 @@ const MapPage = () => {
   return (
     <>
       <Map
-
-
-
-
-
         initialViewState={{
           latitude: 58.007469,
           longitude: 56.187188,
