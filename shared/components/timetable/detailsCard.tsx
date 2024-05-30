@@ -1,13 +1,13 @@
 import React from 'react';
 import Button from '../common/button';
 
-const DetailsCard = (props: any) => {
-  if (!props.link) return <div className="mt-3" />;
+const DetailsCard = ({ link }: { link?: string }) => {
+  if (!link) return <div className="mt-3" />;
   return (
     <Button
       className="mt-5"
       onClick={() => {
-        window.open(props.link, '_blank');
+        window.open(link, '_blank');
       }}
     >
       <h5 className="underline">Подробности мероприятия</h5>

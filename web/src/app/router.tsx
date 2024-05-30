@@ -22,8 +22,8 @@ const router = createBrowserRouter([
   {
     path: '/event/:eventId',
     element: <EventDescription />,
-    loader: ({ params }) =>
-      fetch(`https://psu-tools.ru/api/v2/events/${params.eventId}`),
+    loader: ({ eventId }: { eventId: string }) =>
+      fetch(`https://psu-tools.ru/api/v2/events/${eventId}`),
   },
 ]);
 

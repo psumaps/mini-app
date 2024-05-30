@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLoaderData } from 'react-router-dom';
 import { Event } from '../../models/event';
 
 import Block from '../common/block';
@@ -11,10 +10,10 @@ import DetailsCard from './detailsCard';
 import ContactsCard from './contactsCard';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
-const options = {
+const options: Intl.DateTimeFormatOptions = {
   month: 'long',
   day: 'numeric',
-  timezone: 'UTC',
+  timeZone: 'UTC',
 };
 
 const EventCard = ({ event }: { event: Event }) => {
@@ -29,6 +28,7 @@ const EventCard = ({ event }: { event: Event }) => {
               loading="lazy"
               src={event.cover_image}
               className="object-cover h-40 rounded-t-lg"
+              alt=""
             />
             {event.tag ? (
               <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
@@ -37,6 +37,7 @@ const EventCard = ({ event }: { event: Event }) => {
                 </p>
               </div>
             ) : (
+              // eslint-disable-next-line react/jsx-no-useless-fragment
               <></>
             )}
 

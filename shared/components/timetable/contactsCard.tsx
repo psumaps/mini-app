@@ -2,7 +2,7 @@
 import React from 'react';
 import AvatarIcon from '../../assets/avatar.svg?react';
 
-const ContactsCard = (props: any) => {
+const ContactsCard = ({ organizer }: { organizer?: string }) => {
   return (
     <div>
       <h2 className="mt-7">Контакты:</h2>
@@ -11,7 +11,7 @@ const ContactsCard = (props: any) => {
         <AvatarIcon className="fill-c_main dark:fill-cd_main" />
         <div className="mx-2">
           <p className="mt-2 mb-1 c1 font-bold">Организатор</p>
-          <p className="c1">{props.organizer ?? 'Неизвестно'}</p>
+          <p className="c1">{organizer ?? 'Неизвестно'}</p>
         </div>
       </div>
     </div>

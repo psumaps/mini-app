@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import HeartIcon from '../../assets/heart.svg?react';
 import Button from './button';
 
-const HeartButton = (props: { person: any }) => {
-  const [active, setActive] = useState(props.person);
+const HeartButton = ({ person }: { person: boolean }) => {
+  const [active, setActive] = useState(person);
   return (
     <Button
       className={`h-10 w-10 rounded-full hover:scale-110 ${active ? 'bg-red-600 dark:bg-red-600' : ''}`}
