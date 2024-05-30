@@ -1,0 +1,43 @@
+name: Linting
+
+on:
+  pull_request:
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      - run: npm ci
+      - name: Get file changes
+        id: get_file_changes
+        uses: trilom/file-changes-action@v1.2.3
+        with:
+          output: ' '
+
+      - name: Echo file changes
+        id: hello
+        run: |
+          echo Added files: ${{ steps.get_file_changes.outputs.files_added }}
+          echo Changed files: ${{ steps.get_file_changes.outputs.files_modified }}
+          echo Removed files: ${{ steps.get_file_changes.outputs.files_removed }}
+
+      - name: Prettier Checking
+        if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
+        run: npx prettier --config ./.prettierrc  ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --fix
+
+      - name: ESLint Checking
+        if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
+        run: npx eslint --config ./.eslintrc.cjs --ignore-path ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --fix
+
+      - name: Commit changes
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: 'refactor: apply formating'
+      #           branch: ${{ github.head_ref }}
