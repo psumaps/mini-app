@@ -17,8 +17,6 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 const EventCard = ({ event }: { event: Event }) => {
-  // const {event} = useLoaderData();
-  // event.event_date = new Date(event.event_date);
   return (
     <Block className="p-[0_!important]">
       <div className="flex flex-col w-full">
@@ -74,7 +72,7 @@ const EventCard = ({ event }: { event: Event }) => {
           </h3>
 
           <SignUpCard link={event.registration_link} />
-          <ViewMapCard link={event.map_link} />
+          {event.map_link && <ViewMapCard link={event.map_link} />}
           <DetailsCard link={event.registration_link} />
 
           <h2 className="mt-6">О мероприятии:</h2>
