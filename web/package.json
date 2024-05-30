@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite --host",
     "build": "npm run tailwind && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --host",
     "tailwind": "npx tailwindcss -i ../shared/tailwind/index.css -o ./src/tw.css",
     "tailwind:watch": "npm run tailwind -- --watch"
