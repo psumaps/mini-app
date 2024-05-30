@@ -4,7 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import ProfilePage from '~/pages/profile';
 import MapPage from '~/pages/map';
 import TimetablePage from '~/pages/timetable';
-import EventDescription from '~/pages/event-description';
+import EventDescription from '~/pages/timetable/eventDescription.tsx';
 
 const router = createBrowserRouter([
   {

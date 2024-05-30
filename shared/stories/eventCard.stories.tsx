@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import eventCard from "../components/event/eventCard";
+import eventCard from "../components/timetable/eventCard";
 //import {reactRouterParameters, withRouter} from "storybook-addon-remix-react-router";
 
 

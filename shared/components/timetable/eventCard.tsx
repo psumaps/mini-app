@@ -28,7 +28,7 @@ function EventCard({ event }: { event: Event }) {
                         <img
                             loading="lazy"
                             src={event.cover_image}
-                            className="object-cover h-[161px] rounded-t-lg"
+                            className="object-cover h-40 rounded-t-lg"
                         />
                         {
                             (event.tag) ?

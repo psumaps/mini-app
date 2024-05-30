@@ -1,6 +1,7 @@
 import React from "react";
 import AvatarIcon from "../../assets/avatar.svg?react";
 
+
 function ContactsCard(props: any, ) {
   return (
     <div>
@@ -8,7 +9,7 @@ function ContactsCard(props: any, ) {
       <h3 className="mt-1">Организаторы/ спикеры</h3>
       <div className="container flex flex-row flex-nowrap items-center pb-1.5">
           <AvatarIcon className="fill-c_main dark:fill-cd_main" />
-          <div className=" ml-2 mr-2">
+          <div className="mx-2">
               <p className="mt-2 mb-1 c1 font-bold">
                   Организатор
               </p>
