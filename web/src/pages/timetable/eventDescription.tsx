@@ -1,19 +1,19 @@
 import React from 'react';
-import HeaderBar from '~/widgets/headerBar';
 import Layout from '~/../../shared/components/common/layout';
+import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 import EventCard from '~/../../shared/components/event/eventCard.tsx';
 
-function EventDescription() {
+const EventDescription = () => {
   return (
     <>
-      <HeaderBar pageName={'Мероприятие'} />
+      <HeaderBar pageName="Мероприятие" />
       <Layout>
         <EventCard />
       </Layout>
       <NavigationBar />
     </>
   );
-}
+};
 
 export default EventDescription;
