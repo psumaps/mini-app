@@ -1,0 +1,50 @@
+name: Linting
+
+on:
+  pull_request:
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      - run: npm ci
+      - name: Get file changes
+        id: get_file_changes
+        uses: trilom/file-changes-action@v1.2.3
+        with:
+          output: ' '
+
+      - name: Echo file changes
+        id: hello
+        run: |
+          echo Added files: ${{ steps.get_file_changes.outputs.files_added }}
+          echo Changed files: ${{ steps.get_file_changes.outputs.files_modified }}
+          echo Removed files: ${{ steps.get_file_changes.outputs.files_removed }}
+
+      - name: Prettier Checking
+        if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
+        run: npx prettier --config ./.prettierrc  ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --write
+
+      - name: ESLint Checking
+        if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
+        run: npx eslint --config ./.eslintrc.cjs ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --fix
+
+      - name: Commit changes
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          # Optional. Commit message for the created commit.
+          # Defaults to "Apply automatic changes"
+          commit_message: 'refactor: apply formating'
+
+          # Optional. Options used by `git-commit`.
+          # See https://git-scm.com/docs/git-commit#_options
+          commit_options: '--no-verify --signoff'
+          # Optional commit user and author settings
+          commit_author: Actions <actions@github.com> # defaults to "username <username@users.noreply.github.com>", where "username" belongs to the author of the commit that triggered the run

@@ -8,7 +8,7 @@
     "native": "npm start --prefix native",
     "storybook": "concurrently --kill-others \"npm run tailwind:watch --prefix web\" \"storybook dev -p 6006\"",
     "build-storybook": "storybook build",
-    "test": "vitest",
+    "test": "vitest --run",
     "lint-staged": "lint-staged",
     "prepare": "husky"
   },
