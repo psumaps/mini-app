@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '~/../../shared/components/common/layout';
 
 import EventCard from '~/../../shared/components/timetable/eventCard.tsx';
-import useLoaderData from '~/../../shared/utils/routerLoader.ts';
+import useLoaderData from '~/utils/routerLoader.ts';
 import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 import { Event } from '~/models/event';
