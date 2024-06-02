@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import userCard from '../components/profile/userCard';
+import settingsCard from '../components/profile/settingsCard';
 
-const meta: Meta<typeof userCard> = {
+const meta: Meta<typeof settingsCard> = {
   title: 'Profile/User card',
-  component: userCard,
+  component: settingsCard,
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout

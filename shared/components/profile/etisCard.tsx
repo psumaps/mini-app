@@ -1,13 +1,15 @@
 import React from 'react';
+import Button from '../common/button';
 
 const EtisCard = () => {
   return (
-    <button
-      type="button"
-      className="bg-c_main dark:bg-cd_main rounded-3xl text-c_bg dark:text-cd_bg items-center justify-center flex h-12 w-full my-4"
+    <Button
+      className="rounded-3xl h-12 w-full my-4 c1"
+      isContrast
+      onClick={() => window.open('https://ya.ru/', '_blank')}
     >
-      <p className="c1 text-c_bg dark:text-cd_bg">Привязать профиль ЕТИС</p>
-    </button>
+      Привязать профиль ЕТИС
+    </Button>
   );
 };
 
