@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo } from 'react';
 
 export interface CheckboxProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -10,7 +10,7 @@ const CheckableText = (props: CheckboxProps) => {
   const {
     name,
     label,
-    classNameLabel = "c3  text-[0.688rem] rounded-2xl px-4 py-[0.469rem] leading-[0.838rem]",
+    classNameLabel = 'c3  text-[0.688rem] rounded-2xl px-4 py-[0.469rem] leading-[0.838rem]',
     id = useMemo(() => `${name}_${(Math.random() * 100).toFixed(0)}`, [name]),
     ...rest
   } = props;
@@ -33,7 +33,7 @@ const CheckableText = (props: CheckboxProps) => {
       <label
         htmlFor={id}
         onClick={handleCheckboxChange}
-        className={` ${classNameLabel}  ${isChecked ? "bg-c_accent border-c_accent border-2 text-cd_textHeader" : "bg-transparent border-2 border-c_secondary text-c_secondary"}`}
+        className={` ${classNameLabel}  ${isChecked ? 'bg-c_accent border-c_accent border-2 text-cd_textHeader' : 'bg-transparent border-2 border-c_secondary text-c_secondary'}`}
       >
         {label}
       </label>
