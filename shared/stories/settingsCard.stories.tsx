@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import settingsCard from '../components/profile/settingsCard';
+import settingsCard from '../components/settings/settingsCard';
 
 const meta: Meta<typeof settingsCard> = {
-  title: 'Profile/User card',
+  title: 'Settings/Settings card',
   component: settingsCard,
   tags: ['autodocs'],
   parameters: {

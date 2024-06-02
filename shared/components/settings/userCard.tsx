@@ -7,8 +7,8 @@ import Block from '../common/block';
 const UserCard = () => {
   const user: User = useMemo(
     () => ({
-      name: 'Иван',
-      lastname: 'Иванов',
+      name: 'Имя',
+      lastname: 'Фамилия',
       patronymic: 'Иванович',
       status: 'Студент',
       major: 'ИКНТ ПМИ-1 2023',
@@ -32,12 +32,12 @@ const UserCard = () => {
   }, []);
 
   return (
-    <Block>
-      <div className="container flex flex-row flex-nowrap items-center">
-        <div className="rounded-half h-full w-auto">{icon}</div>
-        <div className="mt-2 ml-2 mr-2 w-full">
+    <Block className="shadow-[none_!important] dark:shadow-[none_!important] p-[0_!important]">
+      <div className="container flex flex-row p-1">
+        <div>{icon}</div>
+        <div className="mt-2 w-full p-3">
           <h2>
-            {user.lastname} {user.name}
+            {user.name} {user.lastname}
           </h2>
           <h4 className="mt-2 mb-1">{user.status}</h4>
           <h5>{user.major}</h5>

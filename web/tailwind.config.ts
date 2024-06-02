@@ -22,7 +22,7 @@ module.exports = {
       borderRadius: {
         half: '50%',
         fifty: '3.125rem',
-        forty: '2.5rem'
+        forty: '2.5rem',
       },
       fontSize: {
         xl_: '1.31rem',
@@ -46,11 +46,12 @@ module.exports = {
         'c_border-secondary': '#DADADA',
         // dark mode
         cd_main: '#FEFEFE',
+        cd_telegram: '#323232',
         cd_secondary: '#979797',
         cd_inactive: '#626262',
         cd_textHeader: '#FFFFFF',
-        cd_bg: '#282828',
-        'cd_bg-block': '#202020',
+        cd_bg: '#121212',
+        'cd_bg-block': '#222222',
         'cd_bg-secondary': '#2525251A',
         cd_shadow: '#262626',
         cd_border: '#383838',
