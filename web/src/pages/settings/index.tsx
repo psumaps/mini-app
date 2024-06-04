@@ -1,10 +1,10 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
 import React from 'react';
+import SettingsCard from 'psumaps-frontend/shared/components/settings/settingsCard.tsx';
 import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
-import SettingsCard from '~/components/settings/settingsCard.tsx';
 
-const ProfilePage = () => {
+const SettingsPage = () => {
   return (
     <div className="h-[92vh]">
       {/* nav is 8vh */}
@@ -16,4 +16,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default SettingsPage;

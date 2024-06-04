@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import getStoredTheme from 'psumaps-frontend/shared/utils/readTheme';
 import MapIcon from 'psumaps-frontend/shared/assets/map.svg?react';
 import TimetableIcon from 'psumaps-frontend/shared/assets/timetable.svg?react';
-import AccountIcon from 'psumaps-frontend/shared/assets/account.svg?react';
+import SettingsIcon from 'psumaps-frontend/shared/assets/settings.svg?react';
 import Storage from '~/app/storage';
 
 const NavigationBar = () => {
@@ -32,8 +32,8 @@ const NavigationBar = () => {
       <a href="/" aria-label="Карта">
         <MapIcon className={fill('/')} />
       </a>
-      <a href="/profile" aria-label="Профиль">
-        <AccountIcon className={fill('/profile')} />
+      <a href="/settings" aria-label="Настройки">
+        <SettingsIcon className={fill('/settings')} />
       </a>
       <a href="/timetable" aria-label="Расписание">
         <TimetableIcon className={fill('/timetable')} />
