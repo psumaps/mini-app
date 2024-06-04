@@ -1,4 +1,3 @@
-// @ts-expect-error no types for this
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
@@ -57,6 +56,7 @@ module.exports = {
         cd_shadow: '#262626',
         cd_border: '#383838',
         'cd_border-secondary': '#545454',
+        cd_sub: '#CCCCCC',
       },
     },
   },
