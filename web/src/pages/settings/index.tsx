@@ -8,7 +8,7 @@ const SettingsPage = () => {
   return (
     <div className="h-[92vh]">
       {/* nav is 8vh */}
-      <HeaderBar pageName="Профиль" />
+      <HeaderBar pageName="Настройки" />
       <SettingsCard />
 
       <NavigationBar />
