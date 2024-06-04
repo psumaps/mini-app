@@ -30,7 +30,7 @@ const SettingsCard = () => {
       </Button>
 
       <Button
-        className="absolute bottom-16 rounded-3xl h-12 w-[90%] c1"
+        className="absolute bottom-14 rounded-3xl h-12 w-[90%] c1"
         onClick={() => window.open('https://t.me/psumaps', '_blank')}
       >
         Сообщить об ошибке
