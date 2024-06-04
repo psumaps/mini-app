@@ -1,18 +1,17 @@
 import React from 'react';
-// eslint-disable-next-line import/no-relative-packages
-import Storage from '../../../web/src/app/storage';
 import UserCard from './userCard';
 import Layout from '../common/layout';
 import ThemeSwitch from '../common/themeSwitch';
 import Button from '../common/button.tsx';
+import IStorage from '../../models/storage';
 
-const SettingsCard = () => {
+const SettingsCard = ({ storage }: { storage: IStorage }) => {
   return (
     <Layout>
       <UserCard />
       <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
         Темная тема
-        <ThemeSwitch storage={new Storage()} />
+        <ThemeSwitch storage={storage} />
       </div>
       <Button
         className="rounded-3xl h-12 w-full mt-5 c3"
