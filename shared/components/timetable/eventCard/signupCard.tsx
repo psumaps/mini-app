@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../common/button';
+import Button from '../../common/button.tsx';
 
 const SignUpCard = ({ link }: { link?: string }) => {
   if (!link) return <div className="mt-7" />;

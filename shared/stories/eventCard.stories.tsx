@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import eventCard from '../components/timetable/eventCard';
-// import {reactRouterParameters, withRouter} from "storybook-addon-remix-react-router";
 
 const meta: Meta<typeof eventCard> = {
   title: 'Event-description/Event card',
@@ -36,7 +35,7 @@ export const Default: Story = {
     },
   },
 };
-export const Default2: Story = {
+export const LongTag: Story = {
   args: {
     event: {
       organizer: 'PSU-TOOLS TEAM',

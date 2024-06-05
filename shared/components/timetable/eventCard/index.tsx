@@ -1,13 +1,13 @@
-import React from 'react';
-import { Event } from '../../models/event';
+import React, { useMemo } from 'react';
+import { Event } from '~/models/event.ts';
 
-import Block from '../common/block';
-import HeartButton from '../common/heartButton';
-import ShareButton from '../common/shareButton';
-import SignUpCard from './signupCard';
-import ViewMapCard from './viewMapCard';
-import DetailsCard from './detailsCard';
-import ContactsCard from './contactsCard';
+import Block from '../../common/block.tsx';
+import HeartButton from './heartButton.tsx';
+import ShareButton from './shareButton.tsx';
+import SignUpCard from './signupCard.tsx';
+import ViewMapCard from './viewMapCard.tsx';
+import DetailsCard from './detailsCard.tsx';
+import ContactsCard from './contactsCard.tsx';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const options: Intl.DateTimeFormatOptions = {
@@ -17,10 +17,15 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 const EventCard = ({ event }: { event: Event }) => {
+  const day = useMemo(
+    () =>
+      `${event.event_date.toLocaleString('ru', options)}, ${days.at(event.event_date.getDay())}`,
+    [event.event_date],
+  );
   return (
     <Block className="p-[0_!important]">
       <div className="flex flex-col w-full">
-        <div className="flex relative flex-col w-full aspect-[2.13] ">
+        <div className="flex relative flex-col w-full">
           <div className="flex flex-col relative">
             <img
               loading="lazy"
@@ -37,7 +42,7 @@ const EventCard = ({ event }: { event: Event }) => {
             )}
 
             <div className="absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2">
-              <HeartButton person={false} />
+              <HeartButton active={false} />
               <ShareButton id={event.id} />
             </div>
           </div>
@@ -56,11 +61,7 @@ const EventCard = ({ event }: { event: Event }) => {
             </h2>
             {/* <span className="text-base text-zinc-500">- 19:30</span> */}
           </div>
-          <h4>
-            {`${event.event_date.toLocaleString('ru', options)}, ${
-              days[event.event_date.getDay()]
-            }`}
-          </h4>
+          <h4>{day}</h4>
           <h3 className="mt-4 leading-4">
             Место:<span className="c1"> {event.location}</span>
           </h3>
