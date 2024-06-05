@@ -8,7 +8,7 @@ import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 
 import NavigationBar from '~/widgets/navigationBar';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual.ts';
+import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 
 const IndoorControl = () => {
   useControl(

@@ -64,5 +64,16 @@ module.exports = {
     'jsx-a11y/no-static-element-interactions': 'off',
     'no-use-before-define': 'off', // bugs out
     '@typescript-eslint/no-use-before-define': 'off',
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "": "never",
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
   },
 };
