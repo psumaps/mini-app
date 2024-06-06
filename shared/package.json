@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "description": "Shared components for psumaps-frontend",
   "scripts": {
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "author": "psumaps team",
   "license": "MPL-2.0",

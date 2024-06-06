@@ -7,6 +7,7 @@
     "web": "concurrently --kill-others \"npm run dev --prefix web\" \"npm run tailwind:watch --prefix web\"",
     "native": "npm start --prefix native",
     "storybook": "concurrently --kill-others \"npm run tailwind:watch --prefix web\" \"npm run storybook --prefix shared\"",
+    "build-storybook": "npm run build-storybook --prefix shared",
     "test": "vitest --run",
     "lint-staged": "lint-staged",
     "prepare": "husky"
