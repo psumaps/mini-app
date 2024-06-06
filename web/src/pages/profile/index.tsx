@@ -1,9 +1,9 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
 import React from 'react';
-import EtisCard from 'psumaps-frontend/shared/components/profile/etisCard';
-import UserCard from 'psumaps-frontend/shared/components/profile/userCard';
-import Layout from 'psumaps-frontend/shared/components/common/layout';
-import ThemeSwitch from 'psumaps-frontend/shared/components/common/themeSwitch';
+import EtisCard from 'psumaps-shared/src/components/profile/etisCard';
+import UserCard from 'psumaps-shared/src/components/profile/userCard';
+import Layout from 'psumaps-shared/src/components/common/layout';
+import ThemeSwitch from 'psumaps-shared/src/components/common/themeSwitch';
 import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 import Storage from '~/app/storage';

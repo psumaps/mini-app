@@ -23,6 +23,6 @@
       "~/*": ["./shared/*", "./tests/*", "./web/src/*", "./native/src/*"]
     }
   },
-  "include": ["shared", "tests", "web/src", "native/src", "tailwind.config.ts"],
+  "include": ["shared/src", "tests", "web/src", "native/src", "tailwind.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
