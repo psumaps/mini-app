@@ -1,24 +1,24 @@
+import React from 'react';
+import { StoryFn, Meta, StoryObj } from '@storybook/react';
 import Checkable, {
   CheckableProps,
   Radio,
-  Checkbox
-} from "../components/common/checkable";
-import React from "react";
-import { StoryFn, Meta, StoryObj } from "@storybook/react";
+  Checkbox,
+} from '../components/common/checkable';
 
 const meta = {
-  title: "Common/Checkable",
+  title: 'Common/Checkable',
   component: Checkable,
   // @ts-expect-error subcomonents are supported badly
   subcomponents: { Radio, Checkbox },
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     type: {
-      options: ["radio", "checkbox"],
-      control: { type: "radio" },
+      options: ['radio', 'checkbox'],
+      control: { type: 'radio' },
     },
   },
 } satisfies Meta<typeof Checkable>;
@@ -26,25 +26,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const args: CheckableProps = {
-  name: "Checkable",
-  label: "Радио ",
-  type: "radio",
+const commonArgs: CheckableProps = {
+  name: 'Checkable',
+  label: 'Радио ',
+  type: 'radio',
 };
 
 export const DefaultRadio: Story = {
   render: (args) => <Radio {...args} />,
   args: {
-    type: "radio",
+    type: 'radio',
   },
-}
+};
 
 export const DefaultCheckbox: Story = {
   render: (args) => <Checkbox {...args} />,
   args: {
-    type: "checkbox",
-  }
-}
+    type: 'checkbox',
+  },
+};
 
 const PairTemplate: StoryFn<CheckableProps> = (args) => (
   <div className="flex flex-col gap-4">
@@ -54,7 +54,7 @@ const PairTemplate: StoryFn<CheckableProps> = (args) => (
 );
 
 export const Pair = PairTemplate.bind({});
-Pair.args = args;
+Pair.args = commonArgs;
 
 const TwoPairsTemplate: StoryFn<CheckableProps> = (args) => {
   const { name, label, ...rest } = args;
@@ -69,4 +69,4 @@ const TwoPairsTemplate: StoryFn<CheckableProps> = (args) => {
 };
 
 export const TwoPairs = TwoPairsTemplate.bind({});
-TwoPairs.args = args;
+TwoPairs.args = commonArgs;

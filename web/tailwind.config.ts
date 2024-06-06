@@ -23,6 +23,7 @@ module.exports = {
         half: '50%',
         fifty: '3.125rem',
         forty: '2.5rem',
+        forty: '2.5rem',
       },
       fontSize: {
         xl_: '1.31rem',
@@ -52,8 +53,9 @@ module.exports = {
         cd_bg: '#282828',
         'cd_bg-block': '#202020',
         'cd_bg-secondary': '#2525251A',
-        cd_border: '#141414',
         cd_shadow: '#262626',
+        cd_border: '#383838',
+        'cd_border-secondary': '#545454',
       },
     },
   },

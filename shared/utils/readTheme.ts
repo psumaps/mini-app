@@ -1,14 +1,16 @@
-import IStorage from "../models/storage";
+import IStorage from '../models/storage';
 
-async function getStoredTheme<T extends IStorage>(storage: T): Promise<boolean> {
-  const theme: string = await storage.get("theme") ?? "";
+async function getStoredTheme<T extends IStorage>(
+  storage: T,
+): Promise<boolean> {
+  const theme: string = (await storage.get('theme')) ?? '';
   switch (theme) {
-    case "dark":
+    case 'dark':
       return true;
-    case "light":
+    case 'light':
       return false;
     default:
-      return await storage.isDarkPreffered();
+      return storage.isDarkPreffered();
   }
 }
 

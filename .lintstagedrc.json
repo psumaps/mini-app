@@ -1,0 +1,10 @@
+{
+  "*.css": [
+    "prettier --write"
+  ],
+  "*.{ts,tsx}": [
+    "prettier --write",
+    "eslint --ignore-path .gitignore --fix",
+    "vitest related --run"
+  ]
+}

@@ -1,6 +1,8 @@
-import React from "react";
+import React from 'react';
 
-function Line(props: React.HTMLAttributes<HTMLHRElement>) {
+const Line = (
+  props: React.HTMLAttributes<HTMLHRElement> & { className?: string },
+) => {
   const { className, ...rest } = props;
   return (
     <hr
@@ -8,6 +10,6 @@ function Line(props: React.HTMLAttributes<HTMLHRElement>) {
       {...rest}
     />
   );
-}
+};
 
 export default Line;

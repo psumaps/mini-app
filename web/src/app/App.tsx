@@ -7,12 +7,12 @@ import '@fontsource/montserrat/500.css';
 import router from '~/app/router.tsx';
 import '~/tw.css';
 
-function App() {
+const App = () => {
   return (
     <div>
       <RouterProvider router={router} />
     </div>
   );
-}
+};
 
 export default App;

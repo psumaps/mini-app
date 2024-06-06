@@ -20,9 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./shared/*", "./tests/*", "./web/src/*", "./native/src/*"]
     }
   },
-  "include": ["src", "tailwind.config.ts"],
+  "include": ["shared", "tests", "web/src", "native/src", "tailwind.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
