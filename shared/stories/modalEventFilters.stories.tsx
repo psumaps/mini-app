@@ -1,9 +1,9 @@
 /// <reference types="vite-plugin-svgr/client" />
 import type { Meta, StoryObj } from '@storybook/react';
-import Modal from '../../web/src/pages/modal/modal';
+import Modal from '../components/modal/modal';
 import Button from '../../shared/components/common/button';
 import FilterIcon from '../assets/filter.svg?react';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 const meta = {
   title: 'modal/Modal',
@@ -23,15 +23,56 @@ type Story = StoryObj<typeof meta>;
 
 export function ModalEventFilter() {
   const [modalActive, setModalActive] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState(0);
+
+  const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newCheckedState = event.target.checked;
+    if (newCheckedState) {
+      setSelectedFilters(selectedFilters + 1);
+    } else {
+      setSelectedFilters(selectedFilters - 1);
+    }
+  };
+
   return (
     <div>
       <div>
         <Button
-          className={`h-10 w-10 rounded-forty `}
+          className={`h-10 w-10 rounded-forty ${
+            selectedFilters > 0
+              ? ' bg-red-600 fill-white dark:bg-red-600 dark:fill-white'
+              : 'bg-cd_main'
+          }`}
           children={<FilterIcon />}
           onClick={() => setModalActive(true)}
         ></Button>
-        <Modal active={modalActive} setActive={setModalActive} />
+        <Modal
+          active={modalActive}
+          setActive={setModalActive}
+          filtersData={[
+            {
+              name: 'Вид мероприятия',
+              values: [
+                'Собрание клуба',
+                'Концерт',
+                'Фестиваль',
+                'Лекция',
+                'Вид мероприятия',
+                'Выставка',
+              ],
+            },
+            {
+              name: 'Для кого',
+              values: ['Для студентов', 'Для всех', 'Для гостей'],
+            },
+            { name: 'Когда', values: ['Утро', 'День', 'Вечер'] },
+            {
+              name: 'Статус',
+              values: ['Ожидание', 'В самом разгаре', 'Прошедшее'],
+            },
+          ]}
+          onFilterChange={handleFilterChange}
+        />
       </div>
     </div>
   );
