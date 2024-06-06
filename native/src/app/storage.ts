@@ -1,5 +1,5 @@
 import { Appearance } from 'react-native';
-import IStorage from '~/../../shared/models/storage';
+import IStorage from '~/src/models/storage';
 import { default as ExpoStorage } from 'expo-storage';
 
 class Storage implements IStorage {
