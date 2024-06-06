@@ -1,9 +1,9 @@
 /// <reference types="vite-plugin-svgr/client" />
 import type { Meta, StoryObj } from '@storybook/react';
-import Modal from '../components/modal/modal';
-import Button from '../../shared/components/common/button';
-import FilterIcon from '../assets/filter.svg?react';
 import React, { ChangeEvent, useState } from 'react';
+import Modal from '../components/modal/modal';
+import Button from '../components/common/button';
+import FilterIcon from '../assets/filter.svg?react';
 
 const meta = {
   title: 'modal/Modal',
@@ -21,7 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export function ModalEventFilter() {
+export const ModalEventFilter = () => {
   const [modalActive, setModalActive] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState(0);
 
@@ -45,7 +45,7 @@ export function ModalEventFilter() {
           }`}
           children={<FilterIcon />}
           onClick={() => setModalActive(true)}
-        ></Button>
+        />
         <Modal
           active={modalActive}
           setActive={setModalActive}
@@ -76,4 +76,4 @@ export function ModalEventFilter() {
       </div>
     </div>
   );
-}
+};
