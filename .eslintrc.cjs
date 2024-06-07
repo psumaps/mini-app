@@ -19,6 +19,7 @@ module.exports = {
     'native',
     '**/*.svg',
     '**/*.json',
+    'global.d.ts',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
