@@ -76,5 +76,6 @@ module.exports = {
         "tsx": "never"
       }
     ],
+    "@typescript-eslint/no-namespace": 'off',
   },
 };
