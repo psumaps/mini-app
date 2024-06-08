@@ -8,42 +8,40 @@ import 'dotenv/config';
 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 const client = {
   timetable: {
     getFaculties: async (): Promise<Faculty[]> => {
-      return axios
-        .get(`${api.psuTools}/v1/faculties?apiKey=${process.env.PSU_TOOLS_KEY}`)
-        .then((response) => response.data);
+      const response = await axios.get(
+        `${api.psuTools}/v1/faculties?apiKey=${process.env.PSU_TOOLS_KEY}`,
+      );
+      return response.data;
     },
     getGroups: async (facultyId: number): Promise<GroupResponse[]> => {
-      return axios
-        .get(
-          `${api.psuTools}/v1/groups?facultyId=${facultyId}&apiKey=${process.env.PSU_TOOLS_KEY}`,
-        )
-        .then((response) => response.data);
+      const response = await axios.get(
+        `${api.psuTools}/v1/groups?facultyId=${facultyId}&apiKey=${process.env.PSU_TOOLS_KEY}`,
+      );
+      return response.data;
     },
     getGroupTimetable: async (
       groupId: number,
       weekNumber: number,
     ): Promise<GroupTimetable> => {
-      return axios
-        .get(
-          `${api.psuTools}/v1/timetable?groupId=${groupId}&weekNumber=${weekNumber}&apiKey=${process.env.PSU_TOOLS_KEY}`,
-        )
-        .then((response) => response.data);
+      const response = await axios.get(
+        `${api.psuTools}/v1/timetable?groupId=${groupId}&weekNumber=${weekNumber}&apiKey=${process.env.PSU_TOOLS_KEY}`,
+      );
+      return response.data;
     },
   },
   events: {
     getEvents: async (): Promise<Event[]> => {
-      return axios
-        .get(`${api.psuTools}/v2/events`)
-        .then((response) => response.data.events);
+      const response = await axios.get(`${api.psuTools}/v2/events`);
+      return response.data.events;
     },
     getFilters: async (): Promise<Filter[]> => {
-      return axios
-        .get(`${api.psuTools}/v2/filters`)
-        .then((response) => response.data);
+      const response = await axios.get(`${api.psuTools}/v2/filters`);
+      return response.data;
     },
   },
 };
