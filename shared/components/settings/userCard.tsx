@@ -9,11 +9,8 @@ const UserCard = () => {
     () => ({
       name: 'Имя',
       lastname: 'Фамилия',
-      patronymic: 'Иванович',
       status: 'Студент',
       major: 'ИКНТ ПМИ-1 2023',
-      description:
-        'Секретарь профбюро физического факультета, член СНО, волонтёр, член Ордена рыцарей сцены',
     }),
     [],
   );
@@ -26,7 +23,7 @@ const UserCard = () => {
       user.name = s.first_name;
       user.lastname = s.last_name;
       // eslint-disable-next-line jsx-a11y/alt-text
-      setIcon(<img className="w-28 h-28" src={s.photo_100} />);
+      setIcon(<img className="w-28 h-28" src={s.photo_100} alt="" />);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

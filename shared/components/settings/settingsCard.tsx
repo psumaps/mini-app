@@ -2,7 +2,7 @@ import React from 'react';
 import UserCard from './userCard';
 import Layout from '../common/layout';
 import ThemeSwitch from '../common/themeSwitch';
-import Button from '../common/button.tsx';
+import Button from '../common/button';
 import IStorage from '../../models/storage';
 
 const SettingsCard = ({ storage }: { storage: IStorage }) => {

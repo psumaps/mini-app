@@ -1,6 +1,6 @@
-import 'maplibre-gl/dist/maplibre-gl.css';
+import 'maplibre-gl/dist/maplibre-gl';
 import React from 'react';
-import SettingsCard from 'psumaps-frontend/shared/components/settings/settingsCard.tsx';
+import SettingsCard from 'psumaps-frontend/shared/components/settings/settingsCard';
 import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 import Storage from '~/app/storage';
