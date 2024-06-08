@@ -3,12 +3,12 @@ import { Polygon, Position } from 'geojson';
 export default interface Poi {
   geometry: Polygon | Position;
   properties: {
-    class?: unknown;
+    class?: string; // should be room|corridor|area
     id: string;
     indoor?: number;
     level?: string;
     name: string;
-    ref?: unknown;
+    ref?: string; // room number
     subclass?: string;
     tags: {
       amenity?: string;
