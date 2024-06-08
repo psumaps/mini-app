@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '~/../../shared/components/common/layout';
 
 import EventCard from 'psumaps-frontend/shared/components/timetable/eventCard';
-import useLoaderData from '~/utils/routerLoader.ts';
+import useLoaderData from '~/utils/routerLoader';
 import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 import { Event } from '~/models/event';

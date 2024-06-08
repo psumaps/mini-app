@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../../common/button.tsx';
+import Button from '../../common/button';
 
 const ViewMapCard = ({ link }: { link?: string }) => {
   return (

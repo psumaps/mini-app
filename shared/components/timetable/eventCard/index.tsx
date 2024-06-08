@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
-import { Event } from '~/models/event.ts';
+import { Event } from '~/models/event';
 
-import Block from '../../common/block.tsx';
-import HeartButton from './heartButton.tsx';
-import ShareButton from './shareButton.tsx';
-import SignUpCard from './signupCard.tsx';
-import ViewMapCard from './viewMapCard.tsx';
-import DetailsCard from './detailsCard.tsx';
-import ContactsCard from './contactsCard.tsx';
+import Block from '../../common/block';
+import HeartButton from './heartButton';
+import ShareButton from './shareButton';
+import SignUpCard from './signupCard';
+import ViewMapCard from './viewMapCard';
+import DetailsCard from './detailsCard';
+import ContactsCard from './contactsCard';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const options: Intl.DateTimeFormatOptions = {
@@ -23,28 +23,24 @@ const EventCard = ({ event }: { event: Event }) => {
     [event.event_date],
   );
   return (
-    <Block className="p-[0_!important]">
+    <Block className="p-[0_!important] ">
       <div className="flex flex-col w-full">
-        <div className="flex relative flex-col w-full">
-          <div className="flex flex-col relative">
-            <img
-              loading="lazy"
-              src={event.cover_image}
-              className="object-cover h-40 rounded-t-lg"
-              alt=""
-            />
-            {event.tag && (
-              <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
-                <p className="c3 text-white text-center text-wrap">
-                  {event.tag}
-                </p>
-              </div>
-            )}
-
-            <div className="absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2">
-              <HeartButton active={false} />
-              <ShareButton id={event.id} />
+        <div className="flex relative flex-col ">
+          <img
+            loading="lazy"
+            src={event.cover_image}
+            className="object-cover h-40 rounded-t-lg "
+            alt=""
+          />
+          {event.tag && (
+            <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
+              <p className="c3 text-white text-center text-wrap">{event.tag}</p>
             </div>
+          )}
+
+          <div className="absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2">
+            <HeartButton active={false} />
+            <ShareButton id={event.id} />
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import HeartIcon from '../../../assets/heart.svg?react';
-import Button from '../../common/button.tsx';
+import Button from '../../common/button';
 
 const HeartButton = ({ active }: { active: boolean }) => {
   const [isActive, setIsActive] = useState(active);

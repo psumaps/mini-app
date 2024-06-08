@@ -1,7 +1,7 @@
 import React from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import LinkIcon from '../../../assets/link.svg?react';
-import Button from '../../common/button.tsx';
+import Button from '../../common/button';
 
 const ShareButton = ({ id }: { id: number }) => {
   const handleClick = () => {
