@@ -27,7 +27,7 @@
     <a href="https://vk.com/molcentre_psu">
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="shared/assets/ypc-icon.svg">
-          <img src="shared/assets/ypc-icon.svg" alt="PSUMaps" width="120" />
+          <img src="shared/assets/ypc-icon.svg" alt="Центр молодёжной политики ПГНИУ" width="120" />
         </picture>
     </a>
 </p>

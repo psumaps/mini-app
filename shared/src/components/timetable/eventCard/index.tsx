@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Event } from '~/models/event';
+import { Event } from '../../../models/event';
 
 import Block from '../../common/block';
 import HeartButton from './heartButton';

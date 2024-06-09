@@ -1,4 +1,4 @@
-import IStorage from 'psumaps-frontend/shared/models/storage';
+import IStorage from 'psumaps-shared/src/models/storage';
 
 /* eslint-disable @typescript-eslint/require-await */
 

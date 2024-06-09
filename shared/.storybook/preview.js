@@ -1,5 +1,5 @@
-import { withThemeByClassName } from '@storybook/addon-themes';
-import '../web/src/tw.css';
+import { withThemeByClassName } from "@storybook/addon-themes";
+import '../../web/src/tw.css';
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
@@ -16,10 +16,10 @@ const preview = {
 export const decorators = [
   withThemeByClassName({
     themes: {
-      light: 'light',
-      dark: 'dark',
+      light: "light",
+      dark: "dark",
     },
-    defaultTheme: 'light',
+    defaultTheme: "light",
   }),
 ];
 

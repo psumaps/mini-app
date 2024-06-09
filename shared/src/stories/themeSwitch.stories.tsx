@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 // eslint-disable-next-line import/no-relative-packages
-import Storage from '../../web/src/app/storage';
+import Storage from '../../../web/src/app/storage';
 import ThemeSwitch from '../components/common/themeSwitch';
 
 const meta: Meta<typeof ThemeSwitch> = {

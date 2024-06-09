@@ -1,11 +1,11 @@
 import React from 'react';
-import Layout from '~/../../shared/components/common/layout';
+import Layout from 'psumaps-shared/src/components/common/layout';
 
-import EventCard from 'psumaps-frontend/shared/components/timetable/eventCard';
+import EventCard from 'psumaps-shared/src/components/timetable/eventCard';
+import { Event } from 'psumaps-shared/src/models/event';
 import useLoaderData from '~/utils/routerLoader';
 import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
-import { Event } from '~/models/event';
 
 const EventDescription = () => {
   const event = useLoaderData<Event>();
