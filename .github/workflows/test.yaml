@@ -21,4 +21,7 @@ jobs:
 
       - name: Testing Storybook UI
         if: always()
-        run: npm run tailwind --prefix web && npm run build-storybook
+        run: |
+          npm run tailwind --prefix web 
+          cd shared && npm ci
+          npm run build-storybook

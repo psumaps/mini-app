@@ -2,10 +2,10 @@
 
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import getStoredTheme from 'psumaps-frontend/shared/utils/readTheme';
-import MapIcon from 'psumaps-frontend/shared/assets/map.svg?react';
-import TimetableIcon from 'psumaps-frontend/shared/assets/timetable.svg?react';
-import SettingsIcon from 'psumaps-frontend/shared/assets/settings.svg?react';
+import getStoredTheme from 'psumaps-shared/src/utils/readTheme';
+import MapIcon from 'psumaps-shared/src/assets/map.svg?react';
+import TimetableIcon from 'psumaps-shared/src/assets/timetable.svg?react';
+import SettingsIcon from 'psumaps-shared/src/assets/settings.svg?react';
 import Storage from '~/app/storage';
 
 const NavigationBar = () => {

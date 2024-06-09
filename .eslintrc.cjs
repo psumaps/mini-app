@@ -10,7 +10,16 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-type-checked',
     'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'tailwind.config.ts', 'vite.config.ts', 'mapbox-gl-indoorequal', 'native'],
+  ignorePatterns: [
+    'dist',
+    '.eslintrc.cjs',
+    'tailwind.config.ts',
+    'vite.config.ts',
+    'mapbox-gl-indoorequal',
+    'native',
+    '**/*.svg',
+    '**/*.json',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -19,9 +28,12 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier'],
   rules: {
-    'no-void': "off",
+    'no-void': 'off',
     'class-methods-use-this': 'off',
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
     'import/no-extraneous-dependencies': [
       'error',
       {
@@ -29,25 +41,39 @@ module.exports = {
       },
     ],
     'import/extensions': ['off'],
-    "prettier/prettier": [
-      "error",
+    'prettier/prettier': [
+      'error',
       {
-        "endOfLine": "auto"
+        endOfLine: 'auto',
+      },
+    ],
+    'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
+    'no-underscore-dangle': ['error', { allowAfterThis: true }],
+    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
+    'react/jsx-props-no-spreading': 'off',
+    'react/function-component-definition': [
+      'error',
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function',
+      },
+    ],
+    'react/require-default-props': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off', // since the app is mobile-first
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'no-use-before-define': 'off', // bugs out
+    '@typescript-eslint/no-use-before-define': 'off',
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "": "never",
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
       }
     ],
-    'func-style': ['error', 'declaration', { 'allowArrowFunctions': true }],
-    "no-underscore-dangle":  ["error", { "allowAfterThis": true }],
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "react/jsx-props-no-spreading": "off",
-    "react/function-component-definition": ["error", {
-      "namedComponents": "arrow-function",
-      "unnamedComponents": "arrow-function"
-    }],
-    "react/require-default-props": "off",
-    "jsx-a11y/click-events-have-key-events": "off", // since the app is mobile-first
-    "jsx-a11y/no-noninteractive-element-interactions": "off",
-    "jsx-a11y/no-static-element-interactions": "off",
-    "no-use-before-define": "off", // bugs out
-    "@typescript-eslint/no-use-before-define": "off",
   },
 };
