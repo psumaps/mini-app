@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import settingsCard from '../components/settings/settingsCard';
-// eslint-disable-next-line import/no-relative-packages
-import Storage from '../../web/src/app/storage';
+import Storage from '../../../web/src/app/storage';
 
 const meta: Meta<typeof settingsCard> = {
   title: 'Settings/Settings card',
