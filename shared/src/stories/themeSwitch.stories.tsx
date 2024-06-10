@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Storage from '../../../web/src/app/storage';
+import Storage from 'psumaps-miniapp/src/app/storage';
 import ThemeSwitch from '../components/common/themeSwitch';
 
 const meta: Meta<typeof ThemeSwitch> = {
