@@ -22,7 +22,6 @@ const UserCard = () => {
     void bridge.send('VKWebAppGetUserInfo').then((s) => {
       user.name = s.first_name;
       user.lastname = s.last_name;
-      // eslint-disable-next-line jsx-a11y/alt-text
       setIcon(<img className="w-28 h-28" src={s.photo_100} alt="" />);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
