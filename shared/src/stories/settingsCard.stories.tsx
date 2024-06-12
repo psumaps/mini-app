@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Storage from 'psumaps-miniapp/src/app/storage';
+// eslint-disable-next-line import/no-relative-packages
+import Storage from '../../../web/src/app/storage';
 import settingsCard from '../components/settings/settingsCard';
 
 const meta: Meta<typeof settingsCard> = {
