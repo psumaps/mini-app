@@ -29,7 +29,7 @@ const EventCard = ({ event }: { event: Event }) => {
           <img
             loading="lazy"
             src={event.cover_image}
-            className="object-cover h-40 rounded-t-lg "
+            className="object-cover w-full aspect-video max-h-[35vh] rounded-t-lg"
             alt=""
           />
           {event.tag && (
