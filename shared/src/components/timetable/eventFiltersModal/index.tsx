@@ -32,9 +32,7 @@ const Modal = (props: ModalProps) => {
           : 'opacity-0 pointer-events-none translate-y-full '
       }`}
     >
-      <div
-        className={`bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_#DDDDDD] dark:shadow-[0_0px_0.6rem_0px_#262626] transition-opacity duration-300 ease-in-out overflow-y-auto`}
-      >
+      <div className="bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_#DDDDDD] dark:shadow-[0_0px_0.6rem_0px_#262626] transition-opacity duration-300 ease-in-out overflow-y-auto">
         <div className="flex pr-4 pl-4 pb-[2.4rem]">
           <h2 className="pt-0.5 mx-auto c_textHeader dark:text-cd_main">
             Фильтры
