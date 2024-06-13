@@ -19,6 +19,7 @@ module.exports = {
     'native',
     '**/*.svg',
     '**/*.json',
+    'global.d.ts',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -75,5 +76,6 @@ module.exports = {
         "tsx": "never"
       }
     ],
+    "@typescript-eslint/no-namespace": 'off',
   },
 };
