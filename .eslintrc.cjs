@@ -19,6 +19,7 @@ module.exports = {
     'native',
     '**/*.svg',
     '**/*.json',
+    'global.d.ts',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -64,5 +65,17 @@ module.exports = {
     'jsx-a11y/no-static-element-interactions': 'off',
     'no-use-before-define': 'off', // bugs out
     '@typescript-eslint/no-use-before-define': 'off',
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "": "never",
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "@typescript-eslint/no-namespace": 'off',
   },
 };
