@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 import type { Meta, StoryObj } from '@storybook/react';
-import Modal from '../components/timetable/modal/modal';
+import Modal from '../components/timetable/modal/eventFiltersModal';
 import Button from '../components/common/button';
 import FilterIcon from '../assets/filter.svg?react';
 import React, { ChangeEvent, useCallback, useState } from 'react';
