@@ -19,7 +19,7 @@ const CheckableText = (props: CheckboxProps) => {
     id,
     onChange,
     isChecked = false,
-    classNameLabel = 'c3  text-[0.688rem] rounded-2xl px-4 py-[0.469rem] leading-[0.838rem]',
+    classNameLabel = ' c3  text-[0.7rem] rounded-2xl px-4 py-[0.5rem] leading-[0.8rem]',
     ...rest
   } = props;
 

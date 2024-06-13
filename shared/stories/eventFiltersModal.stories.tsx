@@ -1,7 +1,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 import type { Meta, StoryObj } from '@storybook/react';
-import Modal from '../components/modal/modal';
-import Button from '../../shared/components/common/button';
+import Modal from '../components/timetable/modal/modal';
+import Button from '../components/common/button';
 import FilterIcon from '../assets/filter.svg?react';
 import React, { ChangeEvent, useCallback, useState } from 'react';
 
@@ -19,9 +19,8 @@ const meta = {
 } satisfies Meta<typeof Modal>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export function ModalEventFilter() {
+export function EventFiltersModal() {
   const [modalActive, setModalActive] = useState(false);
   const [filters, setFilters] = useState([
     {
@@ -29,9 +28,9 @@ export function ModalEventFilter() {
       name: 'Вид мероприятия',
       values: [
         { id: 'meeting', value: 'Собрание клуба', isChecked: false },
-        { id: 'concert', value: 'Концерт', isChecked: false },
+        { id: 'concert', value: 'Концерт', isChecked: true },
         { id: 'festival', value: 'Фестиваль', isChecked: false },
-        { id: 'lecture', value: 'Лекция', isChecked: false },
+        { id: 'lecture', value: 'Лекция', isChecked: true },
         { id: 'event-type-other', value: 'Вид мероприятия', isChecked: false },
         { id: 'exhibition', value: 'Выставка', isChecked: false },
       ],

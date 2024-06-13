@@ -1,9 +1,9 @@
 /// <reference types="vite-plugin-svgr/client" />
 import React, { ChangeEvent } from 'react';
-import Button from '../common/button';
-import CheckableText from '../common/checkableText';
-import Line from '../common/line';
-import CrossIcon from '../../../shared/assets/cross.svg?react';
+import Button from '../../common/button';
+import CheckableText from '../../common/checkableText';
+import Line from '../../common/line';
+import CrossIcon from '../../../assets/cross.svg?react';
 
 interface Filter {
   id: string;
@@ -22,19 +22,20 @@ interface ModalProps {
   ) => void;
 }
 
-const Modal = ({ active, setActive, filters, setFilters }: ModalProps) => {
+const Modal = (props: ModalProps) => {
+  const { active, setActive, filters, setFilters } = props;
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center transition-transform duration-300 ${
+      className={` px-1 fixed inset-0 flex items-center justify-center transition-transform duration-300 ${
         active
           ? 'opacity-100 translate-y-0 '
           : 'opacity-0 pointer-events-none translate-y-full '
       }`}
     >
       <div
-        className={`bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_10px_0px_#DDDDDD] dark:shadow-[0_0px_10px_0px_#262626] transition-opacity duration-300 ease-in-out overflow-y-auto`}
+        className={`bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_#DDDDDD] dark:shadow-[0_0px_0.6rem_0px_#262626] transition-opacity duration-300 ease-in-out overflow-y-auto`}
       >
-        <div className="flex pr-4 pl-4 pb-[2.375rem]">
+        <div className="flex pr-4 pl-4 pb-[2.4rem]">
           <h2 className="pt-0.5 mx-auto c_textHeader dark:text-cd_main">
             Фильтры
           </h2>
@@ -63,7 +64,7 @@ const Modal = ({ active, setActive, filters, setFilters }: ModalProps) => {
             </div>
             {filter.id !== filters[filters.length - 1].id && (
               <div className="flex pb-4 pt-6 ml-[-1rem] mr-[-1rem]">
-                <Line className="border-[0.031rem]" />
+                <Line className="border-[0.03rem]" />
               </div>
             )}
           </div>
