@@ -1,24 +1,28 @@
 /// <reference types="vite-plugin-svgr/client" />
-
 import React, { ChangeEvent } from 'react';
 import Button from '../common/button';
 import CheckableText from '../common/checkableText';
 import Line from '../common/line';
 import CrossIcon from '../../../shared/assets/cross.svg?react';
 
+interface Filter {
+  id: string;
+  name: string;
+  values: { id: string; value: string; isChecked: boolean }[];
+}
+
 interface ModalProps {
   active: boolean;
   setActive: (active: boolean) => void;
-  filtersData: { name: string; values: string[] }[];
-  onFilterChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  filters: Filter[];
+  setFilters: (
+    event: ChangeEvent<HTMLInputElement>,
+    filterId: string,
+    valueId: string,
+  ) => void;
 }
 
-const Modal = ({
-  active,
-  setActive,
-  filtersData,
-  onFilterChange,
-}: ModalProps) => {
+const Modal = ({ active, setActive, filters, setFilters }: ModalProps) => {
   return (
     <div
       className={`fixed inset-0 flex items-center justify-center transition-transform duration-300 ${
@@ -40,21 +44,24 @@ const Modal = ({
             className="pt-1 float-left bg-inherit"
           />
         </div>
-        {filtersData.map(({ name, values }, index) => (
-          <div key={name}>
+        {filters.map((filter) => (
+          <div key={filter.id}>
             <div className="c4 pb-4 text-c_textFilter dark:text-cd_main">
-              {name}
+              {filter.name}
             </div>
             <div className="flex gap-x-1.5 gap-y-4 flex-wrap">
-              {values.map((value, valueIndex) => (
+              {filter.values.map((value) => (
                 <CheckableText
-                  key={valueIndex}
-                  label={value}
-                  onChange={onFilterChange}
+                  key={value.id}
+                  filterId={filter.id}
+                  valueId={value.id}
+                  label={value.value}
+                  isChecked={value.isChecked}
+                  onChange={setFilters}
                 />
               ))}
             </div>
-            {index < filtersData.length - 1 && (
+            {filter.id !== filters[filters.length - 1].id && (
               <div className="flex pb-4 pt-6 ml-[-1rem] mr-[-1rem]">
                 <Line className="border-[0.031rem]" />
               </div>

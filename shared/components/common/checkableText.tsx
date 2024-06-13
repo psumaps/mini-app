@@ -1,44 +1,50 @@
-import React, { useState, useMemo, ChangeEvent } from 'react';
+import React, { ChangeEvent, useMemo, useCallback } from 'react';
 
 export interface CheckboxProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  filterId: string;
+  valueId: string;
   label?: string;
+  isChecked?: boolean;
   classNameLabel?: string;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: ChangeEvent<HTMLInputElement>, ...args: any[]) => void;
 }
 
 const CheckableText = (props: CheckboxProps) => {
   const {
+    filterId,
+    valueId,
     name,
     label,
     id,
     onChange,
+    isChecked = false,
     classNameLabel = 'c3  text-[0.688rem] rounded-2xl px-4 py-[0.469rem] leading-[0.838rem]',
     ...rest
   } = props;
-  const [isChecked, setIsChecked] = useState(false);
 
   const inputId = useMemo(
     () => id || `${name}_${(Math.random() * 100).toFixed(0)}`,
     [name, id],
   );
 
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newCheckedState = event.target.checked;
-    setIsChecked(newCheckedState);
-    if (onChange) {
-      onChange(event);
-    }
-  };
+  const handleCheckboxChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (onChange) {
+        onChange(event, filterId, valueId);
+      }
+    },
+    [onChange, filterId, valueId],
+  );
 
   const handleLabelClick = () => {
-    const mockEvent = {
+    handleCheckboxChange({
       target: {
         checked: !isChecked,
       },
-    } as ChangeEvent<HTMLInputElement>;
-    handleCheckboxChange(mockEvent);
+    } as ChangeEvent<HTMLInputElement>);
   };
+
   return (
     <div className="flex items-center">
       <input
@@ -53,7 +59,11 @@ const CheckableText = (props: CheckboxProps) => {
       <label
         htmlFor={id}
         onClick={handleLabelClick}
-        className={` ${classNameLabel}  ${isChecked ? 'bg-c_accent border-c_accent border-2 text-cd_textHeader' : 'bg-transparent border-2 border-c_secondary text-c_secondary'}`}
+        className={` ${classNameLabel}  ${
+          isChecked
+            ? 'bg-c_accent border-c_accent border-2 text-cd_textHeader'
+            : 'bg-transparent border-2 border-c_secondary text-c_secondary'
+        }`}
       >
         {label}
       </label>
