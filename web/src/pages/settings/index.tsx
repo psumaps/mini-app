@@ -1,6 +1,8 @@
 import 'maplibre-gl/dist/maplibre-gl';
 import React from 'react';
-import SettingsCard from 'psumaps-shared/src/components/settings/settingsCard';
+import Settings from 'psumaps-shared/src/components/settings';
+import Layout from 'psumaps-shared/src/components/common/layout';
+import UserCard from 'psumaps-shared/src/components/settings/userCard';
 import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 import Storage from '~/app/storage';
@@ -10,8 +12,10 @@ const SettingsPage = () => {
     <div className="h-[92vh]">
       {/* nav is 8vh */}
       <HeaderBar pageName="Настройки" />
-      <SettingsCard storage={new Storage()} />
-
+      <Layout>
+        <UserCard />
+        <Settings storage={new Storage()} />
+      </Layout>
       <NavigationBar />
     </div>
   );

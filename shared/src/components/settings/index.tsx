@@ -1,14 +1,11 @@
 import React from 'react';
-import UserCard from './userCard';
-import Layout from '../common/layout';
 import ThemeSwitch from '../common/themeSwitch';
 import Button from '../common/button';
 import IStorage from '../../models/storage';
 
-const SettingsCard = ({ storage }: { storage: IStorage }) => {
+const Settings = ({ storage }: { storage: IStorage }) => {
   return (
-    <Layout>
-      <UserCard />
+    <>
       <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
         Темная тема
         <ThemeSwitch storage={storage} />
@@ -27,15 +24,14 @@ const SettingsCard = ({ storage }: { storage: IStorage }) => {
       >
         Группа в Telegram
       </Button>
-
       <Button
         className="rounded-3xl h-12 w-full mt-auto c1"
         onClick={() => window.open('https://t.me/psumaps', '_blank')}
       >
         Сообщить об ошибке
       </Button>
-    </Layout>
+    </>
   );
 };
 
-export default SettingsCard;
+export default Settings;
