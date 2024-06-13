@@ -33,7 +33,7 @@ const EventCard = ({ event }: { event: Event }) => {
             alt=""
           />
           {event.tag && (
-            <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-2xl border-2 border-white border-solid">
+            <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-full border-2 border-white border-solid">
               <p className="c3 text-white text-center text-wrap">{event.tag}</p>
             </div>
           )}
