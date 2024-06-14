@@ -22,6 +22,7 @@
     "@vkontakte/vk-bridge": "^2.14.1",
     "array-equal": "^1.0.2",
     "debounce": "^2.0.0",
+    "geojson": "^0.5.0",
     "maplibre-gl": "^4.1.0",
     "psumaps-shared": "file:../shared",
     "react": "^18.3.1",

@@ -7,9 +7,10 @@ export default interface Poi {
     id: string;
     indoor?: number;
     level?: string;
-    name: string;
+    name?: string;
     ref?: string; // room number
     subclass?: string;
+    similarity?: number;
     tags: {
       amenity?: string;
       indoor?: string;

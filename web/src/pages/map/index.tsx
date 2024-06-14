@@ -1,15 +1,17 @@
+import 'maplibre-gl/dist/maplibre-gl.css';
+import SearchPopUp from 'psumaps-shared/src/components/map/search';
+import { PopUpState } from 'psumaps-shared/src/components/map/search/searchUtils';
+import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import React from 'react';
+import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
   NavigationControl,
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
-import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
-import SearchPopUp from 'psumaps-shared/src/components/map/search';
-import NavigationBar from '~/widgets/navigationBar';
-import 'maplibre-gl/dist/maplibre-gl.css';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
+import NavigationBar from '~/widgets/navigationBar';
 
 const IndoorControl = () => {
   useControl(
@@ -27,9 +29,33 @@ const IndoorControl = () => {
 };
 const MapPage = () => {
   const isKeyboardOpen = useDetectKeyboardOpen();
-  const [popupState, setPopupState] = React.useState<
-    'closed' | 'middle' | 'opened'
-  >('closed');
+  const [viewState, setViewState] = React.useState({
+    longitude: 56.187188,
+    latitude: 58.007469,
+    zoom: 16,
+  });
+  const [popupState, setPopupState] = React.useState<PopUpState>('closed');
+
+  const handleSelect = (poi: Poi) => {
+    let lt;
+    let lg;
+
+    if (!('coordinates' in poi.geometry)) {
+      [lg, lt] = poi.geometry;
+    } else {
+      const lgSum = poi.geometry.coordinates[0].reduce((a, b) => a + b[0], 0);
+      const ltSum = poi.geometry.coordinates[0].reduce((a, b) => a + b[1], 0);
+      lt = ltSum / poi.geometry.coordinates[0].length;
+      lg = lgSum / poi.geometry.coordinates[0].length;
+    }
+
+    setViewState({
+      zoom: 18,
+      latitude: lt,
+      longitude: lg,
+    });
+    setPopupState('middle');
+  };
 
   return (
     <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
@@ -37,11 +63,8 @@ const MapPage = () => {
         className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
       >
         <Map
-          initialViewState={{
-            latitude: 58.007469,
-            longitude: 56.187188,
-            zoom: 16,
-          }}
+          {...viewState}
+          onMove={(e) => setViewState(e.viewState)}
           style={{ width: '100%', height: '100%' }}
           mapStyle="https://api.maptiler.com/maps/streets/style.json?key=1XfSivF5uaaJV0EiuRS1"
           attributionControl={false}
@@ -56,7 +79,11 @@ const MapPage = () => {
           <NavigationControl position="bottom-right" />
           <IndoorControl />
         </Map>
-        <SearchPopUp state={popupState} setState={setPopupState} />
+        <SearchPopUp
+          state={popupState}
+          setState={setPopupState}
+          onSelect={handleSelect}
+        />
       </div>
       <NavigationBar
         className={`transition-all duration-200 ease-in-out origin-bottom flex-[0_0_8%] ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
