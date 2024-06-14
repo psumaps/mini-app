@@ -26,9 +26,10 @@ const PopUpHeader = ({
   };
 
   const handleClosedClick = useCallback(() => {
+    if (state !== 'closed') return;
     setState('middle');
     if (inputRef.current) inputRef.current.focus();
-  }, [setState, inputRef]);
+  }, [state, setState, inputRef]);
 
   return (
     <div
@@ -40,10 +41,7 @@ const PopUpHeader = ({
         id="popup-swipe"
         onTouch={useCallback(() => handleClosedClick(), [handleClosedClick])}
       >
-        <div
-          className="size-full items-center relative cursor-pointer"
-          onClick={handleClosedClick}
-        >
+        <div className="size-full items-center relative cursor-pointer">
           <DragHandle state={state} />
           <div
             className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 pt-3 h-fit transition-all duration-500 ease-in-out origin-top
