@@ -64,6 +64,8 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 'off', // since the app is mobile-first
     'jsx-a11y/no-noninteractive-element-interactions': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/control-has-associated-label': 'off',
+    'react/destructuring-assignment': 'off',
     'no-use-before-define': 'off', // bugs out
     '@typescript-eslint/no-use-before-define': 'off',
     "import/extensions": [
