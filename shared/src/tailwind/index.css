@@ -101,3 +101,8 @@
 .react-calendar__month-view__weekdays__weekday--active-minified abbr {
   @apply text-c_bg;
 }
+
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}

@@ -6,7 +6,7 @@ import Map, {
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
-import Popup from 'psumaps-shared/src/components/map/popup';
+import SearchPopUp from 'psumaps-shared/src/components/map/search';
 import NavigationBar from '~/widgets/navigationBar';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
@@ -56,7 +56,7 @@ const MapPage = () => {
           <NavigationControl position="bottom-right" />
           <IndoorControl />
         </Map>
-        <Popup state={popupState} setState={setPopupState} />
+        <SearchPopUp state={popupState} setState={setPopupState} />
       </div>
       <NavigationBar
         className={`transition-all duration-200 ease-in-out origin-bottom flex-[0_0_8%] ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
