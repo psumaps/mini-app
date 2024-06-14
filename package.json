@@ -16,6 +16,7 @@
   "author": "psumaps team",
   "license": "MPL-2.0",
   "dependencies": {
+    "@tanstack/react-query": "^5.45.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@vkontakte/vk-bridge": "^2.14.1",
     "vite-plugin-svgr": "^4.2.0",

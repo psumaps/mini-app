@@ -1,10 +1,12 @@
 import React from 'react';
 
 import { createBrowserRouter } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import httpClient from 'psumaps-shared/src/network/httpClient';
 import ProfilePage from '~/pages/profile';
 import MapPage from '~/pages/map';
 import TimetablePage from '~/pages/timetable';
-import EventDescription from '~/pages/timetable/eventDescription.tsx';
+import EventDescription from '~/pages/timetable/eventDescription';
 
 const router = createBrowserRouter([
   {
@@ -23,7 +25,10 @@ const router = createBrowserRouter([
     path: '/event/:eventId',
     element: <EventDescription />,
     loader: (request) =>
-      fetch(`https://psu-tools.ru/api/v2/events/${request.params.eventId}`),
+      useQuery({
+        queryKey: ['event', Number(request.params.eventId)],
+        queryFn: httpClient.psuTools.events.getEvent,
+      }),
   },
 ]);
 

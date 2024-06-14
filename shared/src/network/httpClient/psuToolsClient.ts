@@ -34,6 +34,16 @@ const client = {
       );
       return response.data.events;
     },
+    getEvent: async ({
+      queryKey: [, eventId],
+    }: {
+      queryKey: [string, eventId: number];
+    }) => {
+      const response = await axios.get<{ events: Event }>(
+        `${api.psuTools}/v2/events/${eventId}`,
+      );
+      return response.data.events;
+    },
     getFilters: async () => {
       const response = await axios.get<Filter[]>(`${api.psuTools}/v2/filters`);
       return response.data;
