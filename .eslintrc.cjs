@@ -20,6 +20,7 @@ module.exports = {
     '**/*.svg',
     '**/*.json',
     'global.d.ts',
+    'vite-env.d.ts',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
