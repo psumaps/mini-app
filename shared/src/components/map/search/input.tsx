@@ -10,15 +10,15 @@ const Input = forwardRef(function Input(
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
   // eslint-disable-next-line react/prop-types
-  const { className, value, onSubmit, ...rest } = props;
+  const { className, value, onSubmit, onClear, ...rest } = props;
   const reference = useMemo(
     () => ref as React.MutableRefObject<HTMLInputElement>,
     [ref],
   );
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
-    if (reference?.current) reference.current.blur();
-    if (onSubmit) onSubmit(e);
+    reference?.current?.blur?.();
+    onSubmit?.(e);
   };
   return (
     <form className={`relative ${className}`} onSubmit={handleSumbit}>
@@ -36,9 +36,7 @@ const Input = forwardRef(function Input(
           e.preventDefault();
           e.stopPropagation();
         }}
-        onClick={() => {
-          if (props.onClear) props.onClear();
-        }}
+        onClick={() => onClear?.()}
         className={`absolute top-1/2 -translate-y-1/2 size-5 transition-all duration-200 ease-in-out
           ${value !== '' ? 'opacity-100 right-4' : 'opacity-0 right-0'}`}
         title="Очистить поиск"
