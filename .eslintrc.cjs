@@ -68,17 +68,17 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'no-use-before-define': 'off', // bugs out
     '@typescript-eslint/no-use-before-define': 'off',
-    "import/extensions": [
-      "error",
-      "ignorePackages",
+    'import/extensions': [
+      'error',
+      'ignorePackages',
       {
-        "": "never",
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
+        '': 'never',
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
     ],
-    "@typescript-eslint/no-namespace": 'off',
+    '@typescript-eslint/no-namespace': 'off',
   },
 };
