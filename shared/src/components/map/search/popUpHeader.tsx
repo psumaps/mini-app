@@ -28,7 +28,7 @@ const PopUpHeader = ({
   const handleClosedClick = useCallback(() => {
     if (state !== 'closed') return;
     setState('middle');
-    if (inputRef.current) inputRef.current.focus();
+    inputRef.current?.focus?.();
   }, [state, setState, inputRef]);
 
   return (
