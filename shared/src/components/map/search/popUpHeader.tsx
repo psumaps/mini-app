@@ -44,10 +44,10 @@ const PopUpHeader = ({
         <div className="size-full items-center relative cursor-pointer">
           <DragHandle state={state} />
           <div
-            className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 pt-3 h-fit transition-all duration-500 ease-in-out origin-top
+            className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit transition-all duration-500 ease-in-out origin-top
                 ${state === 'closed' ? 'scale-y-100 opacity-100' : 'opacity-0 scale-y-0'}`}
           >
-            <SearchIcon className="size-6 stroke-c_main dark:stroke-cd_main absolute top-3 left-4" />
+            <SearchIcon className="size-6 stroke-c_main dark:stroke-cd_main absolute top-0 left-4" />
             <p className="mx-auto z-[-1]">Поиск</p>
           </div>
         </div>

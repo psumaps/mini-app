@@ -1,5 +1,5 @@
 import React from 'react';
-import detectAmenity from '../../../network/utils/detectAmenity';
+import { detectItemAmenityName } from '../../../network/utils/detectAmenity';
 import Poi from '../../../network/models/mapi/poi';
 
 const SearchEntry = ({
@@ -18,7 +18,7 @@ const SearchEntry = ({
       <p className="text-c_accent font-semibold">
         {item.properties.name ?? item.properties.ref ?? 'Без названия'}
       </p>
-      <h4>{detectAmenity(item) ?? 'Без категории'}</h4>
+      <h4>{detectItemAmenityName(item) ?? 'Без категории'}</h4>
     </button>
   );
 };

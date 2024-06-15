@@ -1,7 +1,7 @@
-import { Polygon, Position } from 'geojson';
+import { Point, Polygon } from 'geojson';
 
 export default interface Poi {
-  geometry: Polygon | Position;
+  geometry: Polygon | Point;
   properties: {
     class?: string; // should be room|corridor|area
     id: string;
