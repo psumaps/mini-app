@@ -15,8 +15,12 @@ import Storage from '~/app/storage';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 
-const IndoorControl = () => {
-  useControl(
+const IndoorControl = ({
+  setIndoorControlInstance,
+}: {
+  setIndoorControlInstance: (instance: IndoorEqual | null) => void;
+}) => {
+  const instance = useControl(
     (context: MapContextValue) => {
       // @ts-expect-error no types for this
       const indoorEqual = new IndoorEqual(context.map.getMap(), {
@@ -27,8 +31,10 @@ const IndoorControl = () => {
     },
     { position: 'bottom-right' },
   );
+  setIndoorControlInstance(instance);
   return null;
 };
+
 const MapPage = () => {
   const isKeyboardOpen = useDetectKeyboardOpen();
   const [viewState, setViewState] = React.useState({
@@ -37,6 +43,8 @@ const MapPage = () => {
     zoom: 16,
   });
   const [popupState, setPopupState] = React.useState<PopUpState>('closed');
+  const [indoorControlInstance, setIndoorControlInstance] =
+    React.useState<IndoorEqual | null>(null);
 
   const handleSelect = (poi: Poi) => {
     let lt;
@@ -56,6 +64,8 @@ const MapPage = () => {
       latitude: lt,
       longitude: lg,
     });
+    if (poi.properties.level)
+      indoorControlInstance?.setLevel(poi.properties.level);
     setPopupState('middle');
   };
 
@@ -80,7 +90,9 @@ const MapPage = () => {
               }}
             />
             <NavigationControl position="bottom-right" />
-            <IndoorControl />
+            <IndoorControl
+              setIndoorControlInstance={setIndoorControlInstance}
+            />
           </Map>
           <SearchPopUp
             state={popupState}
