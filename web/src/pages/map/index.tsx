@@ -2,7 +2,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import SearchPopUp from 'psumaps-shared/src/components/map/search';
 import { PopUpState } from 'psumaps-shared/src/components/map/search/searchUtils';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
-import React, { useMemo } from 'react';
+import React, { MutableRefObject, forwardRef, useMemo } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
@@ -15,11 +15,7 @@ import Storage from '~/app/storage';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 
-const IndoorControl = ({
-  setIndoorControlInstance,
-}: {
-  setIndoorControlInstance: (instance: IndoorEqual | null) => void;
-}) => {
+const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   const instance = useControl(
     (context: MapContextValue) => {
       // @ts-expect-error no types for this
@@ -31,9 +27,10 @@ const IndoorControl = ({
     },
     { position: 'bottom-right' },
   );
-  setIndoorControlInstance(instance);
+  // eslint-disable-next-line no-param-reassign
+  (ref! as MutableRefObject<IndoorEqual | null>).current = instance;
   return null;
-};
+});
 
 const MapPage = () => {
   const isKeyboardOpen = useDetectKeyboardOpen();
@@ -43,15 +40,14 @@ const MapPage = () => {
     zoom: 16,
   });
   const [popupState, setPopupState] = React.useState<PopUpState>('closed');
-  const [indoorControlInstance, setIndoorControlInstance] =
-    React.useState<IndoorEqual | null>(null);
+  const indoorControlRef = React.useRef<IndoorEqual | null>(null);
 
   const handleSelect = (poi: Poi) => {
     let lt;
     let lg;
 
-    if (!('coordinates' in poi.geometry)) {
-      [lg, lt] = poi.geometry;
+    if (poi.geometry.type === 'Point') {
+      [lg, lt] = poi.geometry.coordinates;
     } else {
       const lgSum = poi.geometry.coordinates[0].reduce((a, b) => a + b[0], 0);
       const ltSum = poi.geometry.coordinates[0].reduce((a, b) => a + b[1], 0);
@@ -65,7 +61,7 @@ const MapPage = () => {
       longitude: lg,
     });
     if (poi.properties.level)
-      indoorControlInstance?.setLevel(poi.properties.level);
+      indoorControlRef?.current?.setLevel(poi.properties.level);
     setPopupState('middle');
   };
 
@@ -90,9 +86,7 @@ const MapPage = () => {
               }}
             />
             <NavigationControl position="bottom-right" />
-            <IndoorControl
-              setIndoorControlInstance={setIndoorControlInstance}
-            />
+            <IndoorControl ref={indoorControlRef} />
           </Map>
           <SearchPopUp
             state={popupState}

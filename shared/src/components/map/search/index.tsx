@@ -19,8 +19,10 @@ const SearchPopUp = ({
   const [searchValue, setSearchValue] = useState<string>('');
 
   return (
-    <Block // eslint-disable-next-line no-nested-ternary
-      className={`absolute rounded-none rounded-t-3xl bottom-0 overflow-y-clip right-0 left-0 transition-all duration-500 ease-in-out ${state === 'opened' ? 'h-full' : state === 'middle' ? 'h-20' : 'h-14'}`}
+    <Block
+      className={`absolute rounded-none bottom-0 overflow-y-clip right-0 left-0 transition-all duration-500 ease-in-out 
+        ${state === 'opened' ? 'h-full' : ''} ${state === 'middle' ? 'h-24' : 'h-14'}
+        ${state === 'opened' ? '' : 'rounded-t-3xl'}`}
     >
       <PopUpHeader
         state={state}
@@ -29,7 +31,7 @@ const SearchPopUp = ({
       />
       <div
         className={`absolute left-0 right-0 p-4 transition-all duration-500 ease-in-out flex flex-col gap-4
-          ${state === 'opened' ? 'top-12' : 'top-8 py-0'}
+          ${state === 'opened' ? 'top-12' : 'top-12 py-0'}
           ${state === 'closed' ? 'h-0' : 'bottom-0'}`}
       >
         <Input
@@ -48,7 +50,7 @@ const SearchPopUp = ({
           placeholder="Поиск"
         />
         <div
-          className={`flex-[1_1_auto] overflow-y-auto ${state === 'opened' ? 'scale-y-100' : 'scale-y-0'}`}
+          className={`flex-[1_1_auto] overflow-y-auto overflow-x-clip ${state === 'opened' ? 'scale-y-100' : 'scale-y-0'}`}
         >
           <Search entry={searchValue} state={state} onSelect={onSelect} />
         </div>
