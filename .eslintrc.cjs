@@ -13,6 +13,7 @@ module.exports = {
   ignorePatterns: [
     'dist',
     '.eslintrc.cjs',
+    'tailwind/index.css',
     'tailwind.config.ts',
     'vite.config.ts',
     'mapbox-gl-indoorequal',
