@@ -10,6 +10,11 @@ import SearchResult from './searchResult';
 import AmenityIcon from './amenityIcon';
 import Button from '../../common/button';
 
+const queryOptions = {
+  staleTime: 1000 * 60 * 5,
+  refetchOnWindowFocus: false,
+};
+
 const Search = ({
   entry,
   state,
@@ -29,24 +34,21 @@ const Search = ({
       queryKey: ['search', entry],
       queryFn: async () => httpClient.mapi.search(entry!),
       enabled: !!entry && state === 'opened',
-      staleTime: 1000 * 60 * 5,
-      refetchOnWindowFocus: false,
+      ...queryOptions,
     },
     queryClient,
   );
   const amenities = useQuery({
     queryKey: ['amenities'],
     queryFn: async () => httpClient.mapi.getAmenityList(),
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
+    ...queryOptions,
     enabled: state === 'opened',
   });
   const amenityPois = useQuery({
     queryKey: ['amenity-pois', selectedAmenity],
     queryFn: async () => httpClient.mapi.getPoiByAmenity(selectedAmenity),
     enabled: !!selectedAmenity && state === 'opened',
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
+    ...queryOptions,
   });
   const history = useQuery<SearchHistory>(
     {
@@ -56,8 +58,7 @@ const Search = ({
         const data = await storage.get('history');
         return data ? (JSON.parse(data) as SearchHistory) : {};
       },
-      refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 5,
+      ...queryOptions,
     },
     queryClient,
   );
