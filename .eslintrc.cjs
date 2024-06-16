@@ -81,6 +81,6 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-namespace': 'off',
-    'radix': 'off',
+    radix: 'off',
   },
 };
