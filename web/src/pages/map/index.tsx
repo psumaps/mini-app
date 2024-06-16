@@ -6,6 +6,7 @@ import React, { MutableRefObject, forwardRef, useMemo } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
+  MapRef,
   NavigationControl,
   useControl,
 } from 'react-map-gl/maplibre';
@@ -34,6 +35,7 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
 
 const MapPage = () => {
   const isKeyboardOpen = useDetectKeyboardOpen();
+  const mapRef = React.useRef<MapRef | null>(null);
   const [viewState, setViewState] = React.useState({
     longitude: 56.187188,
     latitude: 58.007469,
@@ -55,11 +57,7 @@ const MapPage = () => {
       lg = lgSum / poi.geometry.coordinates[0].length;
     }
 
-    setViewState({
-      zoom: 18,
-      latitude: lt,
-      longitude: lg,
-    });
+    if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
     if (poi.properties.level)
       indoorControlRef?.current?.setLevel(poi.properties.level);
     setPopupState('middle');
@@ -72,6 +70,7 @@ const MapPage = () => {
           className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
         >
           <Map
+            ref={mapRef}
             {...viewState}
             onMove={(e) => setViewState(e.viewState)}
             style={{ width: '100%', height: '100%' }}
