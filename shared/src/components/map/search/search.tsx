@@ -130,7 +130,7 @@ const Search = ({
                   handleAmenityClick={(a) => handleAmenityClick(a, i)}
                   className={`${selectedAmenity === amenity ? 'w-fit h-fit' : ''}`}
                   classNameInner={`transition-all duration-200 ease-in-out origin-top-left
-                    ${amenityPresent && selectedAmenity === amenity ? '' : 'h-0 w-0 opacity-0'}`}
+                    ${amenityPresent && (selectedAmenity === amenity ? '' : 'h-0 w-0 opacity-0')}`}
                 />
               ))}
         </div>
