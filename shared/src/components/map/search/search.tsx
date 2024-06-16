@@ -43,7 +43,7 @@ const Search = ({
   });
   const amenityPois = useQuery({
     queryKey: ['amenity-pois', selectedAmenity],
-    queryFn: async () => httpClient.mapi.getPoiByAmenity(selectedAmenity!),
+    queryFn: async () => httpClient.mapi.getPoiByAmenity(selectedAmenity),
     enabled: !!selectedAmenity && state === 'opened',
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
