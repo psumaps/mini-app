@@ -49,9 +49,11 @@ const MapPage = () => {
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
     lg: number;
+    level: number;
   } | null>(null);
   const [popupState, setPopupState] = React.useState<PopUpState>('closed');
   const [selectedPoi, setSelectedPoi] = React.useState<Poi | null>(null);
+  const [indoorLevel, setIndoorLevel] = React.useState(1);
 
   React.useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
@@ -60,7 +62,7 @@ const MapPage = () => {
   const handleSelect = (poi: Poi) => {
     const { lt, lg } = parseCoordinatesFromGeometry(poi.geometry);
 
-    setMarkerCoords({ lt, lg });
+    setMarkerCoords({ lt, lg, level: parseInt(poi.properties.level ?? '1') });
     setSelectedPoi(poi);
 
     if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
@@ -77,13 +79,24 @@ const MapPage = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const data = await httpClient.mapi.getPoiById(e.features![0].properties.id);
     setSelectedPoi(data);
-    setMarkerCoords(parseCoordinatesFromGeometry(data.geometry));
+    setMarkerCoords({
+      ...parseCoordinatesFromGeometry(data.geometry),
+      level: parseInt(data.properties.level ?? '1'),
+    });
   };
 
   const handleLoad = () => {
-    if (mapRef.current)
+    if (mapRef.current) {
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
+    }
+    if (indoorControlRef.current) {
+      indoorControlRef.current.on('levelchange', () =>
+        setIndoorLevel(parseInt(indoorControlRef?.current?.level ?? '')),
+      );
+    }
   };
 
   return (
@@ -120,7 +133,10 @@ const MapPage = () => {
                   setMarkerCoords(null);
                 }}
               >
-                <MarkerIcon />
+                <MarkerIcon
+                  className={`transition-all duration-200 ease-in-out 
+                    ${markerCoords.level === indoorLevel ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
+                />
               </Marker>
             )}
           </Map>
@@ -133,7 +149,8 @@ const MapPage = () => {
           />
         </div>
         <NavigationBar
-          className={`transition-all duration-200 ease-in-out origin-bottom flex-[0_0_8%] ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
+          className={`transition-all duration-200 ease-in-out origin-bottom flex-[0_0_8%] 
+            ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
         />
       </div>
     </StorageContext.Provider>
