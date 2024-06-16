@@ -16,12 +16,12 @@ const Input = forwardRef(function Input(
     [ref],
   );
 
-  const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     reference?.current?.blur?.();
     onSubmit?.(e);
   };
   return (
-    <form className={`relative ${className}`} onSubmit={handleSumbit}>
+    <form className={`relative ${className}`} onSubmit={handleSubmit}>
       {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
       <input
         ref={ref}
