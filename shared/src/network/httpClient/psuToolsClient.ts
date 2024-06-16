@@ -4,6 +4,7 @@ import Faculty from '../models/psu-tools/faculty';
 import GroupResponse from '../models/psu-tools/groupResponse';
 import GroupTimetable from '../models/psu-tools/timetable';
 import Filter from '../models/psu-tools/eventFilter';
+import Event from '../models/psu-tools/event';
 
 const client = {
   timetable: {
@@ -33,15 +34,11 @@ const client = {
       );
       return response.data.events;
     },
-    getEvent: async ({
-      queryKey: [, eventId],
-    }: {
-      queryKey: [string, eventId: number];
-    }) => {
-      const response = await axios.get<{ events: Event }>(
+    getEvent: async (eventId: number) => {
+      const response = await axios.get<{ event: Event }>(
         `${api.psuTools}/v2/events/${eventId}`,
       );
-      return response.data.events;
+      return response.data.event;
     },
     getFilters: async () => {
       const response = await axios.get<Filter[]>(`${api.psuTools}/v2/filters`);

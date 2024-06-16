@@ -2,19 +2,31 @@ import React from 'react';
 import Layout from 'psumaps-shared/src/components/common/layout';
 
 import EventCard from 'psumaps-shared/src/components/timetable/eventCard';
-import { Event } from 'psumaps-shared/src/models/event';
-import useLoaderData from '~/utils/routerLoader';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
+import httpClient from 'psumaps-shared/src/network/httpClient';
 import HeaderBar from '~/widgets/headerBar';
 import NavigationBar from '~/widgets/navigationBar';
 
 const EventDescription = () => {
-  const event = useLoaderData<Event>();
-  event.event_date = new Date(event.event_date);
+  const params = useParams();
+
+  const query = useQuery({
+    queryKey: ['event', Number(params.eventId)],
+    queryFn: async () =>
+      httpClient.psuTools.events.getEvent(Number(params.eventId)),
+  });
   return (
     <>
       <HeaderBar pageName="Мероприятие" />
       <Layout>
-        <EventCard event={event} />
+        {query.isPending ? <div>Загрузка...</div> : <> </>}
+        {query.isError ? <div>Ошибка!</div> : <> </>}
+        {query.data?.title ? (
+          <EventCard event={query.data} />
+        ) : (
+          <>Событие не найдено :(</>
+        )}
       </Layout>
       <NavigationBar />
     </>

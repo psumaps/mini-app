@@ -8,7 +8,7 @@ export default interface Event {
   description: string;
   id: number;
   tag?: string;
-  event_date: Date;
+  event_date: string;
   location: string;
   number_on_site?: string;
   event_images?: string;

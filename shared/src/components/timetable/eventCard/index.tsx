@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Event } from '../../../models/event';
+import Event from '../../../network/models/psu-tools/event';
 
 import Block from '../../common/block';
 import HeartButton from './heartButton';
@@ -17,10 +17,14 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 const EventCard = ({ event }: { event: Event }) => {
+  const eventDate = useMemo(
+    () => new Date(event.event_date),
+    [event.event_date],
+  );
   const day = useMemo(
     () =>
-      `${event.event_date.toLocaleString('ru', options)}, ${days.at(event.event_date.getDay())}`,
-    [event.event_date],
+      `${eventDate.toLocaleString('ru', options)}, ${days.at(eventDate.getDay())}`,
+    [eventDate],
   );
   return (
     <Block className="p-[0_!important] ">
@@ -52,29 +56,37 @@ const EventCard = ({ event }: { event: Event }) => {
 
           <h1>{event.title}</h1>
           <div className="mt-3">
-            <h2>
-              Начало: {event.event_date.toLocaleTimeString('ru').slice(0, -3)}{' '}
-            </h2>
+            <h2>Начало: {eventDate.toLocaleTimeString('ru').slice(0, -3)} </h2>
             {/* <span className="text-base text-zinc-500">- 19:30</span> */}
           </div>
           <h4>{day}</h4>
-          <h3 className="mt-4 leading-4">
-            Место:<span className="c1"> {event.location}</span>
-          </h3>
+          {event.location && (
+            <h3 className="mt-4 leading-4">
+              Место:<span className="c1"> {event.location}</span>
+            </h3>
+          )}
           <h3 className="mt-2">
+            {/* todo: calc status */}
             Статус:{' '}
             <span className="text-c_secondary dark:text-cd_secondary">
               Ожидание
             </span>
           </h3>
 
-          <SignUpCard link={event.registration_link} />
+          {event.registration_link && (
+            <SignUpCard link={event.registration_link} />
+          )}
           {event.map_link && <ViewMapCard link={event.map_link} />}
-          <DetailsCard link={event.registration_link} />
-
-          <h2 className="mt-6">О мероприятии:</h2>
-          <p className="mt-2.5 c1">{event.description}</p>
-          <ContactsCard organizer={event.organizer} />
+          {event.registration_link && (
+            <DetailsCard link={event.registration_link} />
+          )}
+          {event.description && (
+            <>
+              <h2 className="mt-6">О мероприятии:</h2>
+              <p className="mt-2.5 c1">{event.description}</p>
+            </>
+          )}
+          {event.organizer && <ContactsCard organizer={event.organizer} />}
         </div>
       </div>
     </Block>

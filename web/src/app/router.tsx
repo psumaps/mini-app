@@ -1,8 +1,6 @@
 import React from 'react';
 
 import { createBrowserRouter } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import httpClient from 'psumaps-shared/src/network/httpClient';
 import ProfilePage from '~/pages/profile';
 import MapPage from '~/pages/map';
 import TimetablePage from '~/pages/timetable';
@@ -24,11 +22,6 @@ const router = createBrowserRouter([
   {
     path: '/event/:eventId',
     element: <EventDescription />,
-    loader: (request) =>
-      useQuery({
-        queryKey: ['event', Number(request.params.eventId)],
-        queryFn: httpClient.psuTools.events.getEvent,
-      }),
   },
 ]);
 
