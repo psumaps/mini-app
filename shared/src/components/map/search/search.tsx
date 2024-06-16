@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import httpClient from '../../../network/httpClient';
 import { PopUpState } from './searchUtils';
@@ -14,10 +14,12 @@ const Search = ({
   entry,
   state,
   onSelect,
+  selectedPoi,
 }: {
   entry: string | null;
   state: PopUpState;
   onSelect?: (poi: Poi) => void;
+  selectedPoi: Poi | null;
 }) => {
   const queryClient = useQueryClient();
   const storage = useContext(StorageContext);
@@ -41,7 +43,7 @@ const Search = ({
   });
   const amenityPois = useQuery({
     queryKey: ['amenity-pois', selectedAmenity],
-    queryFn: async () => httpClient.mapi.getPoiByAmenity(selectedAmenity),
+    queryFn: async () => httpClient.mapi.getPoiByAmenity(selectedAmenity!),
     enabled: !!selectedAmenity && state === 'opened',
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
@@ -69,27 +71,43 @@ const Search = ({
   const amenityPresent = (amenityPois.data?.length ?? 0) > 0;
   const searchInProgress = entryPresent || amenityPresent;
 
-  const handlePoiClick = async (poi: Poi) => {
-    if (!history.data) return;
+  const updateHistory = useCallback(
+    async (poi: Poi) => {
+      if (!history.data) return;
 
-    let { data } = history;
+      let { data } = history;
 
-    if (data[poi.properties.id])
-      data[poi.properties.id] = {
-        poi,
-        timestamp: Date.now(),
-      };
-    else
-      data = {
-        ...data,
-        [poi.properties.id]: { poi, timestamp: Date.now() },
-      };
+      if (data[poi.properties.id])
+        data[poi.properties.id] = {
+          poi,
+          timestamp: Date.now(),
+        };
+      else
+        data = {
+          ...data,
+          [poi.properties.id]: { poi, timestamp: Date.now() },
+        };
 
-    if (storage) await storage.set('history', JSON.stringify(data));
-    void queryClient.invalidateQueries({ queryKey: ['history'] });
+      if (storage) await storage.set('history', JSON.stringify(data));
+      void queryClient.invalidateQueries({ queryKey: ['history'] });
+    },
+    [history, storage, queryClient],
+  );
 
+  const handlePoiClick = (poi: Poi) => {
     onSelect?.(poi);
   };
+
+  const handleAmenityReset = useCallback(() => {
+    setSelectedAmenity(null);
+    setAmenitiesGridStyle('');
+  }, []);
+
+  useEffect(() => {
+    if (selectedPoi === null) return;
+    void updateHistory(selectedPoi);
+    handleAmenityReset();
+  }, [selectedPoi, updateHistory, handleAmenityReset]);
 
   const handleAmenityClick = (amenity: string, index: number) => {
     setSelectedAmenity(amenity);
@@ -107,17 +125,12 @@ const Search = ({
     }
   };
 
-  const handleAmemityReset = () => {
-    setSelectedAmenity(null);
-    setAmenitiesGridStyle('');
-  };
-
   return (
     <div className="flex flex-col h-full">
       <div className="relative">
         <div
           className={`grid grid-cols-[1fr_1fr_1fr] gap-x-2 gap-y-8 h-fit transition-all duration-200 ease-in-out flex-auto
-          ${amenityPresent ? 'gap-[0_!important] justify-end' : ''}
+          ${amenityPresent || selectedPoi ? 'gap-[0_!important] justify-end' : ''}
           ${amenitiesGridStyle}`}
         >
           {amenities.data &&
@@ -130,12 +143,13 @@ const Search = ({
                   handleAmenityClick={(a) => handleAmenityClick(a, i)}
                   className={`${selectedAmenity === amenity ? 'w-fit h-fit' : ''}`}
                   classNameInner={`transition-all duration-200 ease-in-out origin-top-left
-                    ${amenityPresent && (selectedAmenity === amenity ? '' : 'h-0 w-0 opacity-0')}`}
+                    ${amenityPresent && (selectedAmenity === amenity ? '' : 'h-0 w-0 opacity-0')}
+                    ${selectedPoi ? 'w-0 h-0 opacity-0' : ''}`}
                 />
               ))}
         </div>
         <Button
-          onClick={handleAmemityReset}
+          onClick={handleAmenityReset}
           variant="accent"
           className={`px-4 py-2 h-fit rounded-full scale-100 active:scale-90 transition-all duration-200 ease-in-out absolute 
             ${amenityPresent ? 'opacity-100 right-0 top-1/2 -translate-y-1/2 ' : 'scale-x-0 opacity-0 right-[-100%] top-0'}`}

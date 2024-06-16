@@ -7,7 +7,6 @@ import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
   MapRef,
-  MapLayerMouseEvent,
   Marker,
   NavigationControl,
   useControl,
@@ -15,6 +14,9 @@ import Map, {
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
+import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
+import httpClient from 'psumaps-shared/src/network/httpClient';
+import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
 import Storage from '~/app/storage';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
@@ -39,32 +41,28 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
 const MapPage = () => {
   const isKeyboardOpen = useDetectKeyboardOpen();
   const mapRef = React.useRef<MapRef | null>(null);
+  const indoorControlRef = React.useRef<IndoorEqual | null>(null);
   const [viewState, setViewState] = React.useState({
     longitude: 56.187188,
     latitude: 58.007469,
     zoom: 16,
   });
-  const [popupState, setPopupState] = React.useState<PopUpState>('closed');
-  const indoorControlRef = React.useRef<IndoorEqual | null>(null);
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
     lg: number;
   } | null>(null);
+  const [popupState, setPopupState] = React.useState<PopUpState>('closed');
+  const [selectedPoi, setSelectedPoi] = React.useState<Poi | null>(null);
+
+  React.useEffect(() => {
+    if (selectedPoi === null) setMarkerCoords(null);
+  }, [selectedPoi]);
 
   const handleSelect = (poi: Poi) => {
-    let lt;
-    let lg;
-
-    if (poi.geometry.type === 'Point') {
-      [lg, lt] = poi.geometry.coordinates;
-    } else {
-      const lgSum = poi.geometry.coordinates[0].reduce((a, b) => a + b[0], 0);
-      const ltSum = poi.geometry.coordinates[0].reduce((a, b) => a + b[1], 0);
-      lt = ltSum / poi.geometry.coordinates[0].length;
-      lg = lgSum / poi.geometry.coordinates[0].length;
-    }
+    const { lt, lg } = parseCoordinatesFromGeometry(poi.geometry);
 
     setMarkerCoords({ lt, lg });
+    setSelectedPoi(poi);
 
     if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
     if (poi.properties.level)
@@ -72,8 +70,21 @@ const MapPage = () => {
     setPopupState('middle');
   };
 
-  const handleClick = (e: MapLayerMouseEvent) => {
-    setMarkerCoords({ lt: e.lngLat.lat, lg: e.lngLat.lng });
+  const handlePoiClick = async (
+    e: MapMouseEvent & {
+      features?: MapGeoJSONFeature[] | undefined;
+    },
+  ) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const data = await httpClient.mapi.getPoiById(e.features![0].properties.id);
+    setSelectedPoi(data);
+    setMarkerCoords(parseCoordinatesFromGeometry(data.geometry));
+  };
+
+  const handleLoad = () => {
+    if (mapRef.current)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
   };
 
   return (
@@ -84,12 +95,12 @@ const MapPage = () => {
         >
           <Map
             ref={mapRef}
+            onLoad={handleLoad}
             {...viewState}
             onMove={(e) => setViewState(e.viewState)}
             style={{ width: '100%', height: '100%' }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=1XfSivF5uaaJV0EiuRS1"
             attributionControl={false}
-            onClick={handleClick}
           >
             <GeolocateControl
               position="bottom-right"
@@ -118,6 +129,8 @@ const MapPage = () => {
             state={popupState}
             setState={setPopupState}
             onSelect={handleSelect}
+            selectedPoi={selectedPoi}
+            setSelectedPoi={setSelectedPoi}
           />
         </div>
         <NavigationBar
