@@ -21,3 +21,8 @@ export default interface Poi {
     type: string;
   };
 }
+
+export const detectPoiName = (poi: Poi | null) => {
+  if (!poi) return '';
+  return poi.properties.name ?? poi.properties.ref ?? 'Без названия';
+};

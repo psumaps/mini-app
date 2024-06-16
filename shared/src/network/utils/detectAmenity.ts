@@ -1,7 +1,8 @@
 import { amenityNameList, amenityImageList } from '../models/mapi/amenity';
 import Poi from '../models/mapi/poi';
 
-export const detectItemAmenityName = (item: Poi) => {
+export const detectItemAmenityName = (item: Poi | null) => {
+  if (!item) return null;
   if (item.properties.tags.amenity)
     return detectAmenityName(item.properties.tags.amenity);
 
