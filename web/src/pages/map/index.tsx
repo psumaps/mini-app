@@ -22,7 +22,8 @@ import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 
 const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
-  const instance = useControl(
+  // eslint-disable-next-line no-param-reassign
+  (ref! as MutableRefObject<IndoorEqual | null>).current = useControl(
     (context: MapContextValue) => {
       // @ts-expect-error no types for this
       const indoorEqual = new IndoorEqual(context.map.getMap(), {
@@ -33,8 +34,6 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
     },
     { position: 'bottom-right' },
   );
-  // eslint-disable-next-line no-param-reassign
-  (ref! as MutableRefObject<IndoorEqual | null>).current = instance;
   return null;
 });
 
