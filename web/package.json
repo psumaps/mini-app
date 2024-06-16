@@ -11,11 +11,13 @@
     "tailwind:watch": "npm run tailwind -- --watch"
   },
   "peerDependencies": {
+    "@tanstack/react-query": "^5.45.0",
     "react": "^18.3.1"
   },
   "dependencies": {
     "@fontsource/montserrat": "^5.0.12",
     "@mapbox-controls/helpers": "^1.1.0",
+    "@tanstack/react-query": "^5.45.0",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "@vkontakte/vk-bridge": "^2.14.1",
     "array-equal": "^1.0.2",
@@ -24,8 +26,8 @@
     "psumaps-shared": "file:../shared",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.0",
     "react-map-gl": "^7.1.7",
+    "react-router-dom": "^6.22.0",
     "tailwindcss": "^3.4.3",
     "vite": "^4.5.2",
     "vite-plugin-svgr": "^4.2.0"
