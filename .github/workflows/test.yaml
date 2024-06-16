@@ -13,7 +13,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-      - run: npm ci
+      - run: npm ci && npm ci --prefix shared && npm ci --prefix web
 
       - name: Testing Shared Utils
         if: always()
