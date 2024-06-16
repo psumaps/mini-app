@@ -7,11 +7,14 @@ import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
   MapRef,
+  MapLayerMouseEvent,
+  Marker,
   NavigationControl,
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
+import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import Storage from '~/app/storage';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
@@ -43,6 +46,10 @@ const MapPage = () => {
   });
   const [popupState, setPopupState] = React.useState<PopUpState>('closed');
   const indoorControlRef = React.useRef<IndoorEqual | null>(null);
+  const [markerCoords, setMarkerCoords] = React.useState<{
+    lt: number;
+    lg: number;
+  } | null>(null);
 
   const handleSelect = (poi: Poi) => {
     let lt;
@@ -57,10 +64,16 @@ const MapPage = () => {
       lg = lgSum / poi.geometry.coordinates[0].length;
     }
 
+    setMarkerCoords({ lt, lg });
+
     if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
     if (poi.properties.level)
       indoorControlRef?.current?.setLevel(poi.properties.level);
     setPopupState('middle');
+  };
+
+  const handleClick = (e: MapLayerMouseEvent) => {
+    setMarkerCoords({ lt: e.lngLat.lat, lg: e.lngLat.lng });
   };
 
   return (
@@ -76,6 +89,7 @@ const MapPage = () => {
             style={{ width: '100%', height: '100%' }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=1XfSivF5uaaJV0EiuRS1"
             attributionControl={false}
+            onClick={handleClick}
           >
             <GeolocateControl
               position="bottom-right"
@@ -86,6 +100,19 @@ const MapPage = () => {
             />
             <NavigationControl position="bottom-right" />
             <IndoorControl ref={indoorControlRef} />
+            {markerCoords && (
+              <Marker
+                latitude={markerCoords.lt}
+                longitude={markerCoords.lg}
+                anchor="bottom"
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  setMarkerCoords(null);
+                }}
+              >
+                <MarkerIcon />
+              </Marker>
+            )}
           </Map>
           <SearchPopUp
             state={popupState}
