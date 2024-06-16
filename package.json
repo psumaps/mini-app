@@ -10,7 +10,8 @@
     "build-storybook": "npm run build-storybook --prefix shared",
     "test": "vitest --run",
     "lint-staged": "lint-staged",
-    "prepare": "husky"
+    "prepare": "husky",
+    "ci-global": "npm ci && npm ci --prefix shared && npm ci --prefix web && npm ci --prefix native"
   },
   "author": "psumaps team",
   "license": "MPL-2.0",
