@@ -1,7 +1,12 @@
+import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/search';
 import { PopUpState } from 'psumaps-shared/src/components/map/search/searchUtils';
+import { StorageContext } from 'psumaps-shared/src/models/storage';
+import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
+import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
 import React, { MutableRefObject, forwardRef, useMemo } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
@@ -12,14 +17,11 @@ import Map, {
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
-import { StorageContext } from 'psumaps-shared/src/models/storage';
-import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
-import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
-import httpClient from 'psumaps-shared/src/network/httpClient';
-import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
 import Storage from '~/app/storage';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
+
+const mapStyleUrl = `${import.meta.env.VITE_URL_MAPTILER_STYLE}?key=${import.meta.env.VITE_MAPTILES_STYLE_KEY}`;
 
 const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   // eslint-disable-next-line no-param-reassign
@@ -27,7 +29,7 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
     (context: MapContextValue) => {
       // @ts-expect-error no types for this
       const indoorEqual = new IndoorEqual(context.map.getMap(), {
-        url: 'https://tiles.ijo42.ru/',
+        url: import.meta.env.VITE_URL_IJO42_TILES,
       });
       void indoorEqual.loadSprite({ update: true });
       return indoorEqual;
@@ -111,7 +113,7 @@ const MapPage = () => {
             {...viewState}
             onMove={(e) => setViewState(e.viewState)}
             style={{ width: '100%', height: '100%' }}
-            mapStyle="https://api.maptiler.com/maps/streets/style.json?key=1XfSivF5uaaJV0EiuRS1"
+            mapStyle={mapStyleUrl}
             attributionControl={false}
           >
             <GeolocateControl
