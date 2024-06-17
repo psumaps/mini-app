@@ -47,11 +47,12 @@ module.exports = {
 
         // dark mode
         cd_main: '#FEFEFE',
+        cd_telegram: '#323232',
         cd_secondary: '#979797',
         cd_inactive: '#626262',
         cd_textHeader: '#FFFFFF',
-        cd_bg: '#282828',
-        'cd_bg-block': '#202020',
+        cd_bg: '#121212',
+        'cd_bg-block': '#222222',
         'cd_bg-secondary': '#2525251A',
         cd_shadow: '#262626',
         cd_border: '#383838',

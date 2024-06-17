@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { createBrowserRouter } from 'react-router-dom';
-import ProfilePage from '~/pages/profile';
+import SettingsPage from '../pages/settings';
 import MapPage from '~/pages/map';
 import TimetablePage from '~/pages/timetable';
 import EventDescription from '~/pages/timetable/eventDescription';
@@ -12,8 +12,8 @@ const router = createBrowserRouter([
     element: <MapPage />,
   },
   {
-    path: '/profile',
-    element: <ProfilePage />,
+    path: '/settings',
+    element: <SettingsPage />,
   },
   {
     path: '/timetable',
