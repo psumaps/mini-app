@@ -6,7 +6,7 @@ const HeartButton = ({ active }: { active: boolean }) => {
   const [isActive, setIsActive] = useState(active);
   return (
     <Button
-      className="h-10 w-10 rounded-full active:scale-90 transition duration-150 ease-in-out"
+      className="h-10 w-10 rounded-full"
       onClick={() => setIsActive(!isActive)}
       variant={isActive ? 'accent' : 'primary'}
       title={isActive ? 'Удалить из избранного' : 'Добавить в избранное'}

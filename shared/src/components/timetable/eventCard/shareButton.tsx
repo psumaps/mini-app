@@ -10,10 +10,7 @@ const ShareButton = ({ id }: { id: number }) => {
     });
   };
   return (
-    <Button
-      className="h-10 w-10 rounded-full active:scale-90 transition duration-75 ease-in-out"
-      onClick={handleClick}
-    >
+    <Button className="h-10 w-10 rounded-full" onClick={handleClick}>
       <LinkIcon className="stroke-0 fill-c_main dark:fill-cd_main" />
     </Button>
   );
