@@ -147,56 +147,29 @@ export const calculateSide = (rect: DOMRect) => {
   return interpolate(lesserSide, greaterSide);
 };
 
-export const calculateNowDiv = () => {
-  const tileNow = node(`.${classTile}--now`);
-  const nowDiv = node(`#${divNowId}`);
-  const tileNowRect = tileNow.getBoundingClientRect();
+export const calculateDiv = (id: string, tileClass: string) => {
+  const div = node(`#${id}`);
+  const tile = node(`.${tileClass}`);
+  const tileRect = tile!.getBoundingClientRect();
 
-  const side = calculateSide(tileNowRect);
-  const center = calculateRectCenter(tileNowRect);
-  nowDiv.setAttribute(
+  const side = 1.1 * calculateSide(tileRect);
+  const center = calculateRectCenter(tileRect);
+  div!.setAttribute(
     'style',
-    `top: ${center.y}px; left: ${center.x}px; width: ${side}px; height: ${side}px;`,
+    `top: ${center.y + 0.05 * side}px; left: ${center.x}px; width: ${side}px; height: ${side}px;`,
   );
 };
 
-export const calculateNowDivMinified = () => {
-  const weekdayNow = node(`.${classWeekday}--now-minified`);
-  if (!weekdayNow) return;
-  const nowDiv = node(`#${divNowId}`);
-  const weekdayNowRect = weekdayNow.getBoundingClientRect();
+export const calculateMinifiedDiv = (id: string, weekdayClass: string) => {
+  const weekday = node(`.${weekdayClass}`);
+  if (!weekday) return;
+  const div = node(`#${id}`);
+  const weekdayRect = weekday.getBoundingClientRect();
 
-  const side = calculateSide(weekdayNowRect);
-  const center = calculateRectCenter(weekdayNowRect);
-  nowDiv.setAttribute(
+  const side = calculateSide(weekdayRect);
+  const center = calculateRectCenter(weekdayRect);
+  div!.setAttribute(
     'style',
-    `top: ${center.y}px; left: ${center.x}px; width: ${side}px;`,
-  );
-};
-
-export const calculateActiveDiv = () => {
-  const activeDiv = node(`#${divActiveId}`);
-  const tileActive = node(`.${classTile}--active`);
-  const tileActiveRect = tileActive.getBoundingClientRect();
-
-  const side = calculateSide(tileActiveRect);
-  const center = calculateRectCenter(tileActiveRect);
-  activeDiv.setAttribute(
-    'style',
-    `top: ${center.y}px; left: ${center.x}px; width: ${side}px; height: ${side}px;`,
-  );
-};
-
-export const calculateActiveDivMinified = () => {
-  const weekdayActive = node(`.${classWeekday}--active-minified`);
-  if (!weekdayActive) return;
-  const activeDiv = node(`#${divActiveId}`);
-  const weekdayActiveRect = weekdayActive.getBoundingClientRect();
-
-  const side = calculateSide(weekdayActiveRect);
-  const center = calculateRectCenter(weekdayActiveRect);
-  activeDiv.setAttribute(
-    'style',
-    `top: ${center.y}px; left: ${center.x}px; width: ${side}px;`,
+    `top: ${center.y}px; left: ${center.x}px; width: ${side * 0.9}px; height: ${side * 1.85}px;`,
   );
 };
