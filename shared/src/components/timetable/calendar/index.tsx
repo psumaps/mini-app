@@ -165,10 +165,10 @@ const CustomCalendar = ({
       <Button
         type="button"
         onClick={handleMinify}
-        className="bg-c_main dark:bg-cd_main size-10 rounded-full mx-auto shadow-xl mb-2 group"
+        className="bg-c_main dark:bg-cd_main size-10 rounded-full mx-auto shadow-xl mb-2"
         title="Свернуть календарь"
       >
-        <CalendarIcon className="size-5 group-active:size-4 transition-all duration-75 stroke-c_bg dark:stroke-cd_bg [stroke-width:0.005rem] fill-c_bg dark:fill-cd_bg" />
+        <CalendarIcon className="size-5 stroke-c_bg dark:stroke-cd_bg [stroke-width:0.005rem] fill-c_bg dark:fill-cd_bg" />
       </Button>
       <div className="flex flex-row justify-between w-[90%] mx-auto mb-1 items-center">
         <CalendarDropdown
