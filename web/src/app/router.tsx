@@ -4,6 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import ProfilePage from '~/pages/profile';
 import MapPage from '~/pages/map';
 import TimetablePage from '~/pages/timetable';
+import EventDescription from '~/pages/timetable/eventDescription';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: '/timetable',
     element: <TimetablePage />,
+  },
+  {
+    path: '/event/:eventId',
+    element: <EventDescription />,
   },
 ]);
 
