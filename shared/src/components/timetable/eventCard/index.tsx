@@ -16,15 +16,12 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 const EventCard = ({ event }: { event: Event }) => {
-  const eventDate = useMemo(
-    () => new Date(event.event_date),
-    [event.event_date],
-  );
-  const day = useMemo(
-    () =>
-      `${eventDate.toLocaleString('ru', options)}, ${days.at(eventDate.getDay())}`,
-    [eventDate],
-  );
+  const { eventDate, eventDay } = useMemo(() => {
+    const date = new Date(event.event_date);
+    const day = `${date.toLocaleString('ru', options)}, ${days.at(date.getDay())}`;
+    return { eventDay: day, eventDate: date };
+  }, [event.event_date]);
+
   return (
     <Block className="p-[0_!important] z-[0_!important] rounded-t-[2rem]">
       <div className="flex flex-col w-full">
@@ -58,7 +55,7 @@ const EventCard = ({ event }: { event: Event }) => {
             <h2>Начало: {eventDate.toLocaleTimeString('ru').slice(0, -3)} </h2>
             {/* <span className="text-base text-zinc-500">- 19:30</span> */}
           </div>
-          <h4>{day}</h4>
+          <h4>{eventDay}</h4>
           {event.location && (
             <h3 className="mt-4 leading-4">
               Место:<span className="c1"> {event.location}</span>

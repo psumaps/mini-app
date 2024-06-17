@@ -8,6 +8,7 @@ interface ImportMetaEnv {
   readonly VITE_URL_INDOOREQUAL_TILES: string;
   readonly VITE_URL_MAPTILER_STYLE: string;
   readonly VITE_MAPTILES_STYLE_KEY: string;
+  readonly VITE_URL_VK_APP: string;
 }
 
 interface ImportMeta {

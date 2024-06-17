@@ -6,7 +6,7 @@ import Button from '../../common/button';
 const ShareButton = ({ id }: { id: number }) => {
   const handleClick = () => {
     void bridge.send('VKWebAppShare', {
-      link: `https://vk.com/app/${id}?`,
+      link: `${import.meta.env.VITE_URL_VK_APP}${id}`,
     });
   };
   return (
