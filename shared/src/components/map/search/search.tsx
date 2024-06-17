@@ -152,7 +152,7 @@ const Search = ({
         <Button
           onClick={handleAmenityReset}
           variant="accent"
-          className={`px-4 py-2 h-fit rounded-full scale-100 active:scale-90 transition-all duration-200 ease-in-out absolute 
+          className={`px-4 py-2 h-fit rounded-full absolute 
             ${amenityPresent ? 'opacity-100 right-0 top-1/2 -translate-y-1/2 ' : 'scale-x-0 opacity-0 right-[-100%] top-0'}`}
         >
           Сбросить
