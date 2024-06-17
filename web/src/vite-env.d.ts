@@ -11,6 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_URL_BIND_ETIS: string;
   readonly VITE_URL_SUPPORT: string;
   readonly VITE_URL_TG_GROUP: string;
+  readonly VITE_URL_VK_APP: string;
 }
 
 interface ImportMeta {

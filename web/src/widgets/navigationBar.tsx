@@ -29,7 +29,7 @@ const NavigationBar = ({ className }: { className?: string }) => {
 
   return (
     <div
-      className={`bg-c_bg dark:bg-cd_bg fixed bottom-0 flex flex-row w-full min-h-14 h-[8dvh] z-50 border-t p-4 justify-evenly items-center border-c_inactive ${className}`}
+      className={`bg-c_bg-block dark:bg-cd_bg-block fixed bottom-0 flex flex-row w-full min-h-14 h-[8dvh] z-50 border-t p-4 justify-evenly items-center border-c_inactive ${className}`}
     >
       <a href="/" aria-label="Карта">
         <MapIcon className={fill('/')} />

@@ -43,6 +43,8 @@ module.exports = {
         c_shadow: '#DFDFDF',
         c_border: '#EBEBEB',
         'c_border-secondary': '#DADADA',
+        c_sub: '#444444',
+
         // dark mode
         cd_main: '#FEFEFE',
         cd_telegram: '#323232',
@@ -55,6 +57,7 @@ module.exports = {
         cd_shadow: '#262626',
         cd_border: '#383838',
         'cd_border-secondary': '#545454',
+        cd_sub: '#CCCCCC',
       },
     },
   },
