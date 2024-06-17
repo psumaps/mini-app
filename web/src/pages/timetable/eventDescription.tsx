@@ -23,13 +23,13 @@ const EventDescription = () => {
       <Layout>
         <HeaderBar pageName="Мероприятие" />
         {query.isPending ? (
-          <>Загрузка...</>
+          <p>Загрузка...</p>
         ) : query.isError ? (
-          <>Ошибка!</>
+          <p>Ошибка!</p>
         ) : query.data.title ? (
           <EventCard event={query.data} />
         ) : (
-          <>Событие не найдено</>
+          <p>Событие не найдено</p>
         )}
       </Layout>
       <NavigationBar />
