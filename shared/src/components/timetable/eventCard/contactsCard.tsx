@@ -7,7 +7,7 @@ const ContactsCard = ({ organizer }: { organizer?: string }) => {
     <>
       <h2 className="mt-7">Контакты:</h2>
       <h3 className="mt-1">Организаторы/ спикеры</h3>
-      <div className="container flex flex-row flex-nowrap items-center pb-1.5">
+      <div className="container flex flex-row flex-nowrap items-center -mb-2.5">
         <AvatarIcon className="fill-c_main dark:fill-cd_main" />
         <div className="mx-2">
           <p className="mt-2 mb-1 c1 font-bold">Организатор</p>

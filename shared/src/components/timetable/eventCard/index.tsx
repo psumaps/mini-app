@@ -5,9 +5,8 @@ import Block from '../../common/block';
 import HeartButton from './heartButton';
 import ShareButton from './shareButton';
 import SignUpCard from './signupCard';
-import ViewMapCard from './viewMapCard';
-import DetailsCard from './detailsCard';
 import ContactsCard from './contactsCard';
+import ViewMapCard from './viewMapCard';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const options: Intl.DateTimeFormatOptions = {
@@ -27,7 +26,7 @@ const EventCard = ({ event }: { event: Event }) => {
     [eventDate],
   );
   return (
-    <Block className="p-[0_!important] ">
+    <Block className="p-[0_!important] z-[0_!important] rounded-t-[2rem]">
       <div className="flex flex-col w-full">
         <div className="flex relative flex-col ">
           <img
@@ -48,7 +47,7 @@ const EventCard = ({ event }: { event: Event }) => {
           </div>
         </div>
 
-        <div className="flex flex-col px-4 mt-4">
+        <div className="flex flex-col px-4 mt-4 pb-4">
           {/* <div className="flex gap-3 self-start c1 text-center"> */}
           {/*  <WatchIcon/> */}
           {/*  <div className="my-auto ">2 ч. 30 м.</div> */}
@@ -78,7 +77,14 @@ const EventCard = ({ event }: { event: Event }) => {
           )}
           {event.map_link && <ViewMapCard link={event.map_link} />}
           {event.registration_link && (
-            <DetailsCard link={event.registration_link} />
+            <a
+              href={event.registration_link}
+              className="underline c3 text-c_secondary dark:text-cd_secondary mt-3 text-center"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Подробности мероприятия
+            </a>
           )}
           {event.description && (
             <>

@@ -17,7 +17,8 @@ const EventDescription = () => {
       httpClient.psuTools.events.getEvent(Number(params.eventId)),
   });
   return (
-    <>
+    <div className="h-[92vh]">
+      {/* nav is 8vh */}
       <HeaderBar pageName="Мероприятие" />
       <Layout>
         {query.isPending ? <div>Загрузка...</div> : <> </>}
@@ -29,7 +30,7 @@ const EventDescription = () => {
         )}
       </Layout>
       <NavigationBar />
-    </>
+    </div>
   );
 };
 
