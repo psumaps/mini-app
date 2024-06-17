@@ -17,24 +17,28 @@ const UserCard = () => {
   const query = useQuery({
     queryKey: ['user'],
     queryFn: async () => bridge.send('VKWebAppGetUserInfo'),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 
   return (
-    <Block className="shadow-[none_!important] dark:shadow-[none_!important] p-[0_!important]">
-      <div className="container flex flex-row p-1">
+    <Block className="shadow-[none_!important] dark:shadow-[none_!important]">
+      <div className="flex flex-row items-center gap-4">
         {query.isPending || query.isError ? (
-          <AvatarIcon className="fill-c_main dark:fill-cd_main w-28 h-28" />
+          <AvatarIcon className="fill-c_main dark:fill-cd_main size-24 min-h-24 min-w-24" />
         ) : (
-          <img className="w-28 h-28" src={query.data.photo_100} alt="" />
+          <img
+            className="size-24 min-h-24 min-w-24"
+            src={query.data.photo_100}
+            alt="Аватар"
+          />
         )}
-        <div className="mt-2 w-full p-3">
-          {query.isPending || query.isError ? (
-            <h2>Загрузка...</h2>
-          ) : (
-            <h2>
-              {query.data.first_name} {query.data.last_name}
-            </h2>
-          )}
+        <div className="w-fit overflow-x-clip">
+          <h2 className="text-ellipsis overflow-x-clip">
+            {query.isPending || query.isError
+              ? 'Загрузка...'
+              : `${query.data.first_name} ${query.data.last_name}`}
+          </h2>
           <h4 className="mt-2 mb-1">{user.status}</h4>
           <h5>{user.major}</h5>
         </div>
