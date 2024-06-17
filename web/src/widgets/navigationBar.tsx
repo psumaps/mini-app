@@ -8,7 +8,7 @@ import TimetableIcon from 'psumaps-shared/src/assets/timetable.svg?react';
 import AccountIcon from 'psumaps-shared/src/assets/account.svg?react';
 import Storage from '~/app/storage';
 
-const NavigationBar = () => {
+const NavigationBar = ({ className }: { className?: string }) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -28,7 +28,9 @@ const NavigationBar = () => {
   };
 
   return (
-    <div className="bg-c_bg-block dark:bg-cd_bg-block fixed bottom-0 flex flex-row w-full min-h-14 h-[8dvh] border-t p-4 justify-evenly border-c_inactive">
+    <div
+      className={`bg-c_bg-block dark:bg-cd_bg-block fixed bottom-0 flex flex-row w-full min-h-14 h-[8dvh] z-50 border-t p-4 justify-evenly items-center border-c_inactive ${className}`}
+    >
       <a href="/" aria-label="Карта">
         <MapIcon className={fill('/')} />
       </a>

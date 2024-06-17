@@ -3,8 +3,8 @@ import Poi from '../models/mapi/poi';
 import api from '../api';
 
 const client = {
-  getPoiById: async (type: string, id: string) => {
-    const response = await axios.get<Poi>(`${api.mapi}/poi/${type}:${id}`);
+  getPoiById: async (id: string) => {
+    const response = await axios.get<Poi>(`${api.mapi}/poi/${id}`);
     return response.data;
   },
   getAmenityList: async () => {

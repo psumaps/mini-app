@@ -12,6 +12,10 @@ export default defineConfig({
     alias: {
       '~': fileURLToPath(new URL('./src', import.meta.url)),
       react: path.resolve('./node_modules/react'),
+      '@tanstack/react-query': path.resolve(
+        './node_modules/@tanstack/react-query',
+      ),
     },
   },
+  envDir: '../',
 });

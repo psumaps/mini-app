@@ -9,7 +9,7 @@ import loadSprite from './sprite';
 import VectorTileSource from './vectorTileSource';
 
 export interface IndoorEqualsProps {
-  url?: string;
+  url: string;
   apiKey?: string;
   layers?: LayerSpecification[];
 }
@@ -42,7 +42,9 @@ export default class IndoorEqual implements IControl<Map> {
 
   private _control?: LevelControl;
 
-  private _updateLevelsDebounce: debounce.DebouncedFunction<() => void> | undefined;
+  private _updateLevelsDebounce:
+    | debounce.DebouncedFunction<() => void>
+    | undefined;
 
   constructor(map: Map, options: IndoorEqualsProps) {
     const SourceKlass = VectorTileSource;
@@ -141,7 +143,9 @@ export default class IndoorEqual implements IControl<Map> {
    * @fires IndoorEqual#levelchange
    */
   updateLevel(level: string) {
-    console.log('The updateLevel method is deprecated. Please use setLevel instead.');
+    console.log(
+      'The updateLevel method is deprecated. Please use setLevel instead.',
+    );
     this.setLevel(level);
   }
 
@@ -173,7 +177,11 @@ export default class IndoorEqual implements IControl<Map> {
    */
   setHeatmapVisible(visible: boolean) {
     if (this.map.getLayer('indoor-heat')) {
-      this.map.setLayoutProperty('indoor-heat', 'visibility', visible ? 'visible' : 'none');
+      this.map.setLayoutProperty(
+        'indoor-heat',
+        'visibility',
+        visible ? 'visible' : 'none',
+      );
     }
   }
 
@@ -195,7 +203,10 @@ export default class IndoorEqual implements IControl<Map> {
     this.source.layers
       .filter((layer) => layer.type !== 'heatmap')
       .forEach((layer) => {
-        this.map.setFilter(layer.id, [...(layer.filter || ['all']), ['==', 'level', this.level]]);
+        this.map.setFilter(layer.id, [
+          ...(layer.filter || ['all']),
+          ['==', 'level', this.level],
+        ]);
       });
   }
 
@@ -207,7 +218,9 @@ export default class IndoorEqual implements IControl<Map> {
 
   _updateLevels() {
     if (this.map.getSource(this.source.sourceId)) {
-      const features = this.map.querySourceFeatures(this.source.sourceId, { sourceLayer: 'area' });
+      const features = this.map.querySourceFeatures(this.source.sourceId, {
+        sourceLayer: 'area',
+      });
       const levels = findAllLevels(features);
       if (!arrayEqual(levels, this.levels)) {
         this.levels = levels;

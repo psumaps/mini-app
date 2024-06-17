@@ -36,7 +36,8 @@ const Button = (props: ButtonProps) => {
     <button
       // eslint-disable-next-line react/button-has-type
       type={type}
-      className={`${className} ${buttonStyles!} flex justify-center items-center`}
+      className={`flex justify-center items-center transition-transform duration-100 ease-in-out scale-100 active:scale-90 
+        ${buttonStyles!} ${className}`}
       {...rest}
     >
       {children}
