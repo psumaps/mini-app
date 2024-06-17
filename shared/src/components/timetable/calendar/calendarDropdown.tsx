@@ -46,7 +46,7 @@ const CalendarDropdown = ({
         type="button"
         // @ts-expect-error button doesn't like ref attr
         ref={dropdownTargetRef}
-        className="text-center flex flex-row gap-1 items-center"
+        className="text-center flex flex-row gap-1 items-center z-20 relative"
         onClick={toggleDropdown}
         title="Сменить месяц"
       >
