@@ -9,15 +9,14 @@ import Storage from '~/app/storage';
 
 const SettingsPage = () => {
   return (
-    <div className="h-[92vh]">
-      {/* nav is 8vh */}
-      <HeaderBar pageName="Настройки" />
+    <>
       <Layout>
+        <HeaderBar pageName="Настройки" />
         <UserCard />
         <Settings storage={new Storage()} />
       </Layout>
       <NavigationBar />
-    </div>
+    </>
   );
 };
 
