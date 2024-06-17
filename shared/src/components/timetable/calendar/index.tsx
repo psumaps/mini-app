@@ -4,10 +4,8 @@ import Calendar from 'react-calendar';
 import CalendarDropdown from './calendarDropdown';
 import {
   Value,
-  calculateActiveDiv,
-  calculateActiveDivMinified,
-  calculateNowDiv,
-  calculateNowDivMinified,
+  calculateDiv,
+  calculateMinifiedDiv,
   classTile,
   classWeekday,
   divActiveId,
@@ -20,6 +18,14 @@ import Button from '../../common/button';
 import CalendarIcon from '../../../assets/calendar.svg?react';
 import ResetIcon from '../../../assets/reset.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
+
+const calculateNowDivMinified = () =>
+  calculateMinifiedDiv(divNowId, `${classWeekday}--now-minified`);
+const calculateActiveDivMinified = () =>
+  calculateMinifiedDiv(divActiveId, `${classWeekday}--active-minified`);
+const calculateNowDiv = () => calculateDiv(divNowId, `${classTile}--now`);
+const calculateActiveDiv = () =>
+  calculateDiv(divActiveId, `${classTile}--active`);
 
 const CustomCalendar = ({
   className,
@@ -62,8 +68,8 @@ const CustomCalendar = ({
     const weekdayNow = node(`.${classWeekday}--now-minified`);
     const weekdayActive = node(`.${classWeekday}--active-minified`);
 
-    if (tileNow) {
-      if (weekdayNow) {
+    if (tileNow !== null) {
+      if (weekdayNow != null) {
         if (!showNowDiv) setShowNowDiv(true);
         if (nowInterval) clearInterval(nowInterval);
         calculateNowDivMinified();
@@ -76,8 +82,8 @@ const CustomCalendar = ({
       setShowNowDiv(false);
     }
 
-    if (tileActive) {
-      if (weekdayActive) {
+    if (tileActive !== null) {
+      if (weekdayActive !== null) {
         if (activeInterval) clearInterval(activeInterval);
         calculateActiveDivMinified();
       } else calculateActiveDiv();
@@ -131,7 +137,7 @@ const CustomCalendar = ({
   const handleMinify = () => {
     const nowDiv = node(`#${divNowId}`);
     const activeDiv = node(`#${divActiveId}`);
-    if (!nowDiv || !activeDiv) return;
+    if (nowDiv === null || activeDiv === null) return;
 
     let nowDivFn: () => void;
     let activeDivFn: () => void;
