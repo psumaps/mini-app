@@ -12,14 +12,14 @@ const Settings = ({ storage }: { storage: IStorage }) => {
       </div>
       <Button
         className="rounded-3xl h-12 w-full mt-5 c3"
-        isContrast
+        variant="contrast"
         onClick={() => window.open('https://ya.ru/', '_blank')}
       >
         Привязать профиль ЕТИС
       </Button>
       <Button
         className="rounded-3xl bg-c_secondary dark:bg-cd_telegram dark:text-cd_main h-12 w-full my-3 c3"
-        isContrast
+        variant="contrast"
         onClick={() => window.open('https://t.me/psumaps', '_blank')}
       >
         Группа в Telegram
