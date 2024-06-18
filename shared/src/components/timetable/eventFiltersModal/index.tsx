@@ -25,15 +25,15 @@ const Modal = (props: ModalProps) => {
 
   return (
     <div
-      className={`mt-8 px-1 fixed inset-0 flex items-center justify-center 
+      className={`mt-8 fixed inset-0 flex items-center justify-center z-30
         ${animEnabled && 'transition-all duration-300'} ${
           active
             ? 'opacity-100 translate-y-0'
-            : 'opacity-0 pointer-events-none translate-y-full '
+            : 'opacity-0 pointer-events-none translate-y-full'
         }`}
     >
       <div // eslint-disable-next-line no-useless-escape
-        className={`bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_var(--c\_shadow)] dark:shadow-[0_0px_0.6rem_0px_var(--cd\_shadow)] overflow-y-auto
+        className={`bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_var(--c\_shadow)] dark:shadow-none overflow-y-auto
           ${animEnabled && 'transition-opacity duration-300 ease-in-out'}`}
       >
         <div className="flex pr-4 pl-4 mb-10 mt-2 relative">
@@ -47,9 +47,9 @@ const Modal = (props: ModalProps) => {
         </div>
         {/* eslint-disable-next-line no-nested-ternary */}
         {query.isPending ? (
-          <div>Загрузка...</div>
+          <p>Загрузка...</p>
         ) : query.isError ? (
-          <div>Ошибка!</div>
+          <p>Ошибка!</p>
         ) : (
           filters?.map((filter) => (
             <div key={filter.id}>
