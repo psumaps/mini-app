@@ -91,17 +91,11 @@ export const EventFiltersModal = () => {
       valueId: string,
     ) => {
       setFilters((prevFilters) => {
-        const filterToUpdate = prevFilters!.find(
-          (filter) => filter.id === filterId,
-        );
-        if (filterToUpdate) {
-          const valueToUpdate = filterToUpdate.values.find(
-            (value) => value.id === valueId,
-          );
-          if (valueToUpdate) {
-            valueToUpdate.isChecked = event.target.checked;
-          }
-        }
+        const filterValue = prevFilters
+          ?.find((filter) => filter.id === filterId)
+          ?.values.find((value) => value.id === valueId);
+
+        if (filterValue) filterValue.isChecked = event.target.checked;
         return [...prevFilters!];
       });
     },
