@@ -1,9 +1,10 @@
 import React, { forwardRef, useMemo } from 'react';
-import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 export interface InputProps {
   onClear?: () => void;
   onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  alwaysShowClear?: boolean;
 }
 
 const Input = forwardRef(function Input(
@@ -12,7 +13,8 @@ const Input = forwardRef(function Input(
 ) {
   const { data: animEnabled } = useAnimEnabled();
   // eslint-disable-next-line react/prop-types
-  const { className, value, onSubmit, onClear, ...rest } = props;
+  const { className, value, onSubmit, onClear, alwaysShowClear, ...rest } =
+    props;
   const reference = useMemo(
     () => ref as React.MutableRefObject<HTMLInputElement>,
     [ref],
@@ -40,7 +42,7 @@ const Input = forwardRef(function Input(
         }}
         onClick={() => onClear?.()}
         className={`absolute top-1/2 -translate-y-1/2 size-5 ${animEnabled && 'transition-all duration-200 ease-in-out'}
-          ${value !== '' ? 'opacity-100 right-4' : 'opacity-0 right-0'}`}
+          ${value !== '' || alwaysShowClear ? 'opacity-100 right-4' : 'opacity-0 right-0'}`}
         title="Очистить поиск"
       >
         <div className="w-full h-[1px] origin-center rotate-45 bg-c_secondary dark:bg-cd_secondary" />
