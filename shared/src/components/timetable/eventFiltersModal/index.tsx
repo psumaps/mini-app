@@ -23,22 +23,20 @@ const Modal = (props: ModalProps) => {
 
   return (
     <div
-      className={` px-1 fixed inset-0 flex items-center justify-center transition-transform duration-300 ${
+      className={`mt-8 px-1 fixed inset-0 flex items-center justify-center transition-all duration-300 ${
         active
-          ? 'opacity-100 translate-y-0 '
+          ? 'opacity-100 translate-y-0'
           : 'opacity-0 pointer-events-none translate-y-full '
       }`}
     >
-      <div className="bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_#DDDDDD] dark:shadow-[0_0px_0.6rem_0px_#262626] transition-opacity duration-300 ease-in-out overflow-y-auto">
-        <div className="flex pr-4 pl-4 pb-[2.4rem]">
-          <h2 className="pt-0.5 mx-auto c_textHeader dark:text-cd_main">
-            Фильтры
-          </h2>
+      <div className="bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_var(--c\_shadow)] dark:shadow-[0_0px_0.6rem_0px_var(--cd\_shadow)] transition-opacity duration-300 ease-in-out overflow-y-auto">
+        <div className="flex pr-4 pl-4 mb-10 mt-2 relative">
+          <h2 className="mx-auto c_textHeader dark:text-cd_main">Фильтры</h2>
           <Button
             onClick={() => setActive(false)}
-            className=" absolute top-[1.4rem] right-[1.9rem]  bg-inherit"
+            className="absolute top-1/2 -translate-y-1/2 right-2 p-2 bg-inherit"
           >
-            <CrossIcon />
+            <CrossIcon className="size-4" />
           </Button>
         </div>
         {/* eslint-disable-next-line no-nested-ternary */}

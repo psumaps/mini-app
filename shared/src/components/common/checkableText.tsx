@@ -7,7 +7,11 @@ export interface CheckboxProps
   label?: string;
   isChecked?: boolean;
   classNameLabel?: string;
-  onChange?: (event: ChangeEvent<HTMLInputElement>, ...args: any[]) => void;
+  onChange?: (
+    event: ChangeEvent<HTMLInputElement>,
+    filterId: string,
+    valueId: string,
+  ) => void;
 }
 
 const CheckableText = (props: CheckboxProps) => {
@@ -59,7 +63,7 @@ const CheckableText = (props: CheckboxProps) => {
       <label
         htmlFor={id}
         onClick={handleLabelClick}
-        className={` ${classNameLabel}  ${
+        className={`transition-colors duration-200 ease-in-out ${classNameLabel} ${
           isChecked
             ? 'bg-c_accent border-c_accent border-2 text-cd_textHeader'
             : 'bg-transparent border-2 border-c_secondary text-c_secondary'
