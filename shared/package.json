@@ -1,6 +1,6 @@
 {
   "name": "psumaps-shared",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Shared components for psumaps-frontend",
   "scripts": {
     "storybook": "storybook dev -p 6006",
