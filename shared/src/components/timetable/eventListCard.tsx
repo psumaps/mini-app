@@ -24,27 +24,29 @@ const EventListCard = ({ event }: { event: Event }) => {
         alt=""
       />
       <div className="flex flex-col px-4 mt-3 pb-4">
-        <div className="flex  justify-between items-center">
+        <div className="flex justify-between items-center">
           {event.tag && (
-            <div className="justify-center py-1.5 px-4 max-w-[60%] rounded-full border-2 border-c_main dark:border-cd_main">
-              <p className="c3 text-center">{event.tag}</p>
+            <div className="justify-center py-1.5 px-4 max-w-[60%] rounded-full border-2 border-cd_main ">
+              <p className="c3 text-center text-cd_main">{event.tag}</p>
             </div>
           )}
 
-          <p className="c3">{date.toLocaleDateString('ru')}</p>
+          <p className="c3 text-cd_main">{date.toLocaleDateString('ru')}</p>
         </div>
         <div className="flex justify-between gap-10 mt-4">
           <div>
-            <h3>{event.title}</h3>
-            <p className="mt-2 c2">{event.location}</p>
+            <h3 className="text-cd_main">{event.title}</h3>
+            <p className="mt-2 c2 text-cd_main">{event.location}</p>
           </div>
           {/* eslint-disable-next-line react/button-has-type */}
           <button className="pr-3">
-            <RightIcon className="fill-c_main dark:fill-cd_main" />
+            <RightIcon className="fill-cd_main" />
           </button>
         </div>
         <div className="relative mt-6">
-          <abbr className="absolute bottom-0 right-2">Прошедшее</abbr>
+          <abbr className="absolute bottom-0 right-2 text-cd_main">
+            Прошедшее
+          </abbr>
         </div>
       </div>
     </Block>
