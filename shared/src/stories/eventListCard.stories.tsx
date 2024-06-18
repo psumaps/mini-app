@@ -44,7 +44,8 @@ export const LongTitle: Story = {
       registration_close_datetime: undefined,
       registration_link: 'https://github.com/PSUMaps',
       map_link: 'https://github.com/PSUMaps',
-      cover_image: 'https://psu-tools.ru/events/default.png',
+      cover_image:
+        'https://cdn.culture.ru/images/17dfa1ca-7963-550e-9a62-cd5b95124b95/c_fill,g_center/01-png',
       description:
         'Присоединяйтесь к нам и прославите яркую энергию весны на нашем ежегодном университетском концерте «Малая весна». Целью этого мероприятия',
       id: 106,
