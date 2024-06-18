@@ -1,6 +1,6 @@
-declare namespace Timetable {
+export namespace Timetable {
   export interface Class {
-    classNumber: number;
+    classNumber: string;
     discipline: string;
     type: string;
     place: string;
