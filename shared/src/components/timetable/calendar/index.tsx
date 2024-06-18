@@ -10,8 +10,10 @@ import {
   classWeekday,
   divActiveId,
   divNowId,
+  calendarId,
   getWeek,
   weekdaysEqual,
+  minificationFrameTime,
 } from './calendarUtils';
 import { nodes, node } from '../../../utils/selector';
 import Button from '../../common/button';
@@ -20,13 +22,10 @@ import CalendarIcon from '../../../assets/calendar.svg?react';
 import ResetIcon from '../../../assets/reset.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
-const calculateNowDivMinified = () =>
-  calculateMinifiedDiv(divNowId, `${classWeekday}--now-minified`);
-const calculateActiveDivMinified = () =>
-  calculateMinifiedDiv(divActiveId, `${classWeekday}--active-minified`);
-const calculateNowDiv = () => calculateDiv(divNowId, `${classTile}--now`);
-const calculateActiveDiv = () =>
-  calculateDiv(divActiveId, `${classTile}--active`);
+const calculateNowDivMinified = () => calculateMinifiedDiv(divNowId, `${classWeekday}--now-minified`); // prettier-ignore
+const calculateActiveDivMinified = () => calculateMinifiedDiv(divActiveId, `${classWeekday}--active-minified`); // prettier-ignore
+const calculateNowDiv = () => calculateDiv(divNowId, `${classTile}--now`); // prettier-ignore
+const calculateActiveDiv = () => calculateDiv(divActiveId, `${classTile}--active`); // prettier-ignore
 
 const CustomCalendar = ({
   className,
@@ -157,10 +156,16 @@ const CustomCalendar = ({
     const activeDuration =
       parseFloat(window.getComputedStyle(activeDiv).transitionDuration) * 1000;
 
-    setTimeout(() => clearInterval(activeInterval!), activeDuration);
-    setTimeout(() => clearInterval(nowInterval!), nowDuration);
-    nowInterval = setInterval(nowDivFn, 10); // 100 fps
-    activeInterval = setInterval(activeDivFn, 10);
+    setTimeout(
+      () => clearInterval(activeInterval!),
+      activeDuration + minificationFrameTime,
+    );
+    setTimeout(
+      () => clearInterval(nowInterval!),
+      nowDuration + minificationFrameTime,
+    );
+    nowInterval = setInterval(nowDivFn, minificationFrameTime);
+    activeInterval = setInterval(activeDivFn, minificationFrameTime);
     setIsMinified(!isMinified);
   };
 
@@ -169,29 +174,30 @@ const CustomCalendar = ({
       <Button
         type="button"
         onClick={handleMinify}
-        className="bg-c_main dark:bg-cd_main size-10 rounded-full mx-auto shadow-xl -mb-6 z-10 relative"
+        className="bg-c_main dark:bg-cd_main size-10 rounded-full mx-auto shadow-xl -mb-6 z-10 relative disabled:bg-c_secondary dark:disabled:bg-cd_secondary"
         title="Свернуть календарь"
       >
         <CalendarIcon className="size-5 stroke-c_bg dark:stroke-cd_bg [stroke-width:0.005rem] fill-c_bg dark:fill-cd_bg" />
       </Button>
       <Block
+        id={calendarId}
         className={`flex flex-col relative pt-8 will-change-auto 
           ${animEnabled && 'transition-all duration-300 ease-in-out'} 
           ${isMinified ? 'pb-6' : ''}`}
       >
-        <div className="fixed top-0 left-0 right-0">
+        <div className="absolute top-0 left-0 right-0">
           <div
             id={divNowId}
             className={`absolute border-2 border-solid border-c_accent rounded-full -translate-x-1/2 will-change-transform
               ${animEnabled && 'ease-in-out duration-300 transition-all'} 
-              ${isMinified ? '-translate-y-[1.15rem]' : '-translate-y-1/2'} 
+              ${isMinified ? '-translate-y-[1rem]' : '-translate-y-1/2'} 
               ${showNowDiv ? 'opacity-100' : 'opacity-0'}`}
           />
           <div
             id={divActiveId}
             className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2 will-change-transform
               ${animEnabled && 'ease-in-out duration-300 transition-all'} 
-              ${isMinified ? '-translate-y-[1.15rem]' : '-translate-y-1/2'}`}
+              ${isMinified ? '-translate-y-[1rem]' : '-translate-y-1/2'}`}
           />
         </div>
         <div className="flex flex-row justify-between w-[90%] mx-auto mb-1 items-center">

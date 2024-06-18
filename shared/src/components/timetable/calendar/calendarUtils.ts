@@ -128,15 +128,25 @@ export const weekdaysEqual = (weekday: Element, date: Date) => {
 
 export const divNowId = 'divNow';
 export const divActiveId = 'divActive';
+export const calendarId = 'custom-calendar';
 
-export const calculateRectCenter = (rect: DOMRect) => {
+export const minificationFrameTime = 50;
+
+type RectSimplified = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+};
+
+export const calculateRectCenter = (rect: RectSimplified) => {
   return {
     x: rect.left + rect.width / 2,
     y: rect.top + rect.height / 2,
   };
 };
 
-export const calculateSide = (rect: DOMRect) => {
+export const calculateSide = (rect: RectSimplified) => {
   const greaterSide = Math.max(rect.width, rect.height);
   const lesserSide = Math.min(rect.width, rect.height);
   const interpolationCoefficient = 0.5 / (greaterSide / lesserSide);
@@ -151,9 +161,15 @@ export const calculateDiv = (id: string, tileClass: string) => {
   const div = node(`#${id}`);
   const tile = node(`.${tileClass}`);
   const tileRect = tile!.getBoundingClientRect();
+  const calendarRect = node(`#${calendarId}`)!.getBoundingClientRect();
+  const rect: RectSimplified = {
+    ...tileRect,
+    left: tileRect.left - calendarRect.left,
+    top: tileRect.top - calendarRect.top,
+  };
 
-  const side = 1.1 * calculateSide(tileRect);
-  const center = calculateRectCenter(tileRect);
+  const side = 1.1 * calculateSide(rect);
+  const center = calculateRectCenter(rect);
   div!.setAttribute(
     'style',
     `top: ${center.y + 0.05 * side}px; left: ${center.x}px; width: ${side}px; height: ${side}px;`,
@@ -165,9 +181,15 @@ export const calculateMinifiedDiv = (id: string, weekdayClass: string) => {
   if (!weekday) return;
   const div = node(`#${id}`);
   const weekdayRect = weekday.getBoundingClientRect();
+  const calendarRect = node(`#${calendarId}`)!.getBoundingClientRect();
+  const rect: RectSimplified = {
+    ...weekdayRect,
+    left: weekdayRect.left - calendarRect.left,
+    top: weekdayRect.top - calendarRect.top,
+  };
 
-  const side = calculateSide(weekdayRect);
-  const center = calculateRectCenter(weekdayRect);
+  const side = calculateSide(rect);
+  const center = calculateRectCenter(rect);
   div!.setAttribute(
     'style',
     `top: ${center.y}px; left: ${center.x}px; width: ${side * 0.9}px; height: ${side * 1.85}px;`,
