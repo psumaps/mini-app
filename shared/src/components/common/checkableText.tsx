@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useMemo, useCallback } from 'react';
+import React, { ChangeEvent, useCallback } from 'react';
 
 export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
@@ -20,17 +20,12 @@ const CheckableText = (props: CheckboxProps) => {
     valueId,
     name,
     label,
-    id,
+    id = filterId,
     onChange,
     isChecked = false,
     classNameLabel = ' c3  text-[0.7rem] rounded-2xl px-4 py-[0.5rem] leading-[0.8rem]',
     ...rest
   } = props;
-
-  const inputId = useMemo(
-    () => id || `${name}_${(Math.random() * 100).toFixed(0)}`,
-    [name, id],
-  );
 
   const handleCheckboxChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +51,7 @@ const CheckableText = (props: CheckboxProps) => {
         checked={isChecked}
         className="hidden"
         name={name}
-        id={inputId}
+        id={id}
         onChange={handleCheckboxChange}
         {...rest}
       />
