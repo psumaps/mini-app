@@ -27,19 +27,32 @@ const NavigationBar = ({ className }: { className?: string }) => {
     return 'fill-c_secondary dark:fill-cd_secondary';
   };
 
+  const navigate = (path: string) => {
+    history.pushState({}, '', path);
+    history.go();
+  };
+
   return (
     <div
       className={`bg-c_bg-block dark:bg-cd_bg-block fixed bottom-0 flex flex-row w-full min-h-14 h-[8dvh] z-50 border-t p-4 justify-evenly items-center border-c_inactive ${className}`}
     >
-      <a href="/" aria-label="Карта">
+      <button type="button" onClick={() => navigate('/')} aria-label="Карта">
         <MapIcon className={fill('/')} />
-      </a>
-      <a href="/settings" aria-label="Настройки">
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate('/settings')}
+        aria-label="Настройки"
+      >
         <SettingsIcon className={fill('/settings')} />
-      </a>
-      <a href="/timetable" aria-label="Расписание">
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate('/timetable')}
+        aria-label="Расписание"
+      >
         <TimetableIcon className={fill('/timetable')} />
-      </a>
+      </button>
     </div>
   );
 };
