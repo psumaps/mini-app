@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Block from '../../common/block';
-import Input from './input';
+import Input from '../../common/clearableInput';
 import PopUpHeader from './popUpHeader';
 import { PopUpState } from './searchUtils';
 import Search from './search';
