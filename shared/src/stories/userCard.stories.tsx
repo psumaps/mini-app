@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import userCard from '../components/profile/userCard';
+import userCard from '../components/settings/userCard';
 
 const meta: Meta<typeof userCard> = {
-  title: 'Profile/User card',
+  title: 'Index/User card ',
   component: userCard,
   tags: ['autodocs'],
   parameters: {

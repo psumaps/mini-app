@@ -39,7 +39,7 @@ const SearchPopUp = ({
 
   return (
     <Block
-      className={`absolute rounded-none bottom-0 overflow-y-clip right-0 left-0 transition-all duration-500 ease-in-out 
+      className={`absolute rounded-none bottom-0 overflow-y-clip right-0 left-0 transition-all duration-500 ease-in-out z-10
         ${state === 'opened' ? 'h-full' : ''} 
         ${state === 'middle' ? 'h-24' : 'h-14'}
         ${state === 'opened' ? '' : 'rounded-t-3xl'}`}

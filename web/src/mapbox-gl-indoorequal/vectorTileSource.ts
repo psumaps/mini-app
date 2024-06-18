@@ -13,8 +13,8 @@ class VectorTileSource {
 
   layers: LayerType[];
 
-  constructor(map: MapInstance, options: IndoorEqualsProps = {}) {
-    const defaultOpts = { url: 'https://tiles.indoorequal.org/', layers };
+  constructor(map: MapInstance, options: IndoorEqualsProps) {
+    const defaultOpts = { layers };
     const opts = { ...defaultOpts, ...options };
     this.map = map;
     this.url = opts.url;

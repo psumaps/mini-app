@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import getStoredTheme from 'psumaps-shared/src/utils/readTheme';
 import MapIcon from 'psumaps-shared/src/assets/map.svg?react';
 import TimetableIcon from 'psumaps-shared/src/assets/timetable.svg?react';
-import AccountIcon from 'psumaps-shared/src/assets/account.svg?react';
+import SettingsIcon from 'psumaps-shared/src/assets/settings.svg?react';
 import Storage from '~/app/storage';
 
 const NavigationBar = ({ className }: { className?: string }) => {
@@ -27,19 +27,32 @@ const NavigationBar = ({ className }: { className?: string }) => {
     return 'fill-c_secondary dark:fill-cd_secondary';
   };
 
+  const navigate = (path: string) => {
+    history.pushState({}, '', path);
+    history.go();
+  };
+
   return (
     <div
-      className={`bg-c_bg dark:bg-cd_bg fixed bottom-0 flex flex-row w-full min-h-14 h-[8dvh] z-50 border-t p-4 justify-evenly items-center border-c_inactive ${className}`}
+      className={`bg-c_bg-block dark:bg-cd_bg-block fixed bottom-0 flex flex-row w-full min-h-14 h-[8dvh] z-50 border-t p-4 justify-evenly items-center border-c_inactive ${className}`}
     >
-      <a href="/" aria-label="Карта">
+      <button type="button" onClick={() => navigate('/')} aria-label="Карта">
         <MapIcon className={fill('/')} />
-      </a>
-      <a href="/profile" aria-label="Профиль">
-        <AccountIcon className={fill('/profile')} />
-      </a>
-      <a href="/timetable" aria-label="Расписание">
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate('/settings')}
+        aria-label="Настройки"
+      >
+        <SettingsIcon className={fill('/settings')} />
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate('/timetable')}
+        aria-label="Расписание"
+      >
         <TimetableIcon className={fill('/timetable')} />
-      </a>
+      </button>
     </div>
   );
 };
