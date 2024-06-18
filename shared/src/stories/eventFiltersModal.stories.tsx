@@ -11,7 +11,7 @@ import api from '../network/api';
 import httpClient from '../network/httpClient';
 
 const meta = {
-  title: 'event/Filters',
+  title: 'Timetable/EventFilters',
   component: Modal,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
