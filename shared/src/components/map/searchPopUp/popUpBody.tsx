@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 import Poi from '../../../network/models/mapi/poi';
-import Input from './input';
+import Input from '../../common/clearableInput';
 import PoiInfoDetails from './poiInfoDetails';
 import {
   popUpBodyPoiContainerId,
@@ -75,7 +75,7 @@ const PopUpBody = forwardRef(function PopUpBody(
         onClear={() => setSearchValue('')}
         type="search"
         inputMode="search"
-        className={`${animEnabled && 'transition-all duration-500 ease-in-out'} ${inputStyles}`}
+        className={`${animEnabled && 'transition-all duration-500 ease-in-out'} z-30 ${inputStyles}`}
         placeholder="Поиск"
       />
       <div
