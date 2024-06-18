@@ -25,11 +25,11 @@ const UserCard = () => {
     <Block className="shadow-[none_!important] dark:shadow-[none_!important]">
       <div className="flex flex-row items-center gap-4">
         {query.isPending || query.isError ? (
-          <AvatarIcon className="fill-c_main dark:fill-cd_main size-24 min-h-24 min-w-24" />
+          <AvatarIcon className="fill-c_main dark:fill-cd_main size-24 min-h-24 min-w-24 rounded-full" />
         ) : (
           <img
-            className="size-24 min-h-24 min-w-24"
-            src={query.data.photo_100}
+            className="size-24 min-h-24 min-w-24 rounded-full"
+            src={query.data.photo_200}
             alt="Аватар"
           />
         )}
