@@ -1,3 +1,9 @@
 export default interface Filter {
-  // TODO
+  id: string;
+  name: string;
+  values: {
+    id: string;
+    value: string;
+    isChecked: boolean;
+  }[];
 }

@@ -1,20 +1,16 @@
-/// <reference types="vite-plugin-svgr/client" />
 import React, { ChangeEvent } from 'react';
+import { UseQueryResult } from '@tanstack/react-query';
 import Button from '../../common/button';
 import CheckableText from '../../common/checkableText';
 import Line from '../../common/line';
 import CrossIcon from '../../../assets/cross.svg?react';
-
-interface Filter {
-  id: string;
-  name: string;
-  values: { id: string; value: string; isChecked: boolean }[];
-}
+import Filter from '../../../network/models/psu-tools/eventFilter';
 
 interface ModalProps {
   active: boolean;
   setActive: (active: boolean) => void;
-  filters: Filter[];
+  filters: Filter[] | null;
+  query: UseQueryResult<Filter[], Error>;
   setFilters: (
     event: ChangeEvent<HTMLInputElement>,
     filterId: string,
@@ -23,7 +19,8 @@ interface ModalProps {
 }
 
 const Modal = (props: ModalProps) => {
-  const { active, setActive, filters, setFilters } = props;
+  const { active, setActive, setFilters, filters, query } = props;
+
   return (
     <div
       className={` px-1 fixed inset-0 flex items-center justify-center transition-transform duration-300 ${
@@ -39,34 +36,42 @@ const Modal = (props: ModalProps) => {
           </h2>
           <Button
             onClick={() => setActive(false)}
-            children={<CrossIcon />}
-            className="pt-1 float-left bg-inherit"
-          />
+            className=" absolute top-[1.4rem] right-[1.9rem]  bg-inherit"
+          >
+            <CrossIcon />
+          </Button>
         </div>
-        {filters.map((filter) => (
-          <div key={filter.id}>
-            <div className="c4 pb-4 text-c_textFilter dark:text-cd_main">
-              {filter.name}
-            </div>
-            <div className="flex gap-x-1.5 gap-y-4 flex-wrap">
-              {filter.values.map((value) => (
-                <CheckableText
-                  key={value.id}
-                  filterId={filter.id}
-                  valueId={value.id}
-                  label={value.value}
-                  isChecked={value.isChecked}
-                  onChange={setFilters}
-                />
-              ))}
-            </div>
-            {filter.id !== filters[filters.length - 1].id && (
-              <div className="flex pb-4 pt-6 ml-[-1rem] mr-[-1rem]">
-                <Line className="border-[0.03rem]" />
+        {/* eslint-disable-next-line no-nested-ternary */}
+        {query.isPending ? (
+          <div>Загрузка...</div>
+        ) : query.isError ? (
+          <div>Ошибка!</div>
+        ) : (
+          filters?.map((filter) => (
+            <div key={filter.id}>
+              <div className="c4 pb-4 text-c_textFilter dark:text-cd_main">
+                {filter.name}
               </div>
-            )}
-          </div>
-        ))}
+              <div className="flex gap-x-1.5 gap-y-4 flex-wrap">
+                {filter.values.map((value) => (
+                  <CheckableText
+                    key={value.id}
+                    filterId={filter.id}
+                    valueId={value.id}
+                    label={value.value}
+                    isChecked={value.isChecked}
+                    onChange={setFilters}
+                  />
+                ))}
+              </div>
+              {filter.id !== query.data[query.data.length - 1].id && (
+                <div className="flex pb-4 pt-6 ml-[-1rem] mr-[-1rem]">
+                  <Line className="border-[0.03rem]" />
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
