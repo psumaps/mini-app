@@ -11,14 +11,14 @@ const EventListCard = ({ event }: { event: Event }) => {
       <img
         loading="lazy"
         src={event.cover_image}
-        className="object-cover w-full aspect-video max-h-[25vh] rounded-t-[2rem]"
+        className="object-cover w-full aspect-video max-h-[30vh] rounded-t-[2rem]"
         alt=""
       />
       <div className="flex flex-col px-4 mt-3 pb-4">
-        <div className="flex justify-between items-center">
+        <div className="flex  justify-between items-center">
           {event.tag && (
-            <div className="justify-center py-1.5 px-4 rounded-full border-2 border-c_main dark:border-cd_main">
-              <p className="c3">{event.tag}</p>
+            <div className="justify-center py-1.5 px-4 max-w-[60%] rounded-full border-2 border-c_main dark:border-cd_main">
+              <p className="c3 text-center">{event.tag}</p>
             </div>
           )}
 
