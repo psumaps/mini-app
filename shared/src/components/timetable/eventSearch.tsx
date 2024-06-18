@@ -1,6 +1,6 @@
 import React from 'react';
-import Block from '../../common/block';
-import Input from '../../common/clearableInput';
+import Block from '../common/block';
+import Input from '../common/clearableInput';
 
 const EventSearch = ({
   className,
@@ -25,7 +25,7 @@ const EventSearch = ({
   };
 
   return (
-    <Block className={`relative py-1 px-1 ${className}`}>
+    <Block className={`relative p-[0_!important] ${className}`}>
       <button
         type="button"
         className={`absolute inset-0 flex bg-transparent items-center justify-center transition-all ease-in-out duration-300 origin-top
@@ -36,7 +36,7 @@ const EventSearch = ({
       </button>
       <Input
         ref={inputRef}
-        className={`absolute inset-0 transition-all ease-in-out duration-300 origin-bottom
+        className={`absolute inset-0 top-1/2 -translate-y-1/2 mx-1 transition-all ease-in-out duration-300 origin-bottom
           ${isInputShown ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}
         type="search"
         inputMode="search"

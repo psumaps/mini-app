@@ -30,7 +30,7 @@ const client = {
   events: {
     getEvents: async () => {
       const response = await axios.get<{ events: Event[] }>(
-        `${api.psuTools}/v2/events`,
+        `${api.psuTools}/v2/events?showAll=true`,
       );
       return response.data.events;
     },
