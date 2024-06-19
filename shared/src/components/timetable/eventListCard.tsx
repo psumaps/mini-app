@@ -38,8 +38,7 @@ const EventListCard = ({ event }: { event: Event }) => {
             <h3 className="text-cd_main">{event.title}</h3>
             <p className="mt-2 c2 text-cd_main">{event.location}</p>
           </div>
-          {/* eslint-disable-next-line react/button-has-type */}
-          <button className="pr-3">
+          <button className="pr-3" type="button">
             <RightIcon className="fill-cd_main" />
           </button>
         </div>
