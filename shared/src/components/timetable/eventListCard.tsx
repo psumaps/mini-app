@@ -3,9 +3,15 @@ import React from 'react';
 import { usePalette } from 'color-thief-react';
 import Block from '../common/block';
 import Event from '../../network/models/psu-tools/event';
-import RightIcon from '../../assets/right-arrow.svg?react';
+import RightArrowIcon from '../../assets/right-arrow.svg?react';
 
-const EventListCard = ({ event }: { event: Event }) => {
+const EventListCard = ({
+  event,
+  onOpenDesc,
+}: {
+  event: Event;
+  onOpenDesc: (id: string) => void;
+}) => {
   const date = new Date(event.event_date);
   const { data } = usePalette(event.cover_image!, 2, 'rgbString', {
     crossOrigin: 'anonymous',
@@ -38,8 +44,12 @@ const EventListCard = ({ event }: { event: Event }) => {
             <h3 className="text-cd_main">{event.title}</h3>
             <p className="mt-2 c2 text-cd_main">{event.location}</p>
           </div>
-          <button className="pr-3" type="button">
-            <RightIcon className="fill-cd_main" />
+          <button
+            className="pr-3"
+            type="button"
+            onClick={() => onOpenDesc(`${event.id}`)}
+          >
+            <RightArrowIcon className="fill-cd_main" />
           </button>
         </div>
         <div className="relative mt-6">

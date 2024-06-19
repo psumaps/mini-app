@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import event from '../components/timetable/eventListCard';
 
 const meta: Meta<typeof event> = {
-  title: 'Event-List-Card/Event card',
+  title: 'Timetable/Event card',
   component: event,
   tags: ['autodocs'],
   parameters: {
