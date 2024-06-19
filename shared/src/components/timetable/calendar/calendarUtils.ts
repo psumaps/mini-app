@@ -163,9 +163,10 @@ export const calculateDiv = (id: string, tileClass: string) => {
   const tileRect = tile!.getBoundingClientRect();
   const calendarRect = node(`#${calendarId}`)!.getBoundingClientRect();
   const rect: RectSimplified = {
-    ...tileRect,
     left: tileRect.left - calendarRect.left,
     top: tileRect.top - calendarRect.top,
+    width: tileRect.width,
+    height: tileRect.height,
   };
 
   const side = 1.1 * calculateSide(rect);
@@ -183,9 +184,10 @@ export const calculateMinifiedDiv = (id: string, weekdayClass: string) => {
   const weekdayRect = weekday.getBoundingClientRect();
   const calendarRect = node(`#${calendarId}`)!.getBoundingClientRect();
   const rect: RectSimplified = {
-    ...weekdayRect,
     left: weekdayRect.left - calendarRect.left,
     top: weekdayRect.top - calendarRect.top,
+    width: weekdayRect.width,
+    height: weekdayRect.height,
   };
 
   const side = calculateSide(rect);
