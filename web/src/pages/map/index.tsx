@@ -3,11 +3,10 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/search';
 import { PopUpState } from 'psumaps-shared/src/components/map/search/searchUtils';
-import { StorageContext } from 'psumaps-shared/src/models/storage';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
-import React, { MutableRefObject, forwardRef, useMemo } from 'react';
+import React, { MutableRefObject, forwardRef } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
@@ -17,7 +16,6 @@ import Map, {
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
-import Storage from '~/app/storage';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 
@@ -102,60 +100,58 @@ const MapPage = () => {
   };
 
   return (
-    <StorageContext.Provider value={useMemo(() => new Storage(), [])}>
-      <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
-        <div
-          className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
+    <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
+      <div
+        className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
+      >
+        <Map
+          ref={mapRef}
+          onLoad={handleLoad}
+          {...viewState}
+          onMove={(e) => setViewState(e.viewState)}
+          style={{ width: '100%', height: '100%' }}
+          mapStyle={mapStyleUrl}
+          attributionControl={false}
         >
-          <Map
-            ref={mapRef}
-            onLoad={handleLoad}
-            {...viewState}
-            onMove={(e) => setViewState(e.viewState)}
-            style={{ width: '100%', height: '100%' }}
-            mapStyle={mapStyleUrl}
-            attributionControl={false}
-          >
-            <GeolocateControl
-              position="bottom-right"
-              style={{
-                marginBottom: `${popupState === 'middle' ? '7rem' : 'calc(4rem + 2dvh)'}`,
-                transition: 'all 500ms ease-in-out',
-              }}
-            />
-            <NavigationControl position="bottom-right" />
-            <IndoorControl ref={indoorControlRef} />
-            {markerCoords && (
-              <Marker
-                latitude={markerCoords.lt}
-                longitude={markerCoords.lg}
-                anchor="bottom"
-                onClick={(e) => {
-                  e.originalEvent.stopPropagation();
-                  setMarkerCoords(null);
-                }}
-              >
-                <MarkerIcon
-                  className={`transition-all duration-200 ease-in-out 
-                    ${markerCoords.level === indoorLevel ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
-                />
-              </Marker>
-            )}
-          </Map>
-          <SearchPopUp
-            state={popupState}
-            setState={setPopupState}
-            onSelect={handleSelect}
-            selectedPoi={selectedPoi}
-            setSelectedPoi={setSelectedPoi}
+          <GeolocateControl
+            position="bottom-right"
+            style={{
+              marginBottom: `${popupState === 'middle' ? '7rem' : 'calc(4rem + 2dvh)'}`,
+              transition: 'all 500ms ease-in-out',
+            }}
           />
-        </div>
-        <NavigationBar
-          className={`transition-all duration-200 ease-in-out origin-bottom flex-[0_0_8%] 
-            ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
+          <NavigationControl position="bottom-right" />
+          <IndoorControl ref={indoorControlRef} />
+          {markerCoords && (
+            <Marker
+              latitude={markerCoords.lt}
+              longitude={markerCoords.lg}
+              anchor="bottom"
+              onClick={(e) => {
+                e.originalEvent.stopPropagation();
+                setMarkerCoords(null);
+              }}
+            >
+              <MarkerIcon
+                className={`transition-all duration-200 ease-in-out 
+                    ${markerCoords.level === indoorLevel ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
+              />
+            </Marker>
+          )}
+        </Map>
+        <SearchPopUp
+          state={popupState}
+          setState={setPopupState}
+          onSelect={handleSelect}
+          selectedPoi={selectedPoi}
+          setSelectedPoi={setSelectedPoi}
         />
       </div>
-    </StorageContext.Provider>
+      <NavigationBar
+        className={`transition-all duration-200 ease-in-out origin-bottom flex-[0_0_8%] 
+            ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
+      />
+    </div>
   );
 };
 

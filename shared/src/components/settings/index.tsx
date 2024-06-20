@@ -2,13 +2,20 @@ import React from 'react';
 import ThemeSwitch from '../common/themeSwitch';
 import Button from '../common/button';
 import IStorage from '../../models/storage';
+import AnimSwitch from '../common/animSwitch';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 const Settings = ({ storage }: { storage: IStorage }) => {
+  const { data: animEnabled } = useAnimEnabled();
   return (
     <>
       <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
         Темная тема
         <ThemeSwitch storage={storage} />
+      </div>
+      <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
+        {animEnabled ? 'Отключить анимации' : 'Включить анимации'}
+        <AnimSwitch storage={storage} />
       </div>
       <Button
         className="rounded-3xl h-12 w-full mt-5 c3"
