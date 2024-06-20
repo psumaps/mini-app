@@ -22,6 +22,7 @@ module.exports = {
     '**/*.json',
     'global.d.ts',
     'vite-env.d.ts',
+    'decorators/**',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
