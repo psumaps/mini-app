@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useCallback } from 'react';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
@@ -15,6 +16,7 @@ export interface CheckboxProps
 }
 
 const CheckableText = (props: CheckboxProps) => {
+  const { data: animEnabled } = useAnimEnabled();
   const {
     filterId,
     valueId,
@@ -47,7 +49,7 @@ const CheckableText = (props: CheckboxProps) => {
       />
       <label
         htmlFor={id}
-        className={`transition-colors duration-200 ease-in-out ${classNameLabel} ${
+        className={`${animEnabled && 'transition-colors duration-200 ease-in-out'} ${classNameLabel} ${
           isChecked
             ? 'bg-c_accent border-c_accent border-2 text-cd_textHeader'
             : 'bg-transparent border-2 border-c_secondary text-c_secondary'

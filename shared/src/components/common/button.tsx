@@ -1,4 +1,5 @@
 import React from 'react';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'contrast' | 'accent';
@@ -6,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = (props: ButtonProps) => {
+  const { data: animEnabled } = useAnimEnabled();
   const {
     variant = 'primary',
     className,
@@ -36,7 +38,7 @@ const Button = (props: ButtonProps) => {
     <button
       // eslint-disable-next-line react/button-has-type
       type={type}
-      className={`flex justify-center items-center transition-transform duration-100 ease-in-out scale-100 active:scale-90 
+      className={`flex justify-center items-center ${animEnabled && 'transition-transform duration-100 ease-in-out'}  scale-100 active:scale-90 
         ${buttonStyles!} ${className}`}
       {...rest}
     >

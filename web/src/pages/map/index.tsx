@@ -16,6 +16,7 @@ import Map, {
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
+import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 
@@ -38,6 +39,7 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
 });
 
 const MapPage = () => {
+  const { data: animEnabled } = useAnimEnabled();
   const isKeyboardOpen = useDetectKeyboardOpen();
   const mapRef = React.useRef<MapRef | null>(null);
   const indoorControlRef = React.useRef<IndoorEqual | null>(null);
@@ -117,7 +119,7 @@ const MapPage = () => {
             position="bottom-right"
             style={{
               marginBottom: `${popupState === 'middle' ? '7rem' : 'calc(4rem + 2dvh)'}`,
-              transition: 'all 500ms ease-in-out',
+              transition: `${animEnabled && 'all 500ms ease-in-out'}`,
             }}
           />
           <NavigationControl position="bottom-right" />
@@ -133,7 +135,7 @@ const MapPage = () => {
               }}
             >
               <MarkerIcon
-                className={`transition-all duration-200 ease-in-out 
+                className={`${animEnabled && 'transition-all duration-200 ease-in-out'} 
                     ${markerCoords.level === indoorLevel ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
               />
             </Marker>
@@ -148,7 +150,7 @@ const MapPage = () => {
         />
       </div>
       <NavigationBar
-        className={`transition-all duration-200 ease-in-out origin-bottom flex-[0_0_8%] 
+        className={`${animEnabled && 'transition-all duration-200 ease-in-out'} origin-bottom flex-[0_0_8%] 
             ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
       />
     </div>

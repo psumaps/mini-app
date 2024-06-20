@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 
 import IStorage from '../../models/storage';
 import getStoredTheme from '../../utils/readTheme';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 /**
  * Рисует переключатель темы. Работает вместе с навигацией
@@ -18,6 +19,7 @@ const ThemeSwitch = <T extends IStorage>({
   className?: string;
   storage: T;
 }) => {
+  const { data: animEnabled } = useAnimEnabled();
   const [isDark, setIsDark] = React.useState(false);
 
   const toggleTheme = () => {
@@ -45,11 +47,11 @@ const ThemeSwitch = <T extends IStorage>({
     >
       <div className="w-10 h-4 rounded-full bg-c_secondary dark:bg-cd_secondary z-0" />
       <div
-        className={`w-8 h-8 rounded-full absolute top-0 left-0 translate-y-2 transition transform-gpu active:scale-90
+        className={`w-8 h-8 rounded-full absolute top-0 left-0 translate-y-2 ${animEnabled && 'transition'} transform-gpu active:scale-90
           ${isDark ? 'bg-slate-300' : 'bg-yellow-400 translate-x-6'}`}
       >
         <div
-          className={`w-6 h-6 rounded-full absolute bg-c_bg dark:bg-cd_bg top-[0.1rem] left-[-0.1rem] transition transform 
+          className={`w-6 h-6 rounded-full absolute bg-c_bg dark:bg-cd_bg top-[0.1rem] left-[-0.1rem] ${animEnabled && 'transition'} transform 
             ${isDark ? 'opacity-100' : 'opacity-0 -translate-x-6'}`}
         />
       </div>

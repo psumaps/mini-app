@@ -19,6 +19,7 @@ import { nodes, node } from '../../../utils/selector';
 import Button from '../../common/button';
 import CalendarIcon from '../../../assets/calendar.svg?react';
 import ResetIcon from '../../../assets/reset.svg?react';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
 const CustomCalendar = ({
   className,
@@ -27,6 +28,7 @@ const CustomCalendar = ({
   className?: string;
   onChange?: (value: Value) => void;
 }) => {
+  const { data: animEnabled } = useAnimEnabled();
   const today = useMemo(() => new Date(), []);
   const [activeStartDate, setActiveStartDate] = useState(today);
   const [value, setValue] = useState<Value>(today);
@@ -90,13 +92,18 @@ const CustomCalendar = ({
   }, [value, isMinified, assignClasses, manageDivs]);
 
   const tileClassName = ({ date }: { date: Date }) => {
-    if (!isMinified) return '';
+    let tileStyle = `${animEnabled && 'transition-all duration-300 ease-in-out'}`;
+    if (!isMinified) return tileStyle;
     const week = getWeek(value as Date);
     const curr = new Date(date);
     curr.setSeconds(1); // 00:00:00 != 00:00:00 for some reason
     if (week[0] <= curr && week[1] >= curr)
-      return `${classTile}--showed-minified`;
-    return 'translate-y-[-100%] opacity-0 h-[0_!important] p-[0_!important]';
+      tileStyle += `${classTile}--showed-minified`;
+    else
+      tileStyle +=
+        'translate-y-[-100%] opacity-0 h-[0_!important] p-[0_!important]';
+
+    return tileStyle;
   };
 
   const handleChange = (newValue: Value) => {
@@ -155,11 +162,16 @@ const CustomCalendar = ({
       <div className="fixed top-0 left-0 right-0 bottom-0 z-[-100]">
         <div
           id={divNowId}
-          className={`absolute border-2 border-solid border-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? 'h-20 -translate-y-5' : '-translate-y-1/2'} ${showNowDiv ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute border-2 border-solid border-c_accent rounded-full -translate-x-1/2 z-[-10] will-change-transform 
+            ${animEnabled && 'ease-in-out duration-300 transition-all'} 
+            ${isMinified ? 'h-20 -translate-y-5' : '-translate-y-1/2'} 
+            ${showNowDiv ? 'opacity-100' : 'opacity-0'}`}
         />
         <div
           id={divActiveId}
-          className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2  z-[-10] will-change-transform ease-in-out duration-300 transition-all ${isMinified ? 'h-20 -translate-y-5' : '-translate-y-1/2'}`}
+          className={`absolute border-2 border-solid border-c_accent bg-c_accent rounded-full -translate-x-1/2  z-[-10] will-change-transform 
+            ${animEnabled && 'ease-in-out duration-300 transition-all'} 
+            ${isMinified ? 'h-20 -translate-y-5' : '-translate-y-1/2'}`}
         />
       </div>
       <Button
@@ -190,7 +202,7 @@ const CustomCalendar = ({
             {today.toLocaleDateString('ru-RU')}
           </h5>
           <ResetIcon
-            className={`w-5 h-5 fill-c_inactive dark:fill-cd_inactive transition-transform ${resetIconAnimation ? 'rotate-[360deg] duration-500' : 'duration-0'}`}
+            className={`w-5 h-5 fill-c_inactive dark:fill-cd_inactive ${animEnabled && 'transition-transform'} ${resetIconAnimation ? 'rotate-[360deg] duration-500' : 'duration-0'}`}
           />
         </button>
       </div>

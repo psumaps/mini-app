@@ -69,7 +69,7 @@
 }
 
 .react-calendar__tile {
-  @apply duration-300 ease-in-out h-10 pb-1 transition-all z-0 will-change-transform;
+  @apply h-10 pb-1 z-0 will-change-transform;
   flex: 0 0 var(--tile-flex-basis) !important;
 }
 

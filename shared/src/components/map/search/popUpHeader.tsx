@@ -4,6 +4,7 @@ import DragHandle from './dragHandle';
 import { PopUpState } from './searchUtils';
 import SearchIcon from '../../../assets/search.svg?react';
 import Poi, { detectPoiName } from '../../../network/models/mapi/poi';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
 const PopUpHeader = ({
   state,
@@ -18,6 +19,7 @@ const PopUpHeader = ({
   selectedPoi: Poi | null;
   setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
 }) => {
+  const { data: animEnabled } = useAnimEnabled();
   const [selectedPoiName, setSelectedPoiName] = React.useState<string>('');
   const handleSwipe = (direction: 'left' | 'right' | 'up' | 'down') => {
     switch (direction) {
@@ -63,14 +65,16 @@ const PopUpHeader = ({
         <div className="size-full items-center relative cursor-pointer">
           <DragHandle state={state} />
           <div
-            className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit transition-all duration-500 ease-in-out origin-top
+            className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit origin-top 
+              ${animEnabled && 'transition-all duration-500 ease-in-out'}
               ${state === 'closed' && selectedPoi === null ? 'scale-y-100 opacity-100' : 'opacity-0 scale-y-0'}`}
           >
             <SearchIcon className="size-6 stroke-c_main dark:stroke-cd_main absolute top-0 left-4" />
             <p className="mx-auto z-[-1]">Поиск</p>
           </div>
           <div
-            className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit transition-all duration-500 ease-in-out origin-bottom
+            className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit origin-bottom
+              ${animEnabled && 'transition-all duration-500 ease-in-out'}
               ${state === 'closed' && !!selectedPoi ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}
               ${state === 'opened' || state === 'middle' ? 'origin-top' : ''}`}
           >

@@ -4,11 +4,12 @@ import httpClient from '../../../network/httpClient';
 import { PopUpState } from './searchUtils';
 import Poi from '../../../network/models/mapi/poi';
 import { StorageContext } from '../../../models/storage';
-import SearchHistory from '~/src/models/searchHistory';
+import SearchHistory from '../../../models/searchHistory';
 import SearchEntry from './searchEntry';
 import SearchResult from './searchResult';
 import AmenityIcon from './amenityIcon';
 import Button from '../../common/button';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
 const queryOptions = {
   staleTime: 1000 * 60 * 5,
@@ -26,6 +27,7 @@ const Search = ({
   onSelect?: (poi: Poi) => void;
   selectedPoi: Poi | null;
 }) => {
+  const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const storage = useContext(StorageContext);
   const [selectedAmenity, setSelectedAmenity] = useState<string | null>(null);
@@ -130,7 +132,8 @@ const Search = ({
     <div className="flex flex-col h-full">
       <div className="relative">
         <div
-          className={`grid grid-cols-[1fr_1fr_1fr] gap-x-2 gap-y-8 h-fit transition-all duration-200 ease-in-out flex-auto
+          className={`grid grid-cols-[1fr_1fr_1fr] gap-x-2 gap-y-8 h-fit flex-auto
+            ${animEnabled && 'transition-all duration-200 ease-in-out'}
           ${amenityPresent || selectedPoi ? 'gap-[0_!important] justify-end' : ''}
           ${amenitiesGridStyle}`}
         >
@@ -143,7 +146,7 @@ const Search = ({
                   amenity={amenity}
                   handleAmenityClick={(a) => handleAmenityClick(a, i)}
                   className={`${selectedAmenity === amenity ? 'w-fit h-fit' : ''}`}
-                  classNameInner={`transition-all duration-200 ease-in-out origin-top-left
+                  classNameInner={`${animEnabled && 'transition-all duration-200 ease-in-out'} origin-top-left
                     ${amenityPresent && (selectedAmenity === amenity ? '' : 'h-0 w-0 opacity-0')}
                     ${selectedPoi ? 'w-0 h-0 opacity-0' : ''}`}
                 />

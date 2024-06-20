@@ -1,4 +1,5 @@
 import React, { forwardRef, useMemo } from 'react';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
 export interface InputProps {
   onClear?: () => void;
@@ -9,6 +10,7 @@ const Input = forwardRef(function Input(
   props: React.InputHTMLAttributes<HTMLInputElement> & InputProps,
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
+  const { data: animEnabled } = useAnimEnabled();
   // eslint-disable-next-line react/prop-types
   const { className, value, onSubmit, onClear, ...rest } = props;
   const reference = useMemo(
@@ -37,7 +39,7 @@ const Input = forwardRef(function Input(
           e.stopPropagation();
         }}
         onClick={() => onClear?.()}
-        className={`absolute top-1/2 -translate-y-1/2 size-5 transition-all duration-200 ease-in-out
+        className={`absolute top-1/2 -translate-y-1/2 size-5 ${animEnabled && 'transition-all duration-200 ease-in-out'}
           ${value !== '' ? 'opacity-100 right-4' : 'opacity-0 right-0'}`}
         title="Очистить поиск"
       >
