@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 export interface CheckableProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -30,6 +31,7 @@ export const Checkbox = (props: CheckableProps) => (
  * @param {React.InputHTMLAttributes<HTMLInputElement>} [props...] - Дополнительные параметры, которые будут распространены на элемент input.
  */
 const Checkable = (props: CheckableProps) => {
+  const { data: animEnabled } = useAnimEnabled();
   const {
     name,
     type = 'radio',
@@ -54,7 +56,9 @@ const Checkable = (props: CheckableProps) => {
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[2] appearance-none size-5 p-0 focus:outline-none peer"
           {...rest}
         />
-        <div className="z-[1] rounded-full border-solid border border-c_accent absolute inset-0 bg-transparent peer-checked:after:scale-100 after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:size-2/3 after:rounded-full after:scale-0 after:transition-transform after:duration-200 after:ease-in-out after:bg-c_accent" />
+        <div
+          className={`z-[1] rounded-full border-solid border border-c_accent absolute inset-0 bg-transparent peer-checked:after:scale-100 after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:size-2/3 after:rounded-full after:scale-0 ${animEnabled && 'after:transition-transform after:duration-200 after:ease-in-out'} after:bg-c_accent`}
+        />
       </div>
       {label && (
         <label htmlFor={id} className={classNameLabel}>

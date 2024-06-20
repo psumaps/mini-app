@@ -3,6 +3,7 @@ import {
   detectAmenityImage,
   detectAmenityName,
 } from '../../../network/utils/detectAmenity';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
 const AmenityIcon = ({
   className,
@@ -15,12 +16,13 @@ const AmenityIcon = ({
   amenity: string;
   handleAmenityClick: (amenity: string) => void;
 }) => {
+  const { data: animEnabled } = useAnimEnabled();
   const Image = detectAmenityImage(amenity);
   return (
     <button
       type="button"
       onClick={() => handleAmenityClick(amenity)}
-      className={`flex flex-col items-center active:scale-90 scale-100 transition-all duration-200 ease-in-out ${className}`}
+      className={`flex flex-col items-center active:scale-90 scale-100 ${animEnabled && 'transition-all duration-200 ease-in-out'} ${className}`}
     >
       <div
         className={`aspect-square size-10 rounded-full bg-c_accent justify-center items-center flex ${classNameInner}`}

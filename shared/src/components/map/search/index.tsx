@@ -6,6 +6,7 @@ import { PopUpState } from './searchUtils';
 import Search from './search';
 import Poi from '../../../network/models/mapi/poi';
 import SearchEntry from './searchEntry';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
 const SearchPopUp = ({
   state,
@@ -20,6 +21,7 @@ const SearchPopUp = ({
   selectedPoi: Poi | null;
   setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
 }) => {
+  const { data: animEnabled } = useAnimEnabled();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchValue, setSearchValue] = useState<string>('');
   const [selectedPoiInner, setSelectedPoiInner] = useState<Poi | null>(null);
@@ -39,7 +41,8 @@ const SearchPopUp = ({
 
   return (
     <Block
-      className={`absolute rounded-none bottom-0 overflow-y-clip right-0 left-0 transition-all duration-500 ease-in-out z-10
+      className={`absolute rounded-none bottom-0 overflow-y-clip right-0 left-0 z-10 
+        ${animEnabled && 'transition-all duration-500 ease-in-out'}
         ${state === 'opened' ? 'h-full' : ''} 
         ${state === 'middle' ? 'h-24' : 'h-14'}
         ${state === 'opened' ? '' : 'rounded-t-3xl'}`}
@@ -52,7 +55,8 @@ const SearchPopUp = ({
         setSelectedPoi={setSelectedPoi}
       />
       <div
-        className={`absolute left-0 right-0 p-4 transition-all duration-500 ease-in-out flex flex-col gap-4
+        className={`absolute left-0 right-0 p-4 flex flex-col gap-4 
+          ${animEnabled && 'transition-all duration-500 ease-in-out'} 
           ${state === 'opened' ? 'top-12' : 'top-12 py-0'}
           ${state === 'closed' ? 'h-0' : 'bottom-0'}`}
       >
@@ -67,7 +71,7 @@ const SearchPopUp = ({
           onClear={() => setSearchValue('')}
           type="search"
           inputMode="search"
-          className={`transition-all duration-500 ease-in-out
+          className={`${animEnabled && 'transition-all duration-500 ease-in-out'}
             ${
               (state === 'opened' || state === 'middle') && selectedPoi === null
                 ? 'scale-y-100 opacity-100'
@@ -76,7 +80,8 @@ const SearchPopUp = ({
           placeholder="Поиск"
         />
         <div
-          className={`absolute -top-2 left-0 right-0 px-4 origin-bottom transition-all duration-500 ease-in-out
+          className={`absolute -top-2 left-0 right-0 px-4 origin-bottom 
+            ${animEnabled && 'transition-all duration-500 ease-in-out'}
             ${selectedPoi === null || state === 'closed' ? 'scale-y-0 opacity-0' : 'scale-y-100 opacity-100'}`}
         >
           <SearchEntry

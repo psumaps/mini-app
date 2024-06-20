@@ -5,6 +5,7 @@ import CheckableText from '../../common/checkableText';
 import Line from '../../common/line';
 import CrossIcon from '../../../assets/cross.svg?react';
 import Filter from '../../../network/models/psu-tools/eventFilter';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
 interface ModalProps {
   active: boolean;
@@ -19,17 +20,22 @@ interface ModalProps {
 }
 
 const Modal = (props: ModalProps) => {
+  const { data: animEnabled } = useAnimEnabled();
   const { active, setActive, setFilters, filters, query } = props;
 
   return (
     <div
-      className={`mt-8 px-1 fixed inset-0 flex items-center justify-center transition-all duration-300 ${
-        active
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 pointer-events-none translate-y-full '
-      }`}
+      className={`mt-8 px-1 fixed inset-0 flex items-center justify-center 
+        ${animEnabled && 'transition-all duration-300'} ${
+          active
+            ? 'opacity-100 translate-y-0'
+            : 'opacity-0 pointer-events-none translate-y-full '
+        }`}
     >
-      <div className="bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_var(--c\_shadow)] dark:shadow-[0_0px_0.6rem_0px_var(--cd\_shadow)] transition-opacity duration-300 ease-in-out overflow-y-auto">
+      <div // eslint-disable-next-line no-useless-escape
+        className={`bg-cd_main dark:bg-cd_bg-block w-screen h-screen rounded-forty p-4 shadow-[0_0px_0.6rem_0px_var(--c\_shadow)] dark:shadow-[0_0px_0.6rem_0px_var(--cd\_shadow)] overflow-y-auto
+          ${animEnabled && 'transition-opacity duration-300 ease-in-out'}`}
+      >
         <div className="flex pr-4 pl-4 mb-10 mt-2 relative">
           <h2 className="mx-auto c_textHeader dark:text-cd_main">Фильтры</h2>
           <Button
