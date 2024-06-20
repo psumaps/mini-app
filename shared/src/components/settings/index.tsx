@@ -1,9 +1,9 @@
 import React from 'react';
-import ThemeSwitch from '../common/themeSwitch';
-import Button from '../common/button';
-import IStorage from '../../models/storage';
-import AnimSwitch from '../common/animSwitch';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
+import IStorage from '../../models/storage';
+import Button from '../common/button';
+import AnimSwitch from './animSwitch';
+import ThemeSwitch from './themeSwitch';
 
 const Settings = ({ storage }: { storage: IStorage }) => {
   const { data: animEnabled } = useAnimEnabled();
