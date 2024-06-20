@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Calendar from '../components/timetable/calendar';
+import StorageDecorator from './decorators/storage';
 
 const meta: Meta<typeof Calendar> = {
   title: 'Timetable/Calendar',
   component: Calendar,
   tags: ['autodocs'],
+  decorators: [StorageDecorator],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'centered',

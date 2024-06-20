@@ -7,6 +7,7 @@ import useTryQueryClient from './useTryQueryClient';
 const useAnimEnabled = () => {
   const queryClient = useTryQueryClient();
   const storage = useContext(StorageContext);
+  console.log(storage);
   return useQuery<boolean>(
     {
       queryKey: ['animation_enabled'],

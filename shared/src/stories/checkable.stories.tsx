@@ -5,6 +5,7 @@ import Checkable, {
   Radio,
   Checkbox,
 } from '../components/common/checkable';
+import StorageDecorator from './decorators/storage';
 
 const meta = {
   title: 'Common/Checkable',
@@ -14,6 +15,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  decorators: [StorageDecorator],
   tags: ['autodocs'],
   argTypes: {
     type: {
