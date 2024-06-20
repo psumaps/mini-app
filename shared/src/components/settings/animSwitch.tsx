@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
+import useTryQueryClient from '../../hooks/useTryQueryClient';
 import IStorage from '../../models/storage';
 import { getStoredAnimEnabled } from '../../utils/readStorage';
 
@@ -17,7 +17,7 @@ const AnimSwitch = <T extends IStorage>({
   className?: string;
   storage: T;
 }) => {
-  const queryClient = useQueryClient();
+  const queryClient = useTryQueryClient();
   const [isAnimEnabled, setIsAnimEnabled] = React.useState(true);
 
   const toggleAnimEnabled = () => {

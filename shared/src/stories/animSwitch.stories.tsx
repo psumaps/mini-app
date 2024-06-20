@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 // eslint-disable-next-line import/no-relative-packages
 import Storage from '../../../web/src/app/storage';
-import ThemeSwitch from '../components/settings/themeSwitch';
+import AnimSwitch from '../components/settings/animSwitch';
 
-const meta: Meta<typeof ThemeSwitch> = {
-  title: 'Settings/Theme switch',
-  component: ThemeSwitch,
+const meta: Meta<typeof AnimSwitch> = {
+  title: 'Settings/Animation switch',
+  component: AnimSwitch,
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout

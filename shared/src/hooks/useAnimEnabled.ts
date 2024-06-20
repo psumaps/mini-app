@@ -1,16 +1,11 @@
+import { useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
-import { QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 import { StorageContext } from '../models/storage';
 import { getStoredAnimEnabled } from '../utils/readStorage';
+import useTryQueryClient from './useTryQueryClient';
 
 const useAnimEnabled = () => {
-  let queryClient: QueryClient;
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    queryClient = useQueryClient();
-  } catch (e) {
-    queryClient = new QueryClient();
-  }
+  const queryClient = useTryQueryClient();
   const storage = useContext(StorageContext);
   return useQuery<boolean>(
     {
