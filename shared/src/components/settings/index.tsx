@@ -1,12 +1,10 @@
 import React from 'react';
-import useAnimEnabled from '../../hooks/useAnimEnabled';
 import IStorage from '../../models/storage';
 import Button from '../common/button';
 import AnimSwitch from './animSwitch';
 import ThemeSwitch from './themeSwitch';
 
 const Settings = ({ storage }: { storage: IStorage }) => {
-  const { data: animEnabled } = useAnimEnabled();
   return (
     <>
       <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
@@ -14,7 +12,7 @@ const Settings = ({ storage }: { storage: IStorage }) => {
         <ThemeSwitch storage={storage} />
       </div>
       <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
-        {animEnabled ? 'Отключить анимации' : 'Включить анимации'}
+        Включить анимации
         <AnimSwitch storage={storage} />
       </div>
       <Button
