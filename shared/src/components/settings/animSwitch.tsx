@@ -45,7 +45,7 @@ const AnimSwitch = <T extends IStorage>({
       <div className="w-10 h-4 rounded-full bg-c_secondary dark:bg-cd_secondary z-0" />
       <div
         className={`w-8 h-8 rounded-full absolute top-0 left-0 translate-y-2 ${isAnimEnabled && 'transition'} transform-gpu active:scale-90
-          ${isAnimEnabled ? 'bg-c_accent' : 'bg-c_inactive dark:bg-cd_bg-c_inactive translate-x-6'}`}
+          ${isAnimEnabled ? 'bg-c_accent translate-x-6' : 'bg-c_inactive dark:bg-cd_bg-c_inactive'}`}
       />
     </button>
   );
