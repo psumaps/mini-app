@@ -4,8 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { User } from '../../models/user';
 import AvatarIcon from '../../assets/avatar.svg?react';
 import Block from '../common/block';
+import useTryQueryClient from '../../hooks/useTryQueryClient';
 
 const UserCard = () => {
+  const queryClient = useTryQueryClient();
   const user: User = useMemo(
     () => ({
       status: 'Студент',
@@ -14,12 +16,15 @@ const UserCard = () => {
     [],
   );
 
-  const query = useQuery({
-    queryKey: ['user'],
-    queryFn: async () => bridge.send('VKWebAppGetUserInfo'),
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-  });
+  const query = useQuery(
+    {
+      queryKey: ['user'],
+      queryFn: async () => bridge.send('VKWebAppGetUserInfo'),
+      staleTime: 1000 * 60 * 5,
+      refetchOnWindowFocus: false,
+    },
+    queryClient,
+  );
 
   return (
     <Block className="shadow-[none_!important] dark:shadow-[none_!important]">
