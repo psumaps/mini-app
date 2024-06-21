@@ -20,7 +20,7 @@ const CheckableText = (props: CheckboxProps) => {
     valueId,
     name,
     label,
-    id = filterId,
+    id = `${filterId}-${valueId}`,
     onChange,
     isChecked = false,
     classNameLabel = ' c3  text-[0.7rem] rounded-2xl px-4 py-[0.5rem] leading-[0.8rem]',
@@ -29,20 +29,10 @@ const CheckableText = (props: CheckboxProps) => {
 
   const handleCheckboxChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      if (onChange) {
-        onChange(event, filterId, valueId);
-      }
+      onChange?.(event, filterId, valueId);
     },
     [onChange, filterId, valueId],
   );
-
-  const handleLabelClick = () => {
-    handleCheckboxChange({
-      target: {
-        checked: !isChecked,
-      },
-    } as ChangeEvent<HTMLInputElement>);
-  };
 
   return (
     <div className="flex items-center">
@@ -57,7 +47,6 @@ const CheckableText = (props: CheckboxProps) => {
       />
       <label
         htmlFor={id}
-        onClick={handleLabelClick}
         className={`transition-colors duration-200 ease-in-out ${classNameLabel} ${
           isChecked
             ? 'bg-c_accent border-c_accent border-2 text-cd_textHeader'
