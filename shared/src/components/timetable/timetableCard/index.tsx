@@ -26,13 +26,13 @@ const TimetableCard = ({ classData, classDate }: Props) => {
 
   return (
     <div className={cardClassName}>
-      <div className="pt-[1.3rem] pb-[1.8rem] pl-[1.6rem] pr-[2.1rem] grid gap-4 grid-cols-2">
+      <div className="pt-[1.3rem] pb-[1.8rem] pl-[1.6rem] pr-[2.1rem] flex justify-between items-start">
         <div>
-          <h3 className={`${cardClassNameText} pb-[0.6rem]`}>
+          <h3 className={`${cardClassNameText}  line-clamp-2 overflow-hidden `}>
             {classData.discipline}
             {classData.type}
           </h3>
-          <div className={`${cardClassNameText} c1 pb-1`}>
+          <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
             {classData.teacher}
           </div>
           <div className={`${cardClassNameText} c2`}>
@@ -40,7 +40,7 @@ const TimetableCard = ({ classData, classDate }: Props) => {
             {classData.place}
           </div>
         </div>
-        <h3 className={`${cardClassNameText} text-right`}>{time}</h3>
+        <h3 className={`${cardClassNameText} text-right ml-5`}>{time}</h3>
       </div>
     </div>
   );
