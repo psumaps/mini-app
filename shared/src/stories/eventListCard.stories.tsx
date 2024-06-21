@@ -1,13 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import eventCard from '../components/timetable/eventCard';
+import event from '../components/timetable/eventListCard';
 import { eventDefault, eventLongTitle } from './data/event';
-import StorageDecorator from './decorators/storage';
 
-const meta: Meta<typeof eventCard> = {
-  title: 'Event-description/Event card',
-  component: eventCard,
+const meta: Meta<typeof event> = {
+  title: 'Timetable/Event card',
+  component: event,
   tags: ['autodocs'],
-  decorators: [StorageDecorator],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'centered',
@@ -22,7 +20,7 @@ export const Default: Story = {
     event: eventDefault,
   },
 };
-export const LongTag: Story = {
+export const LongTitle: Story = {
   args: {
     event: eventLongTitle,
   },
