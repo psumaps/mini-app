@@ -1,5 +1,5 @@
 import React, { forwardRef, useMemo } from 'react';
-import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 export interface InputProps {
   onClear?: () => void;
