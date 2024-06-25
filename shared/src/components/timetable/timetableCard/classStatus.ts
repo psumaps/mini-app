@@ -3,7 +3,6 @@ const CLASS_DURATION_MINUTES: number = 95;
 const classStatus = (classStartTime: string): boolean => {
   try {
     if (typeof classStartTime !== 'string') {
-      console.warn('classStartTime is not a string');
       return false;
     }
 
