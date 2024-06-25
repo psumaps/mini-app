@@ -62,3 +62,19 @@ export const ClassStarted: Story = {
     },
   },
 };
+export const Error: Story = {
+  args: {
+    classData: {
+      classNumber: '341/1',
+      discipline: 'Численные методы моделирования радиоэлектронных схем',
+      type: '(практика)',
+      place: '1 корпус, 3 этаж',
+      teacher: 'Бабушкин И.А.',
+    },
+    classDate: {
+      date: '2023a-09-14T19:30:00',
+      dayOfWeek: '',
+      classes: [],
+    },
+  },
+};
