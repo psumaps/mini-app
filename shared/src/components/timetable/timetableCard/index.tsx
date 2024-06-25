@@ -59,15 +59,14 @@ const TimetableCard = ({ classData, classDate }: Props) => {
       <>
         <div>
           <h3 className={`${cardClassNameText} line-clamp-2 overflow-hidden`}>
-            {classData.discipline}
+            {classData.discipline}&nbsp;
             {classData.type}
           </h3>
           <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
             {classData.teacher}
           </div>
           <div className={`${cardClassNameText} c2`}>
-            {classData.classNumber}
-            {classData.place}
+            {classData.classNumber}&nbsp; ({classData.place})
           </div>
         </div>
         <h3 className={`${cardClassNameText} text-right ml-10`}>{time}</h3>
