@@ -40,8 +40,8 @@ const TimetableCard = ({ classData, classDate }: Props) => {
 
   const cardClassName = `${
     isClassInProgress
-      ? 'bg-c_accent dark:bg-c_accent text-c_bg-block shadow-[0.06rem_0.06rem_0.3rem_0_var(--c_shadow)]'
-      : 'bg-cd_main shadow-[0_0_0.3rem_0_var(--c_shadow)] dark:shadow-none dark:bg-cd_bg-block'
+      ? 'bg-c_accent dark:bg-c_accent text-c_bg-block shadow-md'
+      : 'bg-cd_main shadow-md dark:bg-cd_bg-block'
   }  w-full rounded-[2.5rem]`;
 
   const cardClassNameText = isClassInProgress ? 'text-c_bg-block' : '';
