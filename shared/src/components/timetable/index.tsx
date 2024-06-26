@@ -9,8 +9,12 @@ import Filter from '../../network/models/psu-tools/eventFilter';
 import EventFiltersModal from './eventFiltersModal';
 import Button from '../common/button';
 import FilterIcon from '../../assets/filter.svg?react';
+import EventListCard from './eventListCard';
+import TimetableCard from './timetableCard';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 const Timetable = () => {
+  const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const [currentFeed, setCurrentFeed] = useState<'events' | 'classes'>(
     'events',
@@ -20,7 +24,7 @@ const Timetable = () => {
 
   const [filters, setFilters] = useState<Filter[] | null>(null);
 
-  const query = useQuery(
+  const filtersQuery = useQuery(
     {
       queryKey: ['filters'],
       queryFn: () => httpClient.psuTools.events.getFilters(),
@@ -30,13 +34,21 @@ const Timetable = () => {
     queryClient,
   );
   useEffect(() => {
-    if (query.data) setFilters(query.data);
-  }, [query.data]);
+    if (filtersQuery.data) setFilters(filtersQuery.data);
+  }, [filtersQuery.data]);
 
-  const searchQuery = useQuery(
+  const eventsQuery = useQuery(
     {
       queryKey: ['event-search', searchValue],
       queryFn: httpClient.psuTools.events.getEvents,
+    },
+    queryClient,
+  );
+
+  const classesQuery = useQuery(
+    {
+      queryKey: ['classes'],
+      queryFn: () => httpClient.psuTools.timetable.getGroupTimetable(969, 42),
     },
     queryClient,
   );
@@ -86,7 +98,7 @@ const Timetable = () => {
           setActive={setFiltersActive}
           filters={filters}
           setFilters={handleFilterChange}
-          query={query}
+          query={filtersQuery}
         />
       </div>
       <div className="flex flex-row gap-4 mt-3">
@@ -105,24 +117,51 @@ const Timetable = () => {
           Расписание
         </Button>
       </div>
-      <div className="relative">
+      <div className="relative mt-3">
         <div
-          className={`absolute top-0 flex flex-col gap-3 ${currentFeed === 'events' ? 'left-0 right-0' : 'right-full -left-full'}`}
+          className={`absolute top-0 flex flex-col gap-3
+            ${animEnabled && 'transition-all duration-300 ease-in-out'}
+            ${currentFeed === 'events' ? 'left-0 right-0' : 'mr-10 right-full -left-full'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
-          {searchQuery.isPending ? (
+          {eventsQuery.isPending ? (
             <p>Загрузка...</p>
-          ) : searchQuery.isError ? (
+          ) : eventsQuery.isError ? (
             <p>Ошибка!</p>
           ) : (
-            searchQuery.data.map((event) => (
-              <h2 key={event.id}>{event.title}</h2>
+            eventsQuery.data.map((event) => (
+              <EventListCard
+                key={event.id}
+                event={event}
+                onOpenDesc={() => {}}
+              />
             ))
           )}
         </div>
         <div
-          className={`absolute top-0 flex flex-col gap-3 ${currentFeed === 'classes' ? 'left-0 right-0' : 'left-full -right-full'}`}
-        />
+          className={`absolute top-0 flex flex-col gap-3
+            ${animEnabled && 'transition-all duration-300 ease-in-out'}
+            ${currentFeed === 'classes' ? 'left-0 right-0' : 'ml-10 left-full -right-full'}`}
+        >
+          {/* eslint-disable-next-line no-nested-ternary */}
+          {classesQuery.isPending ? (
+            <p>Загрузка...</p>
+          ) : classesQuery.isError ? (
+            <p>Ошибка!</p>
+          ) : (
+            classesQuery.data.days.map((day) => (
+              <React.Fragment key={day.date}>
+                {day.classes.map((lesson) => (
+                  <TimetableCard
+                    key={`${day.date}-${lesson.classNumber}`}
+                    classDate={day}
+                    classData={lesson}
+                  />
+                ))}
+              </React.Fragment>
+            ))
+          )}
+        </div>
       </div>
     </>
   );
