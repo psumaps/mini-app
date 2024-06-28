@@ -13,6 +13,8 @@ const SearchEntry = ({
   className?: string;
   classNameInner?: string;
 }) => {
+  const building =
+    item?.properties.tags.building ?? item?.properties.tags.corpus;
   return (
     <button
       type="button"
@@ -24,6 +26,7 @@ const SearchEntry = ({
       </p>
       <h4 className={`${classNameInner}`}>
         {detectItemAmenityName(item) ?? 'Без категории'}
+        {building && ` - ${building} корпус`}
       </h4>
     </button>
   );

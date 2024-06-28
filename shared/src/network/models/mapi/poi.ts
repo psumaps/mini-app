@@ -12,6 +12,8 @@ export default interface Poi {
     subclass?: string;
     similarity?: number;
     tags: {
+      corpus?: string;
+      building?: string;
       amenity?: string;
       indoor?: string;
       level?: string;
