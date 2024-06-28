@@ -119,9 +119,9 @@ const Timetable = () => {
       </div>
       <div className="relative mt-3">
         <div
-          className={`absolute top-0 flex flex-col gap-3
-            ${animEnabled && 'transition-all duration-300 ease-in-out'}
-            ${currentFeed === 'events' ? 'left-0 right-0' : 'mr-10 right-full -left-full'}`}
+          className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top
+            ${animEnabled && 'transition-all duration-500 ease-in-out'}
+            ${currentFeed === 'events' ? 'left-0 right-0 scale-y-100 opacity-100' : ' opacity-0 scale-y-0 mr-10 right-full -left-full'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {eventsQuery.isPending ? (
@@ -139,9 +139,9 @@ const Timetable = () => {
           )}
         </div>
         <div
-          className={`absolute top-0 flex flex-col gap-3
-            ${animEnabled && 'transition-all duration-300 ease-in-out'}
-            ${currentFeed === 'classes' ? 'left-0 right-0' : 'ml-10 left-full -right-full'}`}
+          className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top
+            ${animEnabled && 'transition-all duration-500 ease-in-out'}
+            ${currentFeed === 'classes' ? 'left-0 right-0 scale-y-100 opacity-100' : 'opacity-0 scale-y-0 ml-10 left-full -right-full'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {classesQuery.isPending ? (
