@@ -194,6 +194,6 @@ export const calculateMinifiedDiv = (id: string, weekdayClass: string) => {
   const center = calculateRectCenter(rect);
   div!.setAttribute(
     'style',
-    `top: ${center.y}px; left: ${center.x}px; width: ${side * 0.9}px; height: ${side * 1.85}px;`,
+    `top: ${center.y}px; left: ${center.x}px; width: ${side * 0.9}px; height: 4.3rem;`,
   );
 };
