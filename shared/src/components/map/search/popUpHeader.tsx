@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import SwipeGesture from '../../common/swipeGesture';
-import DragHandle from './dragHandle';
+import DragHandle from '../../common/dragHandle';
 import { PopUpState } from './searchUtils';
 import SearchIcon from '../../../assets/search.svg?react';
 import Poi, { detectPoiName } from '../../../network/models/mapi/poi';
@@ -63,7 +63,9 @@ const PopUpHeader = ({
         onTouch={useCallback(() => handleClosedClick(), [handleClosedClick])}
       >
         <div className="size-full items-center relative cursor-pointer">
-          <DragHandle state={state} />
+          <DragHandle
+            className={`${state === 'opened' ? 'mt-4' : ''} ${state === 'middle' ? 'delay-200' : ''}`}
+          />
           <div
             className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit origin-top 
               ${animEnabled && 'transition-all duration-500 ease-in-out'}
