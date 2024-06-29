@@ -98,7 +98,7 @@ const CustomCalendar = ({
   }, [value, isMinified, assignClasses, manageDivs]);
 
   const tileClassName = ({ date }: { date: Date }) => {
-    let tileStyle = `${animEnabled && 'transition-all duration-300 ease-in-out'}`;
+    let tileStyle = `${animEnabled ? 'transition-all duration-300 ease-in-out ' : ' '}`;
     if (!isMinified) return tileStyle;
     const week = getWeek(value as Date);
     const curr = new Date(date);
