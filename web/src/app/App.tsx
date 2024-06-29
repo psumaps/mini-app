@@ -6,8 +6,11 @@ import '@fontsource/montserrat/500.css';
 import '@fontsource/montserrat/700.css';
 
 import { StorageContext } from 'psumaps-shared/src/models/storage';
-import router from '~/app/router';
-import Storage from '~/app/storage';
+import { NavigatorContext } from 'psumaps-shared/src/models/navigator';
+import Storage from './storage';
+import Navigator from './navigator';
+
+import router from './router';
 import '~/tw.css';
 
 const queryClient = new QueryClient();
@@ -16,7 +19,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <StorageContext.Provider value={useMemo(() => new Storage(), [])}>
-        <RouterProvider router={router} />
+        <NavigatorContext.Provider value={useMemo(() => new Navigator(), [])}>
+          <RouterProvider router={router} />
+        </NavigatorContext.Provider>
       </StorageContext.Provider>
     </QueryClientProvider>
   );
