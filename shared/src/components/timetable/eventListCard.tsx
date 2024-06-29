@@ -40,23 +40,26 @@ const EventListCard = ({
 
           <p className="c3 text-cd_main">{date.toLocaleDateString('ru')}</p>
         </div>
-        <div className="flex justify-between gap-10 mt-4">
+        <div className="flex justify-between mt-4">
           <div>
             <h3 className="text-cd_main">{event.name}</h3>
             <p className="mt-2 c2 text-cd_main">{event.place.name}</p>
           </div>
           <button
-            className="pr-3"
+            className="pr-3 pl-10 scale-100 active:scale-90"
             type="button"
             onClick={() => onOpenDesc(`${event.id}`)}
           >
             <RightArrowIcon className="fill-cd_main" />
           </button>
         </div>
+
         <div className="relative mt-6">
-          <abbr className="absolute bottom-0 right-2 text-cd_main">
-            Прошедшее
-          </abbr>
+          {date < new Date() && (
+            <abbr className="absolute bottom-0 right-2 text-cd_main">
+              Прошедшее
+            </abbr>
+          )}
         </div>
       </div>
     </Block>

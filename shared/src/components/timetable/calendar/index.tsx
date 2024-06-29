@@ -116,7 +116,8 @@ const CustomCalendar = ({
     if (!(newValue instanceof Date)) setValue(newValue?.at(0) as Date);
     else setValue(newValue);
 
-    if (onChange) onChange(newValue);
+    (newValue as Date).setHours(0, 0, 0, 0);
+    onChange?.(newValue);
   };
 
   const handleSelect = (month: number, year: number) => {
