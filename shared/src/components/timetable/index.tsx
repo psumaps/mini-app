@@ -1,7 +1,17 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import Calendar from './calendar';
 import EventSearch from './eventSearch';
 import httpClient from '../../network/httpClient';
@@ -11,9 +21,13 @@ import Button from '../common/button';
 import FilterIcon from '../../assets/filter.svg?react';
 import EventListCard from './eventListCard';
 import TimetableCard from './timetableCard';
+import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
 
+const EVENTS_LIMIT = 10;
+
 const Timetable = () => {
+  const navigator = useContext(NavigatorContext);
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const [currentFeed, setCurrentFeed] = useState<'events' | 'classes'>(
@@ -21,6 +35,7 @@ const Timetable = () => {
   );
   const [searchValue, setSearchValue] = useState<string>('');
   const [filtersActive, setFiltersActive] = useState<boolean>(false);
+  const [dateFrom, setDateFrom] = useState<Date>(new Date());
 
   const [filters, setFilters] = useState<Filter[] | null>(null);
 
@@ -37,10 +52,24 @@ const Timetable = () => {
     if (filtersQuery.data) setFilters(filtersQuery.data);
   }, [filtersQuery.data]);
 
-  const eventsQuery = useQuery(
+  const eventsQuery = useInfiniteQuery(
     {
-      queryKey: ['event-search', searchValue],
-      queryFn: httpClient.psuTools.events.getEvents,
+      queryKey: ['event-search', searchValue, dateFrom],
+      queryFn: (params) =>
+        httpClient.psuTools.events.getEvents({
+          dateFrom,
+          offset: params.pageParam,
+          limit: EVENTS_LIMIT,
+        }),
+      gcTime: 10 * 60 * 1000,
+      staleTime: 5 * 60 * 1000,
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, _, lastPageParam) => {
+        if (lastPage.length < EVENTS_LIMIT) {
+          return undefined;
+        }
+        return lastPageParam + 1;
+      },
     },
     queryClient,
   );
@@ -71,9 +100,16 @@ const Timetable = () => {
     [],
   );
 
+  const handleDateChange = (date: Date) => {
+    setDateFrom(date);
+  };
+
   return (
     <>
-      <Calendar className="h-fit" />
+      <Calendar
+        className="h-fit"
+        onChange={(date) => date instanceof Date && handleDateChange(date)}
+      />
       <div className="flex flex-row gap-4 mt-3">
         <EventSearch
           searchValue={searchValue}
@@ -103,14 +139,14 @@ const Timetable = () => {
       </div>
       <div className="flex flex-row gap-4 mt-3">
         <Button
-          variant="primary"
+          variant={currentFeed === 'events' ? 'contrast' : 'primary'}
           className="rounded-3xl flex-1 h-10 shadow-md dark:shadow-none"
           onClick={() => setCurrentFeed('events')}
         >
           События
         </Button>
         <Button
-          variant="primary"
+          variant={currentFeed === 'classes' ? 'contrast' : 'primary'}
           className="rounded-3xl flex-1 h-10 shadow-md dark:shadow-none"
           onClick={() => setCurrentFeed('classes')}
         >
@@ -129,13 +165,35 @@ const Timetable = () => {
           ) : eventsQuery.isError ? (
             <p>Ошибка!</p>
           ) : (
-            eventsQuery.data.map((event) => (
-              <EventListCard
-                key={event.id}
-                event={event}
-                onOpenDesc={() => {}}
-              />
-            ))
+            <>
+              {eventsQuery.data.pages.map((page) => (
+                <React.Fragment key={page[0].id}>
+                  {page
+                    .sort((a, b) =>
+                      new Date(a.event_date) < new Date(b.event_date) ? -1 : 1,
+                    )
+                    .map((event) => (
+                      <EventListCard
+                        key={event.id}
+                        event={event}
+                        onOpenDesc={() =>
+                          navigator?.navigate(`/event/${event.id}`)
+                        }
+                      />
+                    ))}
+                </React.Fragment>
+              ))}
+              <Button
+                variant="primary"
+                className="w-full rounded-3xl py-2"
+                disabled={
+                  !eventsQuery.hasNextPage || eventsQuery.isFetchingNextPage
+                }
+                onClick={() => void eventsQuery.fetchNextPage()}
+              >
+                Загрузить еще
+              </Button>
+            </>
           )}
         </div>
         <div

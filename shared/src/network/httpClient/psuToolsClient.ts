@@ -28,9 +28,21 @@ const client = {
     },
   },
   events: {
-    getEvents: async () => {
+    getEvents: async ({
+      dateFrom,
+      offset = 1,
+      limit,
+    }: {
+      dateFrom: Date;
+      offset: number;
+      limit: number;
+    }) => {
       const response = await axios.get<{ events: Event[] }>(
-        `${api.psuTools}/v2/events?showAll=true`,
+        `${api.psuTools}/v2/events?offset=${offset}&limit=${limit}&dateFrom=${
+          new Date(dateFrom.getTime() - dateFrom.getTimezoneOffset() * 60000)
+            .toISOString()
+            .split('.')[0]
+        }`,
       );
       return response.data.events;
     },
