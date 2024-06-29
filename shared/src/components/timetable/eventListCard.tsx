@@ -17,6 +17,9 @@ const EventListCard = ({
   const { data } = usePalette(event.cover, 2, 'rgbString', {
     crossOrigin: 'anonymous',
   });
+
+  const canDrawGradient = data?.[0] && data?.[1];
+
   return (
     <Block
       className="p-[0_!important] rounded-t-[2.5rem]"
@@ -33,30 +36,45 @@ const EventListCard = ({
       <div className="flex flex-col px-4 mt-3 pb-4">
         <div className="flex justify-between items-center">
           {event.tags && (
-            <div className="justify-center py-1.5 px-4 max-w-[60%] rounded-full border-2 border-cd_main ">
-              <p className="c3 text-center text-cd_main">{event.tags[0]}</p>
+            <div
+              className={`justify-center py-1.5 px-4 max-w-[60%] rounded-full border-2 
+                ${canDrawGradient ? 'border-cd_main' : 'border-c_main dark:border-cd_main'}`}
+            >
+              <p
+                className={`c3 text-center ${canDrawGradient ? 'text-cd_main' : ''}`}
+              >
+                {event.tags[0]}
+              </p>
             </div>
           )}
 
-          <p className="c3 text-cd_main">{date.toLocaleDateString('ru')}</p>
+          <p className={`c3 ${canDrawGradient ? 'text-cd_main' : ''}`}>
+            {date.toLocaleDateString('ru')}
+          </p>
         </div>
         <div className="flex justify-between mt-4">
           <div>
-            <h3 className="text-cd_main">{event.name}</h3>
-            <p className="mt-2 c2 text-cd_main">{event.place.name}</p>
+            <h3 className={canDrawGradient ? 'text-cd_main' : ''}>
+              {event.name}
+            </h3>
+            <p className={`mt-2 c2 ${canDrawGradient ? 'text-cd_main' : ''}`}>
+              {event.place.name}
+            </p>
           </div>
           <button
             className="pr-3 pl-10 scale-100 active:scale-90"
             type="button"
             onClick={() => onOpenDesc(`${event.id}`)}
           >
-            <RightArrowIcon className="fill-cd_main" />
+            <RightArrowIcon className={canDrawGradient ? 'fill-cd_main' : ''} />
           </button>
         </div>
 
         <div className="relative mt-6">
           {date < new Date() && (
-            <abbr className="absolute bottom-0 right-2 text-cd_main">
+            <abbr
+              className={`absolute bottom-0 right-2 ${canDrawGradient ? 'text-cd_main' : ''}`}
+            >
               Прошедшее
             </abbr>
           )}
