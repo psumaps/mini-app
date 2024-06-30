@@ -76,6 +76,7 @@ const Timetable = () => {
         }
         return lastPageParam + 1;
       },
+      enabled: currentFeed === 'events',
     },
     queryClient,
   );
@@ -96,7 +97,7 @@ const Timetable = () => {
         httpClient.psuTools.timetable.getGroupTimetable(
           groupInfoQuery.data!.groupId ?? 1010,
         ),
-      enabled: !groupInfoQuery.isPending,
+      enabled: !groupInfoQuery.isPending && currentFeed === 'classes',
     },
     queryClient,
   );
