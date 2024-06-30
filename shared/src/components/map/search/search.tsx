@@ -109,7 +109,6 @@ const Search = ({
   useEffect(() => {
     if (selectedPoi === null) return;
     void updateHistory(selectedPoi);
-    handleAmenityReset();
   }, [selectedPoi, updateHistory, handleAmenityReset]);
 
   const handleAmenityClick = (amenity: string, index: number) => {
@@ -134,8 +133,8 @@ const Search = ({
         <div
           className={`grid grid-cols-[1fr_1fr_1fr] gap-x-2 gap-y-8 h-fit flex-auto
             ${animEnabled && 'transition-all duration-200 ease-in-out'}
-          ${amenityPresent || selectedPoi ? 'gap-[0_!important] justify-end' : ''}
-          ${amenitiesGridStyle}`}
+            ${amenityPresent || (selectedPoi && selectedAmenity === null) ? 'gap-[0_!important] justify-end' : ''}
+            ${amenitiesGridStyle}`}
         >
           {amenities.data &&
             amenities.data
@@ -148,7 +147,7 @@ const Search = ({
                   className={`${selectedAmenity === amenity ? 'w-fit h-fit' : ''}`}
                   classNameInner={`${animEnabled && 'transition-all duration-200 ease-in-out'} origin-top-left
                     ${amenityPresent && (selectedAmenity === amenity ? '' : 'h-0 w-0 opacity-0')}
-                    ${selectedPoi ? 'w-0 h-0 opacity-0' : ''}`}
+                    ${selectedPoi && selectedAmenity === null ? 'w-0 h-0 opacity-0' : ''}`}
                 />
               ))}
         </div>
