@@ -25,6 +25,7 @@ const EventListCard = ({
       style={{
         background: `linear-gradient(to right, ${data?.[0]}, ${data?.[1]})`,
       }}
+      onClick={() => onOpenDesc(`${event.id}`)}
     >
       <img
         loading="lazy"
@@ -63,7 +64,6 @@ const EventListCard = ({
           <button
             className="pr-3 pl-10 scale-100 active:scale-90"
             type="button"
-            onClick={() => onOpenDesc(`${event.id}`)}
           >
             <RightArrowIcon
               className={
