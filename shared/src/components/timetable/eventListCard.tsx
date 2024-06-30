@@ -66,7 +66,13 @@ const EventListCard = ({
             type="button"
             onClick={() => onOpenDesc(`${event.id}`)}
           >
-            <RightArrowIcon className={canDrawGradient ? 'fill-cd_main' : ''} />
+            <RightArrowIcon
+              className={
+                canDrawGradient
+                  ? 'fill-cd_main'
+                  : 'fill-c_main dark:fill-cd_main'
+              }
+            />
           </button>
         </div>
 
