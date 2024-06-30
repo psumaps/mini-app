@@ -94,9 +94,9 @@ const Timetable = () => {
       queryKey: ['classes'],
       queryFn: () =>
         httpClient.psuTools.timetable.getGroupTimetable(
-          groupInfoQuery.data!.groupId ?? 126,
+          groupInfoQuery.data!.groupId ?? 1010,
         ),
-      enabled: !!groupInfoQuery.data,
+      enabled: !groupInfoQuery.isPending,
     },
     queryClient,
   );
