@@ -23,11 +23,17 @@ import EventListCard from './eventListCard';
 import TimetableCard from './timetableCard';
 import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
+import { StorageContext } from '../../models/storage';
+import {
+  GROUP_INFO_KEY,
+  GroupData,
+} from '../settings/groupChooser/groupChooserUtils';
 
 const EVENTS_LIMIT = 10;
 
 const Timetable = () => {
   const navigator = useContext(NavigatorContext);
+  const storage = useContext(StorageContext);
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const [currentFeed, setCurrentFeed] = useState<'events' | 'classes'>(
@@ -74,10 +80,23 @@ const Timetable = () => {
     queryClient,
   );
 
+  const groupInfoQuery = useQuery<GroupData>(
+    {
+      queryKey: [GROUP_INFO_KEY],
+      queryFn: async () =>
+        JSON.parse((await storage?.get(GROUP_INFO_KEY)) ?? '') as GroupData,
+    },
+    queryClient,
+  );
+
   const classesQuery = useQuery(
     {
       queryKey: ['classes'],
-      queryFn: () => httpClient.psuTools.timetable.getGroupTimetable(969, 42),
+      queryFn: () =>
+        httpClient.psuTools.timetable.getGroupTimetable(
+          groupInfoQuery.data!.groupId ?? 126,
+        ),
+      enabled: !!groupInfoQuery.data,
     },
     queryClient,
   );
