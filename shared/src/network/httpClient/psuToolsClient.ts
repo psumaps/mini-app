@@ -20,9 +20,9 @@ const client = {
       );
       return response.data;
     },
-    getGroupTimetable: async (groupId: number, weekNumber: number) => {
+    getGroupTimetable: async (groupId: number, weekNumber?: number) => {
       const response = await axios.get<GroupTimetable>(
-        `${api.psuTools}/v1/groups/${groupId}/timetable?weekNumber=${weekNumber}&apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}`,
+        `${api.psuTools}/v1/groups/${groupId}/timetable?apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}${weekNumber ? `&weekNumber=${weekNumber}` : ''}`,
       );
       return response.data;
     },
