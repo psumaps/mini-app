@@ -2,11 +2,12 @@ import INavigator from 'psumaps-shared/src/models/navigator';
 
 class Navigator implements INavigator {
   navigate(path: string): void {
-    window.location.href = path;
+    history.pushState({}, '', path);
+    history.go();
   }
 
   back(): void {
-    window.history.back();
+    history.back();
   }
 }
 
