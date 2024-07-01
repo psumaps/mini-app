@@ -7,9 +7,12 @@ import MapIcon from 'psumaps-shared/src/assets/map.svg?react';
 import TimetableIcon from 'psumaps-shared/src/assets/timetable.svg?react';
 import SettingsIcon from 'psumaps-shared/src/assets/settings.svg?react';
 import Storage from '~/app/storage';
+import Navigator from '~/app/navigator';
 
 const NavigationBar = ({ className }: { className?: string }) => {
   const location = useLocation();
+  const navigator = new Navigator();
+  const navigate = (path: string) => navigator.navigate(path);
 
   useEffect(() => {
     const loadTheme = async () => {
@@ -25,11 +28,6 @@ const NavigationBar = ({ className }: { className?: string }) => {
       return 'fill-c_main dark:fill-cd_main';
     }
     return 'fill-c_secondary dark:fill-cd_secondary';
-  };
-
-  const navigate = (path: string) => {
-    history.pushState({}, '', path);
-    history.go();
   };
 
   return (
