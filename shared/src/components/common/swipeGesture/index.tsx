@@ -10,7 +10,7 @@ const SwipeGesture = ({
   children?: React.ReactNode;
   onSwipe: (direction: 'left' | 'right' | 'up' | 'down') => void;
   id?: string;
-  onTouch: (e: TouchEvent) => void;
+  onTouch?: (e: TouchEvent) => void;
 }) => {
   const [xDown, setXDown] = useState<number | null>(null);
   const [yDown, setYDown] = useState<number | null>(null);
