@@ -41,7 +41,9 @@ const Timetable = () => {
   );
   const [searchValue, setSearchValue] = useState<string>('');
   const [filtersActive, setFiltersActive] = useState<boolean>(false);
-  const [dateFrom, setDateFrom] = useState<Date>(new Date());
+  const [dateFrom, setDateFrom] = useState<Date>(
+    new Date('2024-05-22T00:00:00'),
+  );
 
   const [filters, setFilters] = useState<Filter[] | null>(null);
 
@@ -96,6 +98,7 @@ const Timetable = () => {
       queryFn: () =>
         httpClient.psuTools.timetable.getGroupTimetable(
           groupInfoQuery.data!.groupId ?? 1010,
+          dateFrom,
         ),
       enabled: !groupInfoQuery.isPending && currentFeed === 'classes',
     },
@@ -227,16 +230,12 @@ const Timetable = () => {
           ) : classesQuery.isError ? (
             <p>Ошибка!</p>
           ) : (
-            classesQuery.data.days.map((day) => (
-              <React.Fragment key={day.date}>
-                {day.classes.map((lesson) => (
-                  <TimetableCard
-                    key={`${day.date}-${lesson.classNumber}`}
-                    classDate={day}
-                    classData={lesson}
-                  />
-                ))}
-              </React.Fragment>
+            classesQuery.data?.classes.map((lesson) => (
+              <TimetableCard
+                key={`${lesson.classNumber}`}
+                classDate={classesQuery.data}
+                classData={lesson}
+              />
             ))
           )}
         </div>

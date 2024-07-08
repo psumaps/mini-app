@@ -2,7 +2,7 @@ import axios from 'axios';
 import api from '../api';
 import Faculty from '../models/psu-tools/faculty';
 import GroupResponse from '../models/psu-tools/groupResponse';
-import GroupTimetable from '../models/psu-tools/timetable';
+import { Timetable } from '../models/psu-tools/timetable';
 import Filter from '../models/psu-tools/eventFilter';
 import Event from '../models/psu-tools/event';
 
@@ -20,9 +20,17 @@ const client = {
       );
       return response.data;
     },
-    getGroupTimetable: async (groupId: number, weekNumber?: number) => {
-      const response = await axios.get<GroupTimetable>(
-        `${api.psuTools}/v1/groups/${groupId}/timetable?apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}${weekNumber ? `&weekNumber=${weekNumber}` : ''}`,
+    getGroupTimetable: async (groupId: number, date?: Date) => {
+      const response = await axios.get<Timetable.Day>(
+        `${api.psuTools}/v1/groups/${groupId}/timetable?apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}${
+          date
+            ? `&date=${
+                new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+                  .toISOString()
+                  .split('T')[0]
+              }`
+            : ''
+        }`,
       );
       return response.data;
     },
