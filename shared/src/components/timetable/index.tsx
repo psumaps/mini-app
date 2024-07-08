@@ -87,14 +87,17 @@ const Timetable = () => {
     {
       queryKey: [GROUP_INFO_KEY],
       queryFn: async () =>
-        JSON.parse((await storage?.get(GROUP_INFO_KEY)) ?? '') as GroupData,
+        JSON.parse(
+          (await storage?.get(GROUP_INFO_KEY)) ??
+            '{"facultyId":4,"groupId":1037,"groupName":"ПМИ-1-2022 НБ"}',
+        ) as GroupData,
     },
     queryClient,
   );
 
   const classesQuery = useQuery(
     {
-      queryKey: ['classes'],
+      queryKey: ['classes', dateFrom],
       queryFn: () =>
         httpClient.psuTools.timetable.getGroupTimetable(
           groupInfoQuery.data!.groupId ?? 1010,

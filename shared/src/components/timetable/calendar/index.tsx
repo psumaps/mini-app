@@ -35,7 +35,7 @@ const CustomCalendar = ({
   onChange?: (value: Value) => void;
 }) => {
   const { data: animEnabled } = useAnimEnabled();
-  const today = useMemo(() => new Date(), []);
+  const today = useMemo(() => new Date('2024-05-22T00:00:00'), []);
   const [activeStartDate, setActiveStartDate] = useState(today);
   const [value, setValue] = useState<Value>(today);
   const [isMinified, setIsMinified] = useState(false);

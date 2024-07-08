@@ -22,9 +22,9 @@ const GroupChooser = <T extends IStorage>({
   const queryClient = useTryQueryClient();
   const [choosing, setChoosing] = useState<Choices | null>(null);
   const [data, setData] = useState<GroupData>({
-    facultyId: null,
-    groupId: null,
-    groupName: null,
+    facultyId: 4,
+    groupId: 1037,
+    groupName: 'ПМИ-1-2022 НБ',
   });
 
   useEffect(() => {
