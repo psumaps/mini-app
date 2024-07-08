@@ -21,10 +21,10 @@ export async function getStoredAnimEnabled<T extends IStorage>(
     (await storage.get('animation_enabled')) ?? '';
   switch (animationEnabled) {
     case '1':
-      return true;
+      return false;
     case '0':
       return false;
     default:
-      return true;
+      return false;
   }
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import IStorage from '../../models/storage';
 import Button from '../common/button';
-import AnimSwitch from './animSwitch';
 import ThemeSwitch from './themeSwitch';
 import GroupChooser from './groupChooser';
 
@@ -11,10 +10,6 @@ const Settings = ({ storage }: { storage: IStorage }) => {
       <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
         Темная тема
         <ThemeSwitch storage={storage} />
-      </div>
-      <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
-        Включить анимации
-        <AnimSwitch storage={storage} />
       </div>
       <Button
         className="rounded-3xl py-4 min-h-12 w-full mt-5 c3"
