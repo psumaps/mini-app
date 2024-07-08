@@ -9,8 +9,7 @@ interface Props {
 
 const TimetableCard = ({ classData, classDate }: Props) => {
   const [isError, setIsError] = React.useState(false);
-
-  const time = useMemo(() => {
+  useMemo(() => {
     try {
       if (!classDate || !classDate.date) {
         throw new Error('Invalid class date');
@@ -30,7 +29,6 @@ const TimetableCard = ({ classData, classDate }: Props) => {
       return '';
     }
   }, [classDate]);
-
   const isClassInProgress = useMemo(() => {
     if (!classDate || !classDate.date) {
       return false;
@@ -66,10 +64,10 @@ const TimetableCard = ({ classData, classDate }: Props) => {
             {classData.teacher}
           </div>
           <div className={`${cardClassNameText} c2`}>
-            {classData.classNumber}&nbsp; ({classData.place})
+            пара №{classData.classNumber}&nbsp; ({classData.place})
           </div>
         </div>
-        <h3 className={`${cardClassNameText} text-right ml-10`}>{time}</h3>
+        {/* <h3 className={`${cardClassNameText} text-right ml-10`}>{time}</h3> */}
       </>
     );
   };
