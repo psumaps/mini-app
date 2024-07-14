@@ -1,11 +1,10 @@
 import debounce from 'debounce';
 import arrayEqual from 'array-equal';
 import type { Map } from 'maplibre-gl';
-import { IControl } from 'react-map-gl/src/types/lib.ts';
 import { LayerSpecification } from 'maplibre-gl';
+import { IControl } from 'react-map-gl/src/types/lib.ts';
 import findAllLevels from './levels';
 import LevelControl from './levelControl';
-import loadSprite from './sprite';
 import VectorTileSource from './vectorTileSource';
 
 export interface IndoorEqualsProps {
@@ -147,28 +146,6 @@ export default class IndoorEqual implements IControl<Map> {
       'The updateLevel method is deprecated. Please use setLevel instead.',
     );
     this.setLevel(level);
-  }
-
-  /**
-   * Load a sprite and add all images to the map
-   * @param {string} baseUrl the baseUrl where to load the sprite
-   * @param {object} options
-   * @param {boolean} [options.update] Update existing image (default false)
-   * @return {Promise} It resolves an hash of images.
-   */
-  loadSprite(optionsArg = {}) {
-    const opts = { update: false, ...optionsArg };
-    return loadSprite().then((sprite) => {
-      Object.keys(sprite).forEach((id) => {
-        const { data, ...options } = sprite[id];
-        if (!this.map.hasImage(id)) {
-          this.map.addImage(id, data, options);
-        } else if (opts.update) {
-          this.map.updateImage(id, data);
-        }
-      });
-      return sprite;
-    });
   }
 
   /**
