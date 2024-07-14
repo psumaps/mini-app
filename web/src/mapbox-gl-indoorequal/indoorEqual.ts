@@ -178,7 +178,9 @@ export default class IndoorEqual implements IControl<Map> {
 
   _updateFilters() {
     this.source.layers
-      .filter((layer) => layer.type !== 'heatmap')
+      .filter(
+        (layer) => layer.type !== 'heatmap' && !layer.id.includes('indoorb'),
+      )
       .forEach((layer) => {
         this.map.setFilter(layer.id, [
           ...(layer.filter || ['all']),

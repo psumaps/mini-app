@@ -1,6 +1,7 @@
 import { MapInstance } from 'react-map-gl/dist/esm/types';
-import { layers, LayerType } from './layers';
+import { layers } from './layers';
 import { IndoorEqualsProps } from '~/mapbox-gl-indoorequal/indoorEqual.ts';
+import { LayerSpecification } from 'maplibre-gl';
 
 class VectorTileSource {
   private map: MapInstance;
@@ -11,7 +12,7 @@ class VectorTileSource {
 
   sourceId: string;
 
-  layers: LayerType[];
+  layers: LayerSpecification[];
 
   constructor(map: MapInstance, options: IndoorEqualsProps) {
     const defaultOpts = { layers };
