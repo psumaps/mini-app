@@ -1,5 +1,8 @@
+import { LayerSpecification } from 'maplibre-gl';
+
 const commonPoi = {
   type: 'symbol',
+  source: 'indoorequal',
   'source-layer': 'poi',
   layout: {
     'icon-image': [
@@ -8,7 +11,12 @@ const commonPoi = {
       ['image', ['concat', ['literal', 'indoorequal-'], ['get', 'class']]],
     ],
     'text-anchor': 'top',
-    'text-field': ['concat', ['get', 'name:latin'], '\n', ['get', 'name:nonlatin']],
+    'text-field': [
+      'concat',
+      ['get', 'name:latin'],
+      '\n',
+      ['get', 'name:nonlatin'],
+    ],
     'text-max-width': 9,
     'text-offset': [0, 0.6],
     'text-padding': 2,
@@ -31,151 +39,44 @@ const rank2Class = [
   'ticket_validator',
 ];
 
-export type LayerType =
-  | {
-      filter: (string | string[])[];
-      paint: {
-        'fill-color': (
-          | string
-          | (string | string[] | (string | string[] | (string | string[])[])[])[]
-          | (
-              | string
-              | (string | (string | string[] | boolean)[] | (string | string[])[])[]
-              | (string | string[] | (string | string[])[])[]
-            )[]
-          | (string | string[])[]
-        )[];
-      };
-      id: string;
-      'source-layer': string;
-      type: string;
-    }
-  | {
-      filter: (string | string[])[];
-      paint: { 'fill-color': string };
-      id: string;
-      'source-layer': string;
-      type: string;
-    }
-  | {
-      filter: (string | string[])[];
-      paint: { 'line-width': number; 'line-color': string };
-      id: string;
-      'source-layer': string;
-      type: string;
-    }
-  | {
-      filter: string[];
-      paint: {
-        'line-width': { stops: number[][]; base: number };
-        'line-dasharray': number[];
-        'line-color': string;
-      };
-      id: string;
-      'source-layer': string;
-      type: string;
-    }
-  | {
-      filter: (string | string[])[];
-      layout: {
-        'icon-rotation-alignment': string;
-        'symbol-placement': string;
-        'icon-image': (string | string[] | (string | string[])[])[];
-      };
-      id: string;
-      'source-layer': string;
-      type: string;
-    }
-  | {
-      layout: {
-        'text-max-width': number;
-        'text-field': (string | string[])[];
-        'text-offset': number[];
-        'text-anchor': string;
-        'text-size': number;
-        'text-padding': number;
-        'icon-image': (string | (string | (string | string[])[])[])[];
-      };
-      filter: (string | string[])[];
-      paint: {
-        'text-halo-color': string;
-        'text-halo-blur': number;
-        'text-color': string;
-        'text-halo-width': number;
-      };
-      id: string;
-      'source-layer': string;
-      type: string;
-    }
-  | {
-      layout: {
-        'text-max-width': number;
-        'text-field': (string | string[])[];
-        'text-offset': number[];
-        'text-anchor': string;
-        'text-size': number;
-        'text-padding': number;
-        'icon-image': (string | (string | (string | string[])[])[])[];
-      };
-      filter: (string | string[])[];
-      paint: {
-        'text-halo-color': string;
-        'text-halo-blur': number;
-        'text-color': string;
-        'text-halo-width': number;
-      };
-      id: string;
-      'source-layer': string;
-      type: string;
-      minzoom: number;
-    }
-  | {
-      filter: string[];
-      paint: {
-        'heatmap-color': (string | string[] | number)[];
-        'heatmap-opacity': (string | string[] | number)[];
-        'heatmap-intensity': number;
-        'heatmap-radius': (string | string[] | number)[];
-      };
-      id: string;
-      'source-layer': string;
-      type: string;
-    }
-  | {
-      filter: string[];
-      layout: {
-        'text-max-width': number;
-        'text-field': (string | (string | string[])[] | string[])[];
-        'text-size': number;
-      };
-      paint: { 'text-halo-color': string; 'text-color': string; 'text-halo-width': number };
-      id: string;
-      'source-layer': string;
-      type: string;
-    };
-
-export const layers: LayerType[] = [
+export const layers: LayerSpecification[] = [
   {
     id: 'indoor-polygon',
     type: 'fill',
+    source: 'indoorequal',
     'source-layer': 'area',
     filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'class', 'level']],
     paint: {
       'fill-color': [
         'case',
         // if private
-        ['all', ['has', 'access'], ['in', ['get', 'access'], ['literal', ['no', 'private']]]],
+        [
+          'all',
+          ['has', 'access'],
+          ['in', ['get', 'access'], ['literal', ['no', 'private']]],
+        ],
         '#F2F1F0',
         // if POI
         [
           'any',
-          ['all', ['==', ['get', 'is_poi'], true], ['!=', ['get', 'class'], 'corridor']],
+          [
+            'all',
+            ['==', ['get', 'is_poi'], true],
+            ['!=', ['get', 'class'], 'corridor'],
+          ],
           [
             'in',
             ['get', 'subclass'],
             [
               'literal',
-              ['class', 'laboratory', 'office', 'auditorium', 'amphitheatre', 'reception'],
+              [
+                'class',
+                'laboratory',
+                'office',
+                'auditorium',
+                'amphitheatre',
+                'reception',
+              ],
             ],
           ],
         ],
@@ -191,6 +92,7 @@ export const layers: LayerType[] = [
   {
     id: 'indoor-area',
     type: 'line',
+    source: 'indoorequal',
     'source-layer': 'area',
     filter: ['all', ['in', 'class', 'area', 'corridor', 'platform']],
     paint: {
@@ -201,6 +103,7 @@ export const layers: LayerType[] = [
   {
     id: 'indoor-column',
     type: 'fill',
+    source: 'indoorequal',
     'source-layer': 'area',
     filter: ['all', ['==', 'class', 'column']],
     paint: {
@@ -210,6 +113,7 @@ export const layers: LayerType[] = [
   {
     id: 'indoor-lines',
     type: 'line',
+    source: 'indoorequal',
     'source-layer': 'area',
     filter: ['all', ['in', 'class', 'room', 'wall']],
     paint: {
@@ -237,6 +141,7 @@ export const layers: LayerType[] = [
   {
     id: 'indoor-transportation-poi',
     type: 'symbol',
+    source: 'indoorequal',
     'source-layer': 'transportation',
     filter: [
       'all',
@@ -268,6 +173,7 @@ export const layers: LayerType[] = [
   {
     id: 'indoor-heat',
     type: 'heatmap',
+    source: 'indoorequal',
     'source-layer': 'heat',
     filter: ['all'],
     paint: {
@@ -282,7 +188,17 @@ export const layers: LayerType[] = [
         1,
         'rgba(102, 103, 173, 0.7)',
       ],
-      'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 13, 20, 17, 40],
+      'heatmap-radius': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        0,
+        3,
+        13,
+        20,
+        17,
+        40,
+      ],
       'heatmap-intensity': 1,
       'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 16, 1, 17.1, 0],
     },
@@ -290,6 +206,7 @@ export const layers: LayerType[] = [
   {
     id: 'indoor-name',
     type: 'symbol',
+    source: 'indoorequal',
     'source-layer': 'area_name',
     filter: ['all'],
     layout: {
@@ -299,6 +216,41 @@ export const layers: LayerType[] = [
         '\n',
         ['get', 'name:nonlatin'],
       ],
+      'text-max-width': 5,
+      'text-size': 14,
+    },
+    paint: {
+      'text-color': '#666',
+      'text-halo-color': '#ffffff',
+      'text-halo-width': 1,
+    },
+  },
+  {
+    id: 'indoorb-polygon',
+    type: 'fill',
+    source: 'indoorequal',
+    'source-layer': 'building_area',
+    paint: {
+      'fill-color': '#fdfcfa',
+    },
+  },
+  {
+    id: 'indoorb-area',
+    type: 'line',
+    source: 'indoorequal',
+    'source-layer': 'building_area',
+    paint: {
+      'line-color': '#bfbfbf',
+      'line-width': 1,
+    },
+  },
+  {
+    id: 'indoorb-name',
+    type: 'symbol',
+    source: 'indoorequal',
+    'source-layer': 'building_area_name',
+    layout: {
+      'text-field': ['get', 'name'],
       'text-max-width': 5,
       'text-size': 14,
     },
