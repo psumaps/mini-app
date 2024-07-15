@@ -47,6 +47,8 @@ const MapPage = () => {
     longitude: 56.187188,
     latitude: 58.007469,
     zoom: 16,
+    pitch: 20,
+    bearing: 20,
   });
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
@@ -143,10 +145,6 @@ const MapPage = () => {
       ],
       sprite: 'https://tiles.ijo42.ru/assets/sprite/indoorequal',
       glyphs: 'https://tiles.ijo42.ru/assets/font/{fontstack}/{range}',
-      bearing: 0,
-      pitch: 0,
-      center: [0, 0],
-      zoom: 1,
     }),
     [],
   );
@@ -162,8 +160,8 @@ const MapPage = () => {
           {...viewState}
           onMove={(e) => setViewState(e.viewState)}
           style={{ width: '100%', height: '100%' }}
-          minZoom={17}
-          maxBounds={[56.180391, 58.005153, 56.194983, 58.010235]}
+          minZoom={16}
+          maxBounds={[56.172495, 58.003141, 56.202192, 58.01219]}
           mapStyle={style}
           clickTolerance={10}
           refreshExpiredTiles={false}
