@@ -201,7 +201,7 @@ export default class IndoorEqual implements IControl<Map> {
         sourceLayer: 'area',
       });
       const levels = findAllLevels(features);
-      if (!arrayEqual(levels, this.levels)) {
+      if (!!levels.length && !arrayEqual(levels, this.levels)) {
         this.levels = levels;
         this._emitLevelsChange();
         this._refreshAfterLevelsUpdate();
