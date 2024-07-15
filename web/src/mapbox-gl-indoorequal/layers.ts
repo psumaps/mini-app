@@ -229,21 +229,37 @@ export const layers: LayerSpecification[] = [
   },
   {
     id: 'indoorb-polygon',
-    type: 'fill',
+    type: 'fill-extrusion',
     source: 'indoorequal',
     'source-layer': 'building_area',
     paint: {
-      'fill-color': '#fdfcfa',
-    },
-  },
-  {
-    id: 'indoorb-area',
-    type: 'line',
-    source: 'indoorequal',
-    'source-layer': 'building_area',
-    paint: {
-      'line-color': '#bfbfbf',
-      'line-width': 1,
+      'fill-extrusion-color': [
+        'interpolate',
+        ['linear'],
+        ['get', 'height'],
+        0,
+        'lightgray',
+        300,
+        'royalblue',
+        400,
+        'lightblue',
+      ],
+      'fill-extrusion-height': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        15.7,
+        0,
+        16.5,
+        ['get', 'height'],
+      ],
+      'fill-extrusion-opacity': 0.7,
+      'fill-extrusion-base': [
+        'case',
+        ['>=', ['get', 'zoom'], 16],
+        ['get', 'height'],
+        0,
+      ],
     },
   },
   {
@@ -258,7 +274,7 @@ export const layers: LayerSpecification[] = [
       'text-font': ['DIN Offc Pro Medium'],
     },
     paint: {
-      'text-color': '#666',
+      'text-color': '#575656',
       'text-halo-color': '#ffffff',
       'text-halo-width': 1,
     },
