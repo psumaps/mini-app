@@ -47,7 +47,7 @@ export default class IndoorEqual implements IControl<Map> {
 
   constructor(map: Map, options: IndoorEqualsProps) {
     const SourceKlass = VectorTileSource;
-    const defaultOpts = { heatmap: true };
+    const defaultOpts = { heatmap: false };
     const opts = { ...defaultOpts, ...options };
     this.source = new SourceKlass(map, options);
     this.map = map;
