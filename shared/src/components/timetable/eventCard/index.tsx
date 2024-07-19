@@ -17,10 +17,10 @@ const options: Intl.DateTimeFormatOptions = {
 
 const EventCard = ({ event }: { event: Event }) => {
   const { eventDate, eventDay } = useMemo(() => {
-    const date = new Date(event.event_date);
+    const date = new Date(event.startDatetime);
     const day = `${date.toLocaleString('ru', options)}, ${days.at(date.getDay())}`;
     return { eventDay: day, eventDate: date };
-  }, [event.event_date]);
+  }, [event.startDatetime]);
 
   return (
     <Block className="p-[0_!important] z-[0_!important] rounded-t-[2rem]">
@@ -28,13 +28,15 @@ const EventCard = ({ event }: { event: Event }) => {
         <div className="flex relative flex-col ">
           <img
             loading="lazy"
-            src={event.cover_image}
+            src={event.cover}
             className="object-cover w-full aspect-video max-h-[35vh] rounded-t-[2rem]"
             alt=""
           />
-          {event.tag && (
+          {event.tags && (
             <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-full border-2 border-white border-solid">
-              <p className="c3 text-white text-center text-wrap">{event.tag}</p>
+              <p className="c3 text-white text-center text-wrap">
+                {event.tags}
+              </p>
             </div>
           )}
 
@@ -50,15 +52,15 @@ const EventCard = ({ event }: { event: Event }) => {
           {/*  <div className="my-auto ">2 ч. 30 м.</div> */}
           {/* </div> */}
 
-          <h1>{event.title}</h1>
+          <h1>{event.name}</h1>
           <div className="mt-3">
             <h2>Начало: {eventDate.toLocaleTimeString('ru').slice(0, -3)} </h2>
             {/* <span className="text-base text-zinc-500">- 19:30</span> */}
           </div>
           <h4>{eventDay}</h4>
-          {event.location && (
+          {event.place.name && (
             <h3 className="mt-4 leading-4">
-              Место:<span className="c1"> {event.location}</span>
+              Место:<span className="c1"> {event.place.name}</span>
             </h3>
           )}
           <h3 className="mt-2">
@@ -69,13 +71,13 @@ const EventCard = ({ event }: { event: Event }) => {
             </span>
           </h3>
 
-          {event.registration_link && (
-            <SignUpCard link={event.registration_link} />
+          {event.registrationUrl && <SignUpCard link={event.registrationUrl} />}
+          {event.registrationUrl && (
+            <ViewMapCard link={event.registrationUrl} />
           )}
-          {event.map_link && <ViewMapCard link={event.map_link} />}
-          {event.registration_link && (
+          {event.registrationUrl && (
             <a
-              href={event.registration_link}
+              href={event.registrationUrl}
               className="underline c3 text-c_secondary dark:text-cd_secondary mt-3 text-center"
               target="_blank"
               rel="noopener noreferrer"
@@ -89,7 +91,7 @@ const EventCard = ({ event }: { event: Event }) => {
               <p className="mt-2.5 c1">{event.description}</p>
             </>
           )}
-          {event.organizer && <ContactsCard organizer={event.organizer} />}
+          {event.organizers && <ContactsCard organizer={event.organizers[0]} />}
         </div>
       </div>
     </Block>

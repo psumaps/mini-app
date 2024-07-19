@@ -2,7 +2,16 @@
 import React from 'react';
 import AvatarIcon from '../../../assets/avatar.svg?react';
 
-const ContactsCard = ({ organizer }: { organizer: string }) => {
+const ContactsCard = ({
+  organizer,
+}: {
+  organizer: {
+    id: number;
+    name: string;
+    description: string;
+    photo: { id: number; name: string; url: string };
+  };
+}) => {
   return (
     <>
       <h2 className="mt-7">Контакты:</h2>
@@ -11,7 +20,7 @@ const ContactsCard = ({ organizer }: { organizer: string }) => {
         <AvatarIcon className="fill-c_main dark:fill-cd_main" />
         <div className="mx-2">
           <p className="mt-2 mb-1 c1 font-bold">Организатор</p>
-          <p className="c1">{organizer}</p>
+          <p className="c1">{organizer.name}</p>
         </div>
       </div>
     </>

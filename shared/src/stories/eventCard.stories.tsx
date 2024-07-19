@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import eventCard from '../components/timetable/eventCard';
-import { eventDefault, eventLongTitle } from './data/event';
+import { eventDefault, eventLongTitle, eventOrganizers } from './data/event';
 import StorageDecorator from './decorators/storage';
 
 const meta: Meta<typeof eventCard> = {
@@ -25,5 +25,10 @@ export const Default: Story = {
 export const LongTag: Story = {
   args: {
     event: eventLongTitle,
+  },
+};
+export const Organizers: Story = {
+  args: {
+    event: eventOrganizers,
   },
 };
