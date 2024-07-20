@@ -80,8 +80,10 @@ const MapPage = () => {
       features?: MapGeoJSONFeature[] | undefined;
     },
   ) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const data = await httpClient.mapi.getPoiById(e.features![0].properties.id);
+    const data = await httpClient.mapi.getIndoorById(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      Math.floor(e.features![0].id/10), // (ノ^_^)ノ┻━┻ ┬─┬
+    );
     setSelectedPoi(data);
     setMarkerCoords({
       ...parseCoordinatesFromGeometry(data.geometry),
@@ -112,7 +114,7 @@ const MapPage = () => {
           tiles: ['https://tile-a.opentopomap.cz/{z}/{x}/{y}.png'],
           type: 'raster',
           maxzoom: 17,
-          minzoom: 17,
+          // minzoom: 17,
           volatile: true,
           tileSize: 256,
         },
@@ -160,8 +162,8 @@ const MapPage = () => {
           {...viewState}
           onMove={(e) => setViewState(e.viewState)}
           style={{ width: '100%', height: '100%' }}
-          minZoom={16}
-          maxBounds={[56.172495, 58.003141, 56.202192, 58.01219]}
+          // minZoom={16}
+          // maxBounds={[56.172495, 58.003141, 56.202192, 58.01219]}
           mapStyle={style}
           clickTolerance={10}
           refreshExpiredTiles={false}
@@ -193,6 +195,22 @@ const MapPage = () => {
               />
             </Marker>
           )}
+          {[
+            [56.188402185,58.008710502],
+                [56.188545164,58.008176979],
+          ].map((arr) => (
+            <Marker
+              key={arr[0]}
+              longitude={arr[0]}
+              latitude={arr[1]}
+              anchor="bottom"
+            >
+              <MarkerIcon
+                className={`${animEnabled && 'transition-all duration-200 ease-in-out'} 
+                    ${0 ? 'opacity-100 scale-100' : 'opacity-70 scale-75'}`}
+              />
+            </Marker>
+          ))}
         </Map>
         <SearchPopUp
           state={popupState}
