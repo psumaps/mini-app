@@ -14,7 +14,7 @@ const SearchEntry = ({
   classNameInner?: string;
 }) => {
   const building =
-    item?.properties.tags.building ?? item?.properties.tags.corpus;
+    item?.properties.tags?.building ?? item?.properties.tags?.corpus;
   return (
     <button
       type="button"
