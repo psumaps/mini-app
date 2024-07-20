@@ -20,8 +20,8 @@ const PoiInfoDetails = ({
   hoursTag = translateOpeningHours(hoursTag);
   return (
     <div className={`${className}`}>
-      <Line />
-      <div className="flex flex-row justify-between w-[80%] items-center mx-auto py-1">
+      <Line className="dark:border-cd_border-secondary" />
+      <div className="flex flex-row justify-between px-4 items-center mx-auto py-2">
         <p className="b1">Время работы</p>
         <button type="button" onClick={() => setOpened(!opened)}>
           <ArrowRight
@@ -31,21 +31,21 @@ const PoiInfoDetails = ({
           />
         </button>
       </div>
-      <Line />
+      <Line className="dark:border-cd_border-secondary" />
       <div
         className={`origin-top ${
           animEnabled ? 'transition-all duration-200 ease-in-out' : ''
-        } ${opened ? 'scale-y-100' : 'scale-y-0'}`}
+        } ${opened ? 'scale-y-100' : 'scale-y-0 h-0'}`}
       >
         {hoursTag.split(',').map((interval) => {
           const [day, time] = interval.trim().split(' ');
           return (
             <>
-              <div className="flex flex-row justify-between w-[80%] items-center mx-auto py-1">
+              <div className="flex flex-row justify-between px-4 items-center mx-auto py-2">
                 <p className="c2">{day}</p>
                 <h3 className="text-c_accent font-semibold">{time}</h3>
               </div>
-              <Line />
+              <Line className="dark:border-cd_border-secondary" />
             </>
           );
         })}
