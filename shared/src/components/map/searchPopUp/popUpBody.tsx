@@ -6,6 +6,7 @@ import Search from './search';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 import { PopUpState } from './search/searchUtils';
 import Poi from '../../../network/models/mapi/poi';
+import { popUpBodyPoiContainerId } from './popUpUtils';
 
 const PopUpBody = forwardRef(function PopUpBody(
   {
@@ -67,11 +68,17 @@ const PopUpBody = forwardRef(function PopUpBody(
         placeholder="Поиск"
       />
       <div
-        className={`absolute -top-2 left-0 right-0 px-4 origin-bottom 
+        id={popUpBodyPoiContainerId}
+        className={`absolute -top-2 left-0 right-0 px-2 origin-bottom 
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
             ${selectedPoi === null || state === 'closed' ? 'scale-y-0 opacity-0' : 'scale-y-100 opacity-100'}`}
       >
-        <PoiInfo item={selectedPoiInner} onClick={() => {}} classNameInner="" />
+        <PoiInfo
+          item={selectedPoiInner}
+          onClick={() => {}}
+          classNameInner=""
+          className="px-4"
+        />
         <button
           type="button"
           onClick={handleClearPoi}
@@ -82,7 +89,7 @@ const PopUpBody = forwardRef(function PopUpBody(
           <div className="w-full h-[1px] origin-center rotate-45 bg-c_secondary dark:bg-cd_secondary" />
           <div className="w-full h-[1px] origin-center -rotate-45 bg-c_secondary dark:bg-cd_secondary" />
         </button>
-        <PoiInfoDetails item={selectedPoiInner} className="w-100" />
+        <PoiInfoDetails item={selectedPoiInner} className="w-100 py-3" />
       </div>
       <div
         className={`flex-[1_1_auto] overflow-y-auto overflow-x-clip 
