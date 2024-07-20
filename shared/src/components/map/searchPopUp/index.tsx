@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import Block from '../../common/block';
 import Input from './input';
 import PopUpHeader from './popUpHeader';
-import { PopUpState } from './searchUtils';
+import { PopUpState } from './search/searchUtils';
 import Search from './search';
 import Poi from '../../../network/models/mapi/poi';
-import SearchEntry from './searchEntry';
+import PoiInfo from './poiInfo';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import PoiInfoDetails from './poiInfoDetails';
 
 const SearchPopUp = ({
   state,
@@ -84,7 +85,7 @@ const SearchPopUp = ({
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
             ${selectedPoi === null || state === 'closed' ? 'scale-y-0 opacity-0' : 'scale-y-100 opacity-100'}`}
         >
-          <SearchEntry
+          <PoiInfo
             item={selectedPoiInner}
             onClick={() => {}}
             classNameInner=""
@@ -93,12 +94,13 @@ const SearchPopUp = ({
             type="button"
             onClick={handleClearPoi}
             onTouchStartCapture={handleClearPoi}
-            className="absolute top-1/2 -translate-y-1/2 right-4 size-6 z-20"
+            className="absolute top-0 right-4 size-6 z-20"
             title="Очистить выбранную точку"
           >
             <div className="w-full h-[1px] origin-center rotate-45 bg-c_secondary dark:bg-cd_secondary" />
             <div className="w-full h-[1px] origin-center -rotate-45 bg-c_secondary dark:bg-cd_secondary" />
           </button>
+          <PoiInfoDetails item={selectedPoiInner} className="w-100" />
         </div>
         <div
           className={`flex-[1_1_auto] overflow-y-auto overflow-x-clip 

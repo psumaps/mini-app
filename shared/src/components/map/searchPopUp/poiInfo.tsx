@@ -2,7 +2,7 @@ import React from 'react';
 import { detectItemAmenityName } from '../../../network/utils/detectAmenity';
 import Poi from '../../../network/models/mapi/poi';
 
-const SearchEntry = ({
+const PoiInfo = ({
   item,
   onClick,
   className,
@@ -15,6 +15,8 @@ const SearchEntry = ({
 }) => {
   const building =
     item?.properties.tags.building ?? item?.properties.tags.corpus;
+  const level = item?.properties.tags.level ?? '1';
+
   return (
     <button
       type="button"
@@ -26,10 +28,10 @@ const SearchEntry = ({
       </p>
       <h4 className={`${classNameInner}`}>
         {detectItemAmenityName(item) ?? 'Без категории'}
-        {building && ` - ${building} корпус`}
+        {building && ` - Корпус ${building}, этаж ${level}`}
       </h4>
     </button>
   );
 };
 
-export default SearchEntry;
+export default PoiInfo;
