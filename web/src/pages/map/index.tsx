@@ -1,8 +1,8 @@
 import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
-import SearchPopUp from 'psumaps-shared/src/components/map/search';
-import { PopUpState } from 'psumaps-shared/src/components/map/search/searchUtils';
+import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
+import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';

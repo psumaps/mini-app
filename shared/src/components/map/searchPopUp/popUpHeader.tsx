@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import SwipeGesture from '../../common/swipeGesture';
 import DragHandle from '../../common/dragHandle';
-import { PopUpState } from './searchUtils';
+import { PopUpState } from './search/searchUtils';
 import SearchIcon from '../../../assets/search.svg?react';
 import Poi, { detectPoiName } from '../../../network/models/mapi/poi';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
@@ -62,9 +62,9 @@ const PopUpHeader = ({
         id="popup-swipe"
         onTouch={useCallback(() => handleClosedClick(), [handleClosedClick])}
       >
-        <div className="size-full items-center relative cursor-pointer">
+        <div className="size-full items-center relative cursor-pointer pt-2">
           <DragHandle
-            className={`${state === 'opened' ? 'mt-4' : ''} ${state === 'middle' ? 'delay-200' : ''}`}
+            className={`${state === 'opened' ? 'mt-[0.5rem_!important]' : 'mt-[0_!important]'} ${state === 'middle' ? 'delay-200' : ''}`}
           />
           <div
             className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit origin-top 
@@ -75,7 +75,7 @@ const PopUpHeader = ({
             <p className="mx-auto z-[-1]">Поиск</p>
           </div>
           <div
-            className={`absolute top-0 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit origin-bottom
+            className={`absolute top-2 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit origin-bottom
               ${animEnabled && 'transition-all duration-500 ease-in-out'}
               ${state === 'closed' && !!selectedPoi ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}
               ${state === 'opened' || state === 'middle' ? 'origin-top' : ''}`}

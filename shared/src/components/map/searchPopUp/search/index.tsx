@@ -1,15 +1,15 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import httpClient from '../../../network/httpClient';
+import httpClient from '../../../../network/httpClient';
 import { PopUpState } from './searchUtils';
-import Poi from '../../../network/models/mapi/poi';
-import { StorageContext } from '../../../models/storage';
-import SearchHistory from '../../../models/searchHistory';
-import SearchEntry from './searchEntry';
+import Poi from '../../../../network/models/mapi/poi';
+import { StorageContext } from '../../../../models/storage';
+import SearchHistory from '../../../../models/searchHistory';
+import PoiInfo from '../poiInfo';
 import SearchResult from './searchResult';
-import AmenityIcon from './amenityIcon';
-import Button from '../../common/button';
-import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import AmenityIcon from '../amenityIcon';
+import Button from '../../../common/button';
+import useAnimEnabled from '../../../../hooks/useAnimEnabled';
 
 const queryOptions = {
   staleTime: 1000 * 60 * 5,
@@ -173,7 +173,7 @@ const Search = ({
           historyArr.map(
             (key) =>
               history.data?.[key] && (
-                <SearchEntry
+                <PoiInfo
                   key={key}
                   item={history.data[key].poi}
                   onClick={() => void handlePoiClick(history.data[key].poi)}
