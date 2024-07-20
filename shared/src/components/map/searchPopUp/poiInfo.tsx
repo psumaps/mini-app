@@ -14,8 +14,8 @@ const PoiInfo = ({
   classNameInner?: string;
 }) => {
   const building =
-    item?.properties.tags.building ?? item?.properties.tags.corpus;
-  const level = item?.properties.tags.level ?? '1';
+    item?.properties.tags?.building ?? item?.properties.tags?.corpus;
+  const level = item?.properties.tags?.level ?? '1';
 
   return (
     <button

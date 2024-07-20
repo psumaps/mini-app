@@ -1,4 +1,8 @@
-import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
+import {
+  MapGeoJSONFeature,
+  MapMouseEvent,
+  StyleSpecification,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
@@ -8,7 +12,7 @@ import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
-import React, { MutableRefObject, forwardRef } from 'react';
+import React, { forwardRef, MutableRefObject, useMemo } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
@@ -21,7 +25,6 @@ import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 
-const mapStyleUrl = `${import.meta.env.VITE_URL_MAPTILER_STYLE}?key=${import.meta.env.VITE_MAPTILES_STYLE_KEY}`;
 const popUpId = 'search-pop-up';
 
 const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
@@ -29,11 +32,9 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   (ref! as MutableRefObject<IndoorEqual | null>).current = useControl(
     (context: MapContextValue) => {
       // @ts-expect-error no types for this
-      const indoorEqual = new IndoorEqual(context.map.getMap(), {
+      return new IndoorEqual(context.map.getMap(), {
         url: import.meta.env.VITE_URL_IJO42_TILES,
       });
-      void indoorEqual.loadSprite({ update: true });
-      return indoorEqual;
     },
     { position: 'bottom-right' },
   );
@@ -49,6 +50,8 @@ const MapPage = () => {
     longitude: 56.187188,
     latitude: 58.007469,
     zoom: 16,
+    pitch: 20,
+    bearing: 20,
   });
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
@@ -87,8 +90,10 @@ const MapPage = () => {
       features?: MapGeoJSONFeature[] | undefined;
     },
   ) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const data = await httpClient.mapi.getPoiById(e.features![0].properties.id);
+    const data = await httpClient.mapi.getIndoorById(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      String(Math.floor(e.features![0].id / 10)), // (ノ^_^)ノ┻━┻ ┬─┬
+    );
     setSelectedPoi(data);
     setPopupState('middle');
     setMarkerCoords({
@@ -111,6 +116,44 @@ const MapPage = () => {
     }
   };
 
+  const style: StyleSpecification = useMemo(
+    () => ({
+      version: 8,
+      name: 'basemap',
+      sources: {
+        topo: {
+          tiles: ['https://tile-a.opentopomap.cz/{z}/{x}/{y}.png'],
+          type: 'raster',
+          maxzoom: 17,
+          // minzoom: 17,
+          volatile: true,
+          tileSize: 256,
+        },
+      },
+      layers: [
+        {
+          id: 'Background',
+          type: 'background',
+          layout: {
+            visibility: 'visible',
+          },
+          paint: {
+            'background-color': {
+              type: 'interval',
+              stops: [
+                [6, 'hsl(47,79%,94%)'],
+                [14, 'hsl(42,49%,93%)'],
+              ],
+            },
+          },
+        },
+      ],
+      sprite: 'https://tiles.ijo42.ru/assets/sprite/indoorequal',
+      glyphs: 'https://tiles.ijo42.ru/assets/font/{fontstack}/{range}',
+    }),
+    [],
+  );
+
   return (
     <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
       <div
@@ -122,7 +165,12 @@ const MapPage = () => {
           {...viewState}
           onMove={(e) => setViewState(e.viewState)}
           style={{ width: '100%', height: '100%' }}
-          mapStyle={mapStyleUrl}
+          minZoom={16}
+          maxBounds={[56.172495, 58.003141, 56.202192, 58.01219]}
+          mapStyle={style}
+          clickTolerance={10}
+          refreshExpiredTiles={false}
+          validateStyle={false}
           attributionControl={false}
         >
           <GeolocateControl position="bottom-right" />
