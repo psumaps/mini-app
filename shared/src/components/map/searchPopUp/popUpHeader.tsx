@@ -58,7 +58,7 @@ const PopUpHeader = ({
 
   return (
     <div
-      className={`absolute
+      className={`absolute z-10
           ${state === 'opened' || state === 'middle' ? 'top-0 left-0 right-0 h-[15dvh]' : 'inset-0'}`}
     >
       <SwipeGesture
