@@ -103,7 +103,7 @@ export const eventOrganizers: Event = {
   endDatetime: undefined,
   registrationUrl: 'https://psu-tools.ru',
   registrationCloseDatetime: undefined,
-  tags: ['Лицей', 'Образование'],
+  tags: ['Лицей', 'Образование', 'Технологии и инновации', 'Наука'],
   cover: 'https://cdn.culture.ru/images/b2a75295-f894-5d0c-8d3c-22ee5448220e',
   photos: [],
 };

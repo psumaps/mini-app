@@ -33,7 +33,7 @@ const EventListCard = ({
         <div className="flex justify-between items-center">
           {event.tags && (
             <div className="justify-center py-1.5 px-4 max-w-[60%] rounded-full border-2 border-cd_main ">
-              <p className="c3 text-center text-cd_main">{event.tags}</p>
+              <p className="c3 text-center text-cd_main">{event.tags[0]}</p>
             </div>
           )}
 

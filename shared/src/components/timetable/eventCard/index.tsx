@@ -32,13 +32,6 @@ const EventCard = ({ event }: { event: Event }) => {
             className="object-cover w-full aspect-video max-h-[35vh] rounded-t-[2rem]"
             alt=""
           />
-          {event.tags && (
-            <div className="justify-center absolute bottom-4 left-4 py-2 px-4 w-fit max-w-[50%] font-bold rounded-full border-2 border-white border-solid">
-              <p className="c3 text-white text-center text-wrap">
-                {event.tags}
-              </p>
-            </div>
-          )}
 
           <div className="absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2">
             <HeartButton active={false} />
@@ -51,6 +44,14 @@ const EventCard = ({ event }: { event: Event }) => {
           {/*  <WatchIcon/> */}
           {/*  <div className="my-auto ">2 ч. 30 м.</div> */}
           {/* </div> */}
+          <div className="flex py-2 flex-wrap">
+            {event.tags.map((tag) => (
+              // eslint-disable-next-line react/jsx-key
+              <div className="py-1.5 px-4 w-fit text-center rounded-full border-2 border-c_main dark:border-cd_main border-solid m-1">
+                <p className="c3">{tag}</p>
+              </div>
+            ))}
+          </div>
 
           <h1>{event.name}</h1>
           <div className="mt-3">
