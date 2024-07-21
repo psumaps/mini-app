@@ -1,8 +1,4 @@
-import {
-  MapGeoJSONFeature,
-  MapMouseEvent,
-  StyleSpecification,
-} from 'maplibre-gl';
+import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
@@ -12,7 +8,7 @@ import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
-import React, { forwardRef, MutableRefObject, useMemo } from 'react';
+import React, { forwardRef, MutableRefObject } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
@@ -24,6 +20,11 @@ import Map, {
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
+import {
+  initialView,
+  mapConfig,
+  mapConfigProps,
+} from '~/mapbox-gl-indoorequal/mapConfig';
 
 const popUpId = 'search-pop-up';
 
@@ -46,13 +47,8 @@ const MapPage = () => {
   const isKeyboardOpen = useDetectKeyboardOpen();
   const mapRef = React.useRef<MapRef | null>(null);
   const indoorControlRef = React.useRef<IndoorEqual | null>(null);
-  const [viewState, setViewState] = React.useState({
-    longitude: 56.187188,
-    latitude: 58.007469,
-    zoom: 16,
-    pitch: 20,
-    bearing: 20,
-  });
+  const [viewState, setViewState] = React.useState(initialView);
+  const mapProps = React.useMemo<mapConfigProps>(() => mapConfig, []);
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
     lg: number;
@@ -92,7 +88,7 @@ const MapPage = () => {
   ) => {
     const data = await httpClient.mapi.getIndoorById(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      String(Math.floor(e.features![0].id / 10)), // (ノ^_^)ノ┻━┻ ┬─┬
+      String(Math.floor(e.features![0].id / 10)), // в поле id приходит значение в 10 раз больше (ノ^_^)ノ┻━┻ ┬─┬
     );
     setSelectedPoi(data);
     setPopupState('middle');
@@ -116,44 +112,6 @@ const MapPage = () => {
     }
   };
 
-  const style: StyleSpecification = useMemo(
-    () => ({
-      version: 8,
-      name: 'basemap',
-      sources: {
-        topo: {
-          tiles: ['https://tile-a.opentopomap.cz/{z}/{x}/{y}.png'],
-          type: 'raster',
-          maxzoom: 17,
-          // minzoom: 17,
-          volatile: true,
-          tileSize: 256,
-        },
-      },
-      layers: [
-        {
-          id: 'Background',
-          type: 'background',
-          layout: {
-            visibility: 'visible',
-          },
-          paint: {
-            'background-color': {
-              type: 'interval',
-              stops: [
-                [6, 'hsl(47,79%,94%)'],
-                [14, 'hsl(42,49%,93%)'],
-              ],
-            },
-          },
-        },
-      ],
-      sprite: 'https://tiles.ijo42.ru/assets/sprite/indoorequal',
-      glyphs: 'https://tiles.ijo42.ru/assets/font/{fontstack}/{range}',
-    }),
-    [],
-  );
-
   return (
     <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
       <div
@@ -163,15 +121,8 @@ const MapPage = () => {
           ref={mapRef}
           onLoad={handleLoad}
           {...viewState}
+          {...mapProps}
           onMove={(e) => setViewState(e.viewState)}
-          style={{ width: '100%', height: '100%' }}
-          minZoom={15.5}
-          maxBounds={[56.172495, 58.003141, 56.202192, 58.01219]}
-          mapStyle={style}
-          clickTolerance={10}
-          refreshExpiredTiles={false}
-          validateStyle={false}
-          attributionControl={false}
         >
           <GeolocateControl position="bottom-right" />
           <NavigationControl position="bottom-right" />

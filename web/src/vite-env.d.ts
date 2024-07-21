@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_URL_IJO42_TILES: string;
+  readonly VITE_URL_MAP_ASSETS: string;
   readonly VITE_URL_IJO42_MAPI: string;
   readonly VITE_PSU_TOOLS_KEY: string;
   readonly VITE_URL_PSU_TOOLS_API: string;
