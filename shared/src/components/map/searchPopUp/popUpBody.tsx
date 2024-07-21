@@ -58,9 +58,9 @@ const PopUpBody = forwardRef(function PopUpBody(
       />
       <div
         id={popUpBodyPoiContainerId}
-        className={`absolute -top-2 left-0 right-0 px-2 origin-bottom pt-10
+        className={`absolute -top-2 left-0 right-0 px-2 origin-bottom z-20
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
-            ${selectedPoi === null || state === 'closed' ? 'scale-y-0 opacity-0 h-0' : 'scale-y-100 opacity-100'}`}
+            ${selectedPoi === null || state === 'closed' ? 'scale-y-0 opacity-0 h-0' : 'scale-y-100 opacity-100 mt-10 pb-10'}`}
       >
         <PoiInfoDetails item={selectedPoiInner} className="w-100 pt-3" />
       </div>
