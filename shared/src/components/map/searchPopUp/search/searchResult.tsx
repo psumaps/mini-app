@@ -1,6 +1,6 @@
 import React from 'react';
-import Poi from '../../../network/models/mapi/poi';
-import SearchEntry from './searchEntry';
+import Poi from '../../../../network/models/mapi/poi';
+import PoiInfo from '../poiInfo';
 
 const SearchResult = ({
   data,
@@ -13,7 +13,7 @@ const SearchResult = ({
     <p>Ничего не найдено</p>
   ) : (
     data.map((item) => (
-      <SearchEntry
+      <PoiInfo
         key={item.properties.id}
         item={item}
         onClick={() => handlePoiClick(item)}

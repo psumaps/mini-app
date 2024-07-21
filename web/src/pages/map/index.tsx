@@ -1,8 +1,10 @@
 import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
-import SearchPopUp from 'psumaps-shared/src/components/map/search';
-import { PopUpState } from 'psumaps-shared/src/components/map/search/searchUtils';
+import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
+import { calculateControlsMargin } from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
+import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
+import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
@@ -16,11 +18,11 @@ import Map, {
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
-import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 
 const mapStyleUrl = `${import.meta.env.VITE_URL_MAPTILER_STYLE}?key=${import.meta.env.VITE_MAPTILES_STYLE_KEY}`;
+const popUpId = 'search-pop-up';
 
 const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   // eslint-disable-next-line no-param-reassign
@@ -61,6 +63,13 @@ const MapPage = () => {
     if (selectedPoi === null) setMarkerCoords(null);
   }, [selectedPoi]);
 
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      calculateControlsMargin(popUpId);
+    }, 33);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleSelect = (poi: Poi) => {
     const { lt, lg } = parseCoordinatesFromGeometry(poi.geometry);
 
@@ -81,6 +90,7 @@ const MapPage = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const data = await httpClient.mapi.getPoiById(e.features![0].properties.id);
     setSelectedPoi(data);
+    setPopupState('middle');
     setMarkerCoords({
       ...parseCoordinatesFromGeometry(data.geometry),
       level: parseInt(data.properties.level ?? '1'),
@@ -115,13 +125,7 @@ const MapPage = () => {
           mapStyle={mapStyleUrl}
           attributionControl={false}
         >
-          <GeolocateControl
-            position="bottom-right"
-            style={{
-              marginBottom: `${popupState === 'middle' ? '7rem' : 'calc(4rem + 2dvh)'}`,
-              transition: `${animEnabled && 'all 500ms ease-in-out'}`,
-            }}
-          />
+          <GeolocateControl position="bottom-right" />
           <NavigationControl position="bottom-right" />
           <IndoorControl ref={indoorControlRef} />
           {markerCoords && (
@@ -142,6 +146,7 @@ const MapPage = () => {
           )}
         </Map>
         <SearchPopUp
+          id={popUpId}
           state={popupState}
           setState={setPopupState}
           onSelect={handleSelect}

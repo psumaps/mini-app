@@ -1,3 +1,4 @@
+/// <reference types="vite-plugin-svgr/client" />
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { usePalette } from 'color-thief-react';
