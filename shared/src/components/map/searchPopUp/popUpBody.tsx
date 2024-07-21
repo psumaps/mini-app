@@ -6,7 +6,7 @@ import Search from './search';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 import { PopUpState } from './search/searchUtils';
 import Poi from '../../../network/models/mapi/poi';
-import { popUpBodyPoiContainerId } from './popUpUtils';
+import { popUpBodyPoiContainerId, popUpSearchInputId } from './popUpUtils';
 
 const PopUpBody = forwardRef(function PopUpBody(
   {
@@ -54,6 +54,7 @@ const PopUpBody = forwardRef(function PopUpBody(
           ${state === 'closed' ? 'h-0' : 'bottom-0'}`}
     >
       <Input
+        id={popUpSearchInputId}
         ref={ref}
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
@@ -71,7 +72,7 @@ const PopUpBody = forwardRef(function PopUpBody(
         id={popUpBodyPoiContainerId}
         className={`absolute -top-2 left-0 right-0 px-2 origin-bottom 
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
-            ${selectedPoi === null || state === 'closed' ? 'scale-y-0 opacity-0' : 'scale-y-100 opacity-100'}`}
+            ${selectedPoi === null || state === 'closed' ? 'scale-y-0 opacity-0 h-0' : 'scale-y-100 opacity-100'}`}
       >
         <PoiInfo
           item={selectedPoiInner}
@@ -89,7 +90,7 @@ const PopUpBody = forwardRef(function PopUpBody(
           <div className="w-full h-[1px] origin-center rotate-45 bg-c_secondary dark:bg-cd_secondary" />
           <div className="w-full h-[1px] origin-center -rotate-45 bg-c_secondary dark:bg-cd_secondary" />
         </button>
-        <PoiInfoDetails item={selectedPoiInner} className="w-100 py-3" />
+        <PoiInfoDetails item={selectedPoiInner} className="w-100 pt-3" />
       </div>
       <div
         className={`flex-[1_1_auto] overflow-y-auto overflow-x-clip 

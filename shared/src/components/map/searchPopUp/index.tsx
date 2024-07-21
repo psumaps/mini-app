@@ -27,10 +27,10 @@ const SearchPopUp = ({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      calculatePopUpHeight(id, state);
+      calculatePopUpHeight(id, state, selectedPoi);
     }, 33);
     return () => clearInterval(interval);
-  }, [state, id]);
+  }, [state, id, selectedPoi]);
 
   return (
     <Block
