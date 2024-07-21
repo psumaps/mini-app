@@ -21,11 +21,11 @@ const PoiInfoDetails = ({
   return (
     <div className={`${className}`}>
       <Line className="dark:border-cd_border-secondary" />
-      <div className="flex flex-row justify-between px-4 items-center mx-auto py-2">
-        <p className="b1">Время работы</p>
+      <div className="flex flex-row justify-between items-center mx-auto py-2">
+        <p className="b1 pl-4">Время работы</p>
         <button type="button" onClick={() => setOpened(!opened)}>
           <ArrowRight
-            className={`fill-c_main dark:fill-cd_main scale-75 ${
+            className={`fill-c_main dark:fill-cd_main size-8 p-2 mr-2 ${
               animEnabled ? 'transition-all duration-200 ease-in-out' : ''
             } ${opened ? '-rotate-90' : 'rotate-90'}`}
           />
