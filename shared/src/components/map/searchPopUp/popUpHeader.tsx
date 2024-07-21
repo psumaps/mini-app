@@ -24,7 +24,7 @@ const PopUpHeader = ({
   const handleSwipe = (direction: 'left' | 'right' | 'up' | 'down') => {
     switch (direction) {
       case 'up':
-        setState('opened');
+        if (!selectedPoi) setState('opened');
         break;
       case 'down':
         setState('closed');
@@ -60,7 +60,7 @@ const PopUpHeader = ({
       <SwipeGesture
         onSwipe={handleSwipe}
         id="popup-swipe"
-        onTouch={useCallback(() => handleClosedClick(), [handleClosedClick])}
+        onTouch={handleClosedClick}
       >
         <div className="size-full items-center relative cursor-pointer pt-2">
           <DragHandle

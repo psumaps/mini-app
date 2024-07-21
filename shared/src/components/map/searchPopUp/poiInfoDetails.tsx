@@ -27,7 +27,7 @@ const PoiInfoDetails = ({
           <ArrowRight
             className={`fill-c_main dark:fill-cd_main scale-75 ${
               animEnabled ? 'transition-all duration-200 ease-in-out' : ''
-            } ${opened ? 'rotate-90' : '-rotate-90'}`}
+            } ${opened ? '-rotate-90' : 'rotate-90'}`}
           />
         </button>
       </div>
@@ -35,13 +35,16 @@ const PoiInfoDetails = ({
       <div
         className={`origin-top ${
           animEnabled ? 'transition-all duration-200 ease-in-out' : ''
-        } ${opened ? 'scale-y-100' : 'scale-y-0 h-0'}`}
+        } ${opened ? '' : 'opacity-0 h-0'}`}
       >
         {hoursTag.split(',').map((interval) => {
           const [day, time] = interval.trim().split(' ');
           return (
             <>
-              <div className="flex flex-row justify-between px-4 items-center mx-auto py-2">
+              <div
+                className="flex flex-row justify-between px-4 items-center mx-auto py-2"
+                key={day}
+              >
                 <p className="c2">{day}</p>
                 <h3 className="text-c_accent font-semibold">{time}</h3>
               </div>

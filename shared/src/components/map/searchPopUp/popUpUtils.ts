@@ -1,10 +1,16 @@
+import Poi from '../../../network/models/mapi/poi';
 import { node } from '../../../utils/selector';
 import { PopUpState } from './search/searchUtils';
 
 export const popUpBodyPoiContainerId = 'pop-up-body-poi-container';
+export const popUpSearchInputId = 'pop-up-search-input';
 export const controlsSelector = '.maplibregl-ctrl-bottom-right';
 
-export const calculatePopUpHeight = (id: string, state: PopUpState) => {
+export const calculatePopUpHeight = (
+  id: string,
+  state: PopUpState,
+  selectedPoi: Poi | null,
+) => {
   const popUp = document.getElementById(id);
   if (!popUp) return;
   switch (state) {
@@ -15,9 +21,16 @@ export const calculatePopUpHeight = (id: string, state: PopUpState) => {
       popUp.style.height = '3.5rem'; // h-14
       break;
     case 'middle': {
+      if (!selectedPoi) {
+        const searchInput = document.getElementById(popUpSearchInputId);
+        if (!searchInput) return;
+        const height = searchInput.clientHeight;
+        popUp.style.height = `calc(${height}px + 3.5rem)`;
+        break;
+      }
       const poiContainer = document.getElementById(popUpBodyPoiContainerId);
       const height = poiContainer?.clientHeight ?? 0;
-      popUp.style.height = `calc(${height}px + 2.5rem)`;
+      popUp.style.height = `calc(${height}px + 3rem)`;
       break;
     }
     default:
