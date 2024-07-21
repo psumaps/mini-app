@@ -165,7 +165,7 @@ const MapPage = () => {
           {...viewState}
           onMove={(e) => setViewState(e.viewState)}
           style={{ width: '100%', height: '100%' }}
-          minZoom={16}
+          minZoom={15.5}
           maxBounds={[56.172495, 58.003141, 56.202192, 58.01219]}
           mapStyle={style}
           clickTolerance={10}
