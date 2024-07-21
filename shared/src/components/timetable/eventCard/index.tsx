@@ -33,6 +33,7 @@ const EventCard = ({ event }: { event: Event }) => {
 
     setIsOpen(!isOpen);
   };
+  const endDate = event.endDatetime ? new Date(event.endDatetime) : null;
 
   return (
     <Block className="p-[0_!important] z-[0_!important] rounded-t-[2rem]">
@@ -85,10 +86,23 @@ const EventCard = ({ event }: { event: Event }) => {
           )}
 
           <h1>{event.name}</h1>
-          <div className="mt-3">
-            <h2>Начало: {eventDate.toLocaleTimeString('ru').slice(0, -3)} </h2>
-            {/* <span className="text-base text-zinc-500">- 19:30</span> */}
-          </div>
+          {endDate ? (
+            <div className="mt-3">
+              <span className="b4 font-bold">
+                {eventDate.toLocaleTimeString('ru').slice(0, -3)}{' '}
+              </span>
+              <span className="b4 text-base font-bold text-zinc-500">
+                - {endDate.toLocaleTimeString('ru').slice(0, -3)}
+              </span>
+            </div>
+          ) : (
+            <div className="mt-3">
+              <h2>
+                Начало: {eventDate.toLocaleTimeString('ru').slice(0, -3)}{' '}
+              </h2>
+            </div>
+          )}
+
           <h4>{eventDay}</h4>
           {event.place.name && (
             <h3 className="mt-4 leading-4">
