@@ -51,7 +51,6 @@ const SearchPopUp = ({
         state={state}
         setState={setState}
         selectedPoi={selectedPoi}
-        setSelectedPoi={setSelectedPoi}
         onSelect={onSelect}
       />
     </Block>

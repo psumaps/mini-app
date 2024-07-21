@@ -3,8 +3,9 @@ import SwipeGesture from '../../common/swipeGesture';
 import DragHandle from '../../common/dragHandle';
 import { PopUpState } from './search/searchUtils';
 import SearchIcon from '../../../assets/search.svg?react';
-import Poi, { detectPoiName } from '../../../network/models/mapi/poi';
+import Poi from '../../../network/models/mapi/poi';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import PoiInfo from './poiInfo';
 
 const PopUpHeader = ({
   state,
@@ -20,7 +21,10 @@ const PopUpHeader = ({
   setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
 }) => {
   const { data: animEnabled } = useAnimEnabled();
-  const [selectedPoiName, setSelectedPoiName] = React.useState<string>('');
+  const [selectedPoiInner, setSelectedPoiInner] = React.useState<Poi | null>(
+    null,
+  );
+
   const handleSwipe = (direction: 'left' | 'right' | 'up' | 'down') => {
     switch (direction) {
       case 'up':
@@ -34,7 +38,7 @@ const PopUpHeader = ({
   };
 
   useEffect(() => {
-    if (selectedPoi !== null) setSelectedPoiName(detectPoiName(selectedPoi));
+    if (selectedPoi !== null) setSelectedPoiInner(selectedPoi);
   }, [selectedPoi]);
 
   const handleClosedClick = useCallback(() => {
@@ -75,12 +79,17 @@ const PopUpHeader = ({
             <p className="mx-auto z-[-1]">Поиск</p>
           </div>
           <div
-            className={`absolute top-2 left-0 right-0 flex flex-row items-center px-4 mt-4 h-fit origin-bottom
+            className={`absolute top-2 left-0 right-0 flex flex-row items-center px-2 mt-4 h-fit origin-bottom
               ${animEnabled && 'transition-all duration-500 ease-in-out'}
-              ${state === 'closed' && !!selectedPoi ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}
+              ${(state === 'closed' || state === 'middle') && !!selectedPoi ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}
               ${state === 'opened' || state === 'middle' ? 'origin-top' : ''}`}
           >
-            <p className="mx-auto z-[-1]">{selectedPoiName}</p>
+            <PoiInfo
+              item={selectedPoiInner}
+              onClick={() => {}}
+              classNameInner=""
+              className="px-4"
+            />
             <button
               type="button"
               onClick={handleClearPoi}

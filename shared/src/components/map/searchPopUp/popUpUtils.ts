@@ -18,7 +18,9 @@ export const calculatePopUpHeight = (
       popUp.style.height = '100%';
       break;
     case 'closed':
-      popUp.style.height = '3.5rem'; // h-14
+      if (!selectedPoi)
+        popUp.style.height = '3.5rem'; // h-14
+      else popUp.style.height = '5.5rem';
       break;
     case 'middle': {
       if (!selectedPoi) {
