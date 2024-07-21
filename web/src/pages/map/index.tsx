@@ -18,13 +18,9 @@ import Map, {
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
-import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
+import IndoorEqual from '~/mapEngine/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
-import {
-  initialView,
-  mapConfig,
-  mapConfigProps,
-} from '~/mapbox-gl-indoorequal/mapConfig';
+import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
 
 const popUpId = 'search-pop-up';
 
@@ -33,9 +29,7 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   (ref! as MutableRefObject<IndoorEqual | null>).current = useControl(
     (context: MapContextValue) => {
       // @ts-expect-error no types for this
-      return new IndoorEqual(context.map.getMap(), {
-        url: import.meta.env.VITE_URL_IJO42_TILES,
-      });
+      return new IndoorEqual(context.map.getMap(), {});
     },
     { position: 'bottom-right' },
   );
@@ -48,7 +42,7 @@ const MapPage = () => {
   const mapRef = React.useRef<MapRef | null>(null);
   const indoorControlRef = React.useRef<IndoorEqual | null>(null);
   const [viewState, setViewState] = React.useState(initialView);
-  const mapProps = React.useMemo<mapConfigProps>(() => mapConfig, []);
+  const mapProps = React.useMemo<MapConfigProps>(() => mapConfig, []);
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
     lg: number;

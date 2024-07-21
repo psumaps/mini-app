@@ -177,6 +177,9 @@ export const layers: LayerSpecification[] = [
     source: 'indoorequal',
     'source-layer': 'heat',
     filter: ['all'],
+    layout: {
+      visibility: 'none',
+    },
     paint: {
       'heatmap-color': [
         'interpolate',

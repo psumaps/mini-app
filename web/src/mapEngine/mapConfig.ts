@@ -1,10 +1,16 @@
 import { StyleSpecification } from 'maplibre-gl';
 import { ViewState } from 'react-map-gl';
+import { layers } from '~/mapEngine/layers';
 
 const mapStyle: StyleSpecification = {
   version: 8,
   name: 'basemap',
-  sources: {},
+  sources: {
+    indoorequal: {
+      url: import.meta.env.VITE_URL_IJO42_TILES,
+      type: 'vector',
+    },
+  },
   layers: [
     {
       id: 'Background',
@@ -22,10 +28,10 @@ const mapStyle: StyleSpecification = {
         },
       },
     },
+    ...layers,
   ],
-  sprite: import.meta.env.VITE_URL_MAP_ASSETS + 'assets/sprite/indoorequal',
-  glyphs:
-    import.meta.env.VITE_URL_MAP_ASSETS + 'assets/font/{fontstack}/{range}',
+  sprite: `${import.meta.env.VITE_URL_MAP_ASSETS}assets/sprite/indoorequal`,
+  glyphs: `${import.meta.env.VITE_URL_MAP_ASSETS}assets/font/{fontstack}/{range}`,
 };
 
 export const initialView: ViewState = {
@@ -37,7 +43,7 @@ export const initialView: ViewState = {
   bearing: 20,
 };
 
-export type mapConfigProps = {
+export type MapConfigProps = {
   clickTolerance: number;
   attributionControl: boolean;
   mapStyle: StyleSpecification;
@@ -48,11 +54,11 @@ export type mapConfigProps = {
   refreshExpiredTiles: boolean;
 };
 
-export const mapConfig: mapConfigProps = {
+export const mapConfig: MapConfigProps = {
   style: { width: '100%', height: '100%' },
   minZoom: 15.5,
   maxBounds: [56.172495, 58.003141, 56.202192, 58.01219],
-  mapStyle: mapStyle,
+  mapStyle,
   clickTolerance: 10,
   refreshExpiredTiles: false,
   validateStyle: false,
