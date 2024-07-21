@@ -91,7 +91,16 @@ const EventCard = ({ event }: { event: Event }) => {
               <p className="mt-2.5 c1">{event.description}</p>
             </>
           )}
-          {event.organizers && <ContactsCard organizer={event.organizers[0]} />}
+          {event.organizers[0] ? (
+            <>
+              <h2 className="mt-7">Контакты:</h2>
+              <h3 className="mt-1">Организаторы/ спикеры</h3>
+              {event.organizers.map((org) => (
+                // eslint-disable-next-line react/jsx-key
+                <ContactsCard organizer={org} />
+              ))}
+            </>
+          ) : null}
         </div>
       </div>
     </Block>

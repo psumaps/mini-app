@@ -9,14 +9,7 @@ export default interface Event {
     cover: { id: number; name: string; url: string };
     photos: [];
   };
-  organizers?: [
-    {
-      id: number;
-      name: string;
-      description: string;
-      photo: { id: number; name: string; url: string };
-    },
-  ];
+  organizers: Organizer[];
   startDatetime: string;
   endDatetime?: string;
   registrationUrl?: string;
@@ -24,4 +17,10 @@ export default interface Event {
   tags: string[];
   cover: string;
   photos: [];
+}
+export interface Organizer {
+  id: number;
+  name: string;
+  description: string;
+  photo?: { id: number; name: string; url: string };
 }

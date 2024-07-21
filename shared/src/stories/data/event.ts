@@ -17,18 +17,7 @@ export const eventDefault: Event = {
     },
     photos: [],
   },
-  organizers: [
-    {
-      id: 1,
-      name: 'PSU-TOOLS TEAM',
-      description: 'А здесь описание организатора. Пупупу',
-      photo: {
-        id: 2,
-        name: 'Default organizer photo',
-        url: 'https://psu-tools.ru/gallery/default-organizer-photo.png',
-      },
-    },
-  ],
+  organizers: [],
   startDatetime: '2023-09-14T16:00:00',
   endDatetime: undefined,
   registrationUrl: 'https://psu-tools.ru',
@@ -63,7 +52,7 @@ export const eventLongTitle: Event = {
       photo: {
         id: 2,
         name: 'Default organizer photo',
-        url: 'https://psu-tools.ru/gallery/default-organizer-photo.png',
+        url: 'http://www.psu.ru/files/images/podrazdeleniya/licey/licej.png',
       },
     },
   ],
@@ -100,8 +89,14 @@ export const eventOrganizers: Event = {
       photo: {
         id: 2,
         name: 'Default organizer photo',
-        url: 'https://psu-tools.ru/gallery/default-organizer-photo.png',
+        url: 'http://www.psu.ru/files/images/podrazdeleniya/licey/licej.png',
       },
+    },
+    {
+      id: 2,
+      name: 'Лицей ПГНИУ',
+      description: 'А здесь описание организатора. Пупупу',
+      photo: undefined,
     },
   ],
   startDatetime: '2024-09-01T00:00:00',
