@@ -90,6 +90,7 @@ const MapPage = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const data = await httpClient.mapi.getPoiById(e.features![0].properties.id);
     setSelectedPoi(data);
+    setPopupState('middle');
     setMarkerCoords({
       ...parseCoordinatesFromGeometry(data.geometry),
       level: parseInt(data.properties.level ?? '1'),
