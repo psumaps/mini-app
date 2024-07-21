@@ -13,15 +13,15 @@ const ContactsCard = ({
   };
 }) => {
   return (
-    <div className="container flex flex-row flex-nowrap items-center mb-2">
+    <div className="container flex flex-row flex-nowrap items-center mt-2 gap-3">
       {organizer.photo ? (
         <img
-          className="size-24 min-h-24 min-w-24 rounded-full"
+          className="size-16 min-h-16 min-w-16 rounded-full"
           src={organizer.photo.url}
           alt="Организатор"
         />
       ) : (
-        <AvatarIcon className="fill-c_main dark:fill-cd_main" />
+        <AvatarIcon className="fill-c_main dark:fill-cd_main size-16 min-h-16 min-w-16" />
       )}
       <div className="mx-2">
         <p className="mt-2 mb-1 c1 font-bold">{organizer.name}</p>

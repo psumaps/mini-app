@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Event from '../../../network/models/psu-tools/event';
 
 import Block from '../../common/block';
@@ -7,6 +7,9 @@ import ShareButton from './shareButton';
 import SignUpCard from './signupCard';
 import ContactsCard from './contactsCard';
 import ViewMapCard from './viewMapCard';
+import RightArrowIcon from '../../../assets/right-arrow.svg?react';
+import LeftArrowIcon from '../../../assets/left-arrow.svg?react';
+import Button from '../../common/button';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const options: Intl.DateTimeFormatOptions = {
@@ -21,6 +24,15 @@ const EventCard = ({ event }: { event: Event }) => {
     const day = `${date.toLocaleString('ru', options)}, ${days.at(date.getDay())}`;
     return { eventDay: day, eventDate: date };
   }, [event.startDatetime]);
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDropdown = () => {
+    if (isOpen) {
+      setIsOpen(!isOpen);
+      return;
+    }
+
+    setIsOpen(!isOpen);
+  };
 
   return (
     <Block className="p-[0_!important] z-[0_!important] rounded-t-[2rem]">
@@ -44,14 +56,33 @@ const EventCard = ({ event }: { event: Event }) => {
           {/*  <WatchIcon/> */}
           {/*  <div className="my-auto ">2 ч. 30 м.</div> */}
           {/* </div> */}
-          <div className="flex py-2 flex-wrap">
-            {event.tags.map((tag) => (
-              // eslint-disable-next-line react/jsx-key
+
+          {isOpen ? (
+            <div className="flex py-2 flex-wrap">
+              {event.tags.map((tag) => (
+                <div
+                  key={tag}
+                  className="py-1.5 px-4 w-fit text-center rounded-full border-2 border-c_main dark:border-cd_main border-solid m-1 "
+                >
+                  <p className="c3">{tag}</p>
+                </div>
+              ))}
+              <Button className="pr-3" type="button" onClick={toggleDropdown}>
+                <LeftArrowIcon className="fill-c_main dark:fill-cd_main" />
+              </Button>
+            </div>
+          ) : (
+            <div className="flex py-2 flex-wrap">
               <div className="py-1.5 px-4 w-fit text-center rounded-full border-2 border-c_main dark:border-cd_main border-solid m-1">
-                <p className="c3">{tag}</p>
+                <p className="c3">{event.tags[0]}</p>
               </div>
-            ))}
-          </div>
+              {event.tags[1] && (
+                <Button className="pr-3" type="button" onClick={toggleDropdown}>
+                  <RightArrowIcon className="fill-c_main dark:fill-cd_main " />
+                </Button>
+              )}
+            </div>
+          )}
 
           <h1>{event.name}</h1>
           <div className="mt-3">
@@ -92,16 +123,15 @@ const EventCard = ({ event }: { event: Event }) => {
               <p className="mt-2.5 c1">{event.description}</p>
             </>
           )}
-          {event.organizers[0] ? (
+          {event.organizers[0] && (
             <>
               <h2 className="mt-7">Контакты:</h2>
               <h3 className="mt-1">Организаторы/ спикеры</h3>
               {event.organizers.map((org) => (
-                // eslint-disable-next-line react/jsx-key
-                <ContactsCard organizer={org} />
+                <ContactsCard key={org.id} organizer={org} />
               ))}
             </>
-          ) : null}
+          )}
         </div>
       </div>
     </Block>
