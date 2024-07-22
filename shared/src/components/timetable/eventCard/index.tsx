@@ -8,7 +8,6 @@ import SignUpCard from './signupCard';
 import ContactsCard from './contactsCard';
 import ViewMapCard from './viewMapCard';
 import RightArrowIcon from '../../../assets/right-arrow.svg?react';
-import LeftArrowIcon from '../../../assets/left-arrow.svg?react';
 import Button from '../../common/button';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
@@ -69,7 +68,7 @@ const EventCard = ({ event }: { event: Event }) => {
                 </div>
               ))}
               <Button className="pr-3" type="button" onClick={toggleDropdown}>
-                <LeftArrowIcon className="fill-c_main dark:fill-cd_main" />
+                <RightArrowIcon className="fill-c_main dark:fill-cd_main rotate-180" />
               </Button>
             </div>
           ) : (
@@ -79,7 +78,7 @@ const EventCard = ({ event }: { event: Event }) => {
               </div>
               {event.tags[1] && (
                 <Button className="pr-3" type="button" onClick={toggleDropdown}>
-                  <RightArrowIcon className="fill-c_main dark:fill-cd_main " />
+                  <RightArrowIcon className="fill-c_main dark:fill-cd_main" />
                 </Button>
               )}
             </div>
