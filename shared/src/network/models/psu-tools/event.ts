@@ -18,6 +18,7 @@ export default interface Event {
   cover: string;
   photos: [];
 }
+
 export interface Organizer {
   id: number;
   name: string;

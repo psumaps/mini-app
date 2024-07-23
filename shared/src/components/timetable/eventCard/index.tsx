@@ -24,14 +24,7 @@ const EventCard = ({ event }: { event: Event }) => {
     return { eventDay: day, eventDate: date };
   }, [event.startDatetime]);
   const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => {
-    if (isOpen) {
-      setIsOpen(!isOpen);
-      return;
-    }
 
-    setIsOpen(!isOpen);
-  };
   const endDate = event.endDatetime ? new Date(event.endDatetime) : null;
 
   return (
@@ -67,7 +60,11 @@ const EventCard = ({ event }: { event: Event }) => {
                   <p className="c3">{tag}</p>
                 </div>
               ))}
-              <Button className="pr-3" type="button" onClick={toggleDropdown}>
+              <Button
+                className="px-3"
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+              >
                 <RightArrowIcon className="fill-c_main dark:fill-cd_main rotate-180" />
               </Button>
             </div>
@@ -77,7 +74,11 @@ const EventCard = ({ event }: { event: Event }) => {
                 <p className="c3">{event.tags[0]}</p>
               </div>
               {event.tags[1] && (
-                <Button className="pr-3" type="button" onClick={toggleDropdown}>
+                <Button
+                  className="px-3"
+                  type="button"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
                   <RightArrowIcon className="fill-c_main dark:fill-cd_main" />
                 </Button>
               )}
