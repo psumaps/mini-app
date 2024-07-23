@@ -82,7 +82,7 @@ const MapPage = () => {
   ) => {
     const data = await httpClient.mapi.getIndoorById(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      (e.features![0].id! as string).slice(0, -1), // в поле id приходит значение c лишней "1" справа раз больше (ノ^_^)ノ┻━┻ ┬─┬
+      String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
     );
     setSelectedPoi(data);
     setPopupState('middle');
