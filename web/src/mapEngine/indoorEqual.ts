@@ -4,7 +4,7 @@ import type {Map} from 'maplibre-gl';
 import {IControl} from 'react-map-gl/src/types/lib';
 import findAllLevels from './levels';
 import LevelControl from './levelControl';
-import {layers} from '~/mapEngine/layers';
+import layers from '~/mapEngine/layers';
 
 /**
  * Load the indoor= source and layers in your map.
