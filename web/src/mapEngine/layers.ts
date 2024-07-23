@@ -40,7 +40,7 @@ const rank2Class = [
   'ticket_validator',
 ];
 
-export const layers: LayerSpecification[] = [
+const layers: LayerSpecification[] = [
   {
     id: 'indoor-polygon',
     type: 'fill',
@@ -131,6 +131,7 @@ export const layers: LayerSpecification[] = [
       'line-color': 'gray',
       'line-dasharray': [0.4, 0.75],
       'line-width': {
+        // @ts-expect-error UDF
         base: 1.4,
         stops: [
           [17, 2],
@@ -160,11 +161,13 @@ export const layers: LayerSpecification[] = [
       'icon-rotation-alignment': 'viewport',
     },
   },
+  // @ts-expect-error UDF
   {
     id: 'indoor-poi-rank1',
     ...commonPoi,
     filter: ['all', ['==', '$type', 'Point'], ['!in', 'class', ...rank2Class]],
   },
+  // @ts-expect-error UDF
   {
     id: 'indoor-poi-rank2',
     ...commonPoi,
@@ -283,3 +286,4 @@ export const layers: LayerSpecification[] = [
     },
   },
 ];
+export default layers;

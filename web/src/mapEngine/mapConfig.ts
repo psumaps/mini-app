@@ -1,6 +1,6 @@
 import { StyleSpecification } from 'maplibre-gl';
 import { ViewState } from 'react-map-gl';
-import { layers } from '~/mapEngine/layers';
+import mapLayers from '~/mapEngine/layers';
 
 const mapStyle: StyleSpecification = {
   version: 8,
@@ -28,7 +28,7 @@ const mapStyle: StyleSpecification = {
         },
       },
     },
-    ...layers,
+    ...mapLayers,
   ],
   sprite: `${import.meta.env.VITE_URL_MAP_ASSETS}assets/sprite/indoorequal`,
   glyphs: `${import.meta.env.VITE_URL_MAP_ASSETS}assets/font/{fontstack}/{range}`,
