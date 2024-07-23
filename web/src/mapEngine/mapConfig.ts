@@ -7,7 +7,7 @@ const mapStyle: StyleSpecification = {
   name: 'basemap',
   sources: {
     indoorequal: {
-      url: import.meta.env.VITE_URL_IJO42_TILES,
+      tiles: [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}.pbf`],
       type: 'vector',
     },
   },
