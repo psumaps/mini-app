@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import event from '../components/timetable/eventListCard';
-import { eventDefault, eventLongTitle } from './data/event';
+import { eventDefault, eventLongTitle, eventOrganizers } from './data/event';
 
 const meta: Meta<typeof event> = {
   title: 'Timetable/Event card',
@@ -23,5 +23,10 @@ export const Default: Story = {
 export const LongTitle: Story = {
   args: {
     event: eventLongTitle,
+  },
+};
+export const Organizers: Story = {
+  args: {
+    event: eventOrganizers,
   },
 };
