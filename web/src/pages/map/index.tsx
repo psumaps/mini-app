@@ -8,7 +8,7 @@ import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
-import React, { MutableRefObject, forwardRef } from 'react';
+import React, { forwardRef, MutableRefObject } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   GeolocateControl,
@@ -18,10 +18,10 @@ import Map, {
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
-import IndoorEqual from '~/mapbox-gl-indoorequal/indoorEqual';
+import IndoorEqual from '~/mapEngine/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
+import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
 
-const mapStyleUrl = `${import.meta.env.VITE_URL_MAPTILER_STYLE}?key=${import.meta.env.VITE_MAPTILES_STYLE_KEY}`;
 const popUpId = 'search-pop-up';
 
 const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
@@ -29,11 +29,7 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   (ref! as MutableRefObject<IndoorEqual | null>).current = useControl(
     (context: MapContextValue) => {
       // @ts-expect-error no types for this
-      const indoorEqual = new IndoorEqual(context.map.getMap(), {
-        url: import.meta.env.VITE_URL_IJO42_TILES,
-      });
-      void indoorEqual.loadSprite({ update: true });
-      return indoorEqual;
+      return new IndoorEqual(context.map.getMap(), {});
     },
     { position: 'bottom-right' },
   );
@@ -45,11 +41,8 @@ const MapPage = () => {
   const isKeyboardOpen = useDetectKeyboardOpen();
   const mapRef = React.useRef<MapRef | null>(null);
   const indoorControlRef = React.useRef<IndoorEqual | null>(null);
-  const [viewState, setViewState] = React.useState({
-    longitude: 56.187188,
-    latitude: 58.007469,
-    zoom: 16,
-  });
+  const [viewState, setViewState] = React.useState(initialView);
+  const mapProps = React.useMemo<MapConfigProps>(() => mapConfig, []);
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
     lg: number;
@@ -87,8 +80,10 @@ const MapPage = () => {
       features?: MapGeoJSONFeature[] | undefined;
     },
   ) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const data = await httpClient.mapi.getPoiById(e.features![0].properties.id);
+    const data = await httpClient.mapi.getIndoorById(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
+    );
     setSelectedPoi(data);
     setPopupState('middle');
     setMarkerCoords({
@@ -120,10 +115,8 @@ const MapPage = () => {
           ref={mapRef}
           onLoad={handleLoad}
           {...viewState}
+          {...mapProps}
           onMove={(e) => setViewState(e.viewState)}
-          style={{ width: '100%', height: '100%' }}
-          mapStyle={mapStyleUrl}
-          attributionControl={false}
         >
           <GeolocateControl position="bottom-right" />
           <NavigationControl position="bottom-right" />

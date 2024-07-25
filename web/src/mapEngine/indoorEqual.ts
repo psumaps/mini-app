@@ -1,18 +1,10 @@
 import debounce from 'debounce';
 import arrayEqual from 'array-equal';
-import type { Map } from 'maplibre-gl';
-import { IControl } from 'react-map-gl/src/types/lib.ts';
-import { LayerSpecification } from 'maplibre-gl';
+import type {Map} from 'maplibre-gl';
+import {IControl} from 'react-map-gl/src/types/lib';
 import findAllLevels from './levels';
 import LevelControl from './levelControl';
-import loadSprite from './sprite';
-import VectorTileSource from './vectorTileSource';
-
-export interface IndoorEqualsProps {
-  url: string;
-  apiKey?: string;
-  layers?: LayerSpecification[];
-}
+import layers from '~/mapEngine/layers';
 
 /**
  * Load the indoor= source and layers in your map.
@@ -30,8 +22,6 @@ export interface IndoorEqualsProps {
  * @return {IndoorEqual} `this`
  */
 export default class IndoorEqual implements IControl<Map> {
-  private source: VectorTileSource;
-
   private map: Map;
 
   levels: string[];
@@ -46,11 +36,8 @@ export default class IndoorEqual implements IControl<Map> {
     | debounce.DebouncedFunction<() => void>
     | undefined;
 
-  constructor(map: Map, options: IndoorEqualsProps) {
-    const SourceKlass = VectorTileSource;
-    const defaultOpts = { heatmap: true };
-    const opts = { ...defaultOpts, ...options };
-    this.source = new SourceKlass(map, options);
+  constructor(map: Map) {
+    const opts = { heatmap: false };
     this.map = map;
     this.levels = [];
     this.level = '1';
@@ -71,7 +58,6 @@ export default class IndoorEqual implements IControl<Map> {
    * Remove any layers, source and listeners and controls
    */
   remove() {
-    this.source.remove();
     if (this._updateLevelsDebounce === undefined)
       throw new Error('updateLevelsDebounce is undefined');
     this._updateLevelsDebounce.clear();
@@ -137,41 +123,6 @@ export default class IndoorEqual implements IControl<Map> {
   }
 
   /**
-   * Set the displayed level.
-   * @deprecated Use setLevel instead
-   * @param {string} level the level to be displayed
-   * @fires IndoorEqual#levelchange
-   */
-  updateLevel(level: string) {
-    console.log(
-      'The updateLevel method is deprecated. Please use setLevel instead.',
-    );
-    this.setLevel(level);
-  }
-
-  /**
-   * Load a sprite and add all images to the map
-   * @param {string} baseUrl the baseUrl where to load the sprite
-   * @param {object} options
-   * @param {boolean} [options.update] Update existing image (default false)
-   * @return {Promise} It resolves an hash of images.
-   */
-  loadSprite(optionsArg = {}) {
-    const opts = { update: false, ...optionsArg };
-    return loadSprite().then((sprite) => {
-      Object.keys(sprite).forEach((id) => {
-        const { data, ...options } = sprite[id];
-        if (!this.map.hasImage(id)) {
-          this.map.addImage(id, data, options);
-        } else if (opts.update) {
-          this.map.updateImage(id, data);
-        }
-      });
-      return sprite;
-    });
-  }
-
-  /**
    * Change the heatmap layer visibility
    * @param {boolean} visible True to make it visible, false to hide it
    */
@@ -186,8 +137,6 @@ export default class IndoorEqual implements IControl<Map> {
   }
 
   _init() {
-    this.source.addSource();
-    this.source.addLayers();
     this._updateFilters();
     this._updateLevelsDebounce = debounce(this._updateLevels.bind(this), 300);
 
@@ -200,8 +149,10 @@ export default class IndoorEqual implements IControl<Map> {
   }
 
   _updateFilters() {
-    this.source.layers
-      .filter((layer) => layer.type !== 'heatmap')
+    layers
+      .filter(
+        (layer) => layer.type !== 'heatmap' && !layer.id.includes('indoorb'),
+      )
       .forEach((layer) => {
         this.map.setFilter(layer.id, [
           ...(layer.filter || ['all']),
@@ -217,8 +168,8 @@ export default class IndoorEqual implements IControl<Map> {
   }
 
   _updateLevels() {
-    if (this.map.getSource(this.source.sourceId)) {
-      const features = this.map.querySourceFeatures(this.source.sourceId, {
+    if (this.map.getSource('indoorequal')) {
+      const features = this.map.querySourceFeatures('indoorequal', {
         sourceLayer: 'area',
       });
       const levels = findAllLevels(features);
