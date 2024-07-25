@@ -9,6 +9,7 @@ import ContactsCard from './contactsCard';
 import ViewMapCard from './viewMapCard';
 import RightArrowIcon from '../../../assets/right-arrow.svg?react';
 import Button from '../../common/button';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const options: Intl.DateTimeFormatOptions = {
@@ -18,6 +19,7 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 const EventCard = ({ event }: { event: Event }) => {
+  const { data: animEnabled } = useAnimEnabled();
   const { eventDate, eventDay } = useMemo(() => {
     const date = new Date(event.startDatetime);
     const day = `${date.toLocaleString('ru', options)}, ${days.at(date.getDay())}`;
@@ -50,40 +52,41 @@ const EventCard = ({ event }: { event: Event }) => {
           {/*  <div className="my-auto ">2 ч. 30 м.</div> */}
           {/* </div> */}
 
-          {isOpen ? (
-            <div className="flex py-2 flex-wrap">
-              {event.tags.map((tag) => (
-                <div
-                  key={tag}
-                  className="py-1.5 px-4 w-fit text-center rounded-full border-2 border-c_main dark:border-cd_main border-solid m-1 "
-                >
-                  <p className="c3">{tag}</p>
-                </div>
-              ))}
-              <Button
-                className="px-3"
-                type="button"
-                onClick={() => setIsOpen(!isOpen)}
+          <div className="flex py-2 flex-wrap">
+            {event.tags.map((tag, i) => (
+              <div
+                key={tag}
+                style={{
+                  transitionDelay: `${isOpen ? (i - 1) * 200 : (event.tags.length - i) * 200}ms`,
+                  maxWidth:
+                    // eslint-disable-next-line no-nested-ternary
+                    i > 0
+                      ? isOpen
+                        ? `${tag.length * 10 + 40}px`
+                        : '0px'
+                      : '100%',
+                }}
+                className={`py-1.5 px-4 text-center rounded-full h-fit max-h-8 border-2 border-c_main dark:border-cd_main border-solid m-1 ${
+                  !isOpen && i > 0
+                    ? 'max-w-[1px] p-[0_!important] m-[0_!important] border-[0_!important] opacity-0'
+                    : 'opacity-100 w-fit max-w-60'
+                } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
               >
-                <RightArrowIcon className="fill-c_main dark:fill-cd_main rotate-180" />
-              </Button>
-            </div>
-          ) : (
-            <div className="flex py-2 flex-wrap">
-              <div className="py-1.5 px-4 w-fit text-center rounded-full border-2 border-c_main dark:border-cd_main border-solid m-1">
-                <p className="c3">{event.tags[0]}</p>
+                <p className="c3">{tag}</p>
               </div>
-              {event.tags[1] && (
-                <Button
-                  className="px-3"
-                  type="button"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <RightArrowIcon className="fill-c_main dark:fill-cd_main" />
-                </Button>
-              )}
-            </div>
-          )}
+            ))}
+            <Button
+              className="px-3"
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <RightArrowIcon
+                className={`fill-c_main dark:fill-cd_main ${isOpen ? 'rotate-180' : 'rotate-0'} ${
+                  animEnabled ? 'transition-all duration-300 ease-in-out' : ''
+                }`}
+              />
+            </Button>
+          </div>
 
           <h1>{event.name}</h1>
           {endDate ? (
