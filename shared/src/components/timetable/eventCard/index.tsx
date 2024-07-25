@@ -75,17 +75,19 @@ const EventCard = ({ event }: { event: Event }) => {
                 <p className="c3">{tag}</p>
               </div>
             ))}
-            <Button
-              className="px-3"
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <RightArrowIcon
-                className={`fill-c_main dark:fill-cd_main ${isOpen ? 'rotate-180' : 'rotate-0'} ${
-                  animEnabled ? 'transition-all duration-300 ease-in-out' : ''
-                }`}
-              />
-            </Button>
+            {event.tags.length > 1 && (
+              <Button
+                className="px-3"
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                <RightArrowIcon
+                  className={`fill-c_main dark:fill-cd_main ${isOpen ? 'rotate-180' : 'rotate-0'} ${
+                    animEnabled ? 'transition-all duration-300 ease-in-out' : ''
+                  }`}
+                />
+              </Button>
+            )}
           </div>
 
           <h1>{event.name}</h1>
