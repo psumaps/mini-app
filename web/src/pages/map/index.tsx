@@ -21,6 +21,7 @@ import { Location, useLocation } from 'react-router-dom';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
+import QrScanner from '~/mapEngine/qrScanner';
 
 const popUpId = 'search-pop-up';
 
@@ -37,16 +38,16 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
 });
 
 async function handleRedirect(
-  location: Location,
+  redirectHash: string,
   handleSelect: (poi: Poi) => void,
 ) {
-  const redirectHash = location.hash?.split('=');
-  if (redirectHash && redirectHash.length === 2) {
+  const hashParams = redirectHash.split('=');
+  if (hashParams.length === 2 && hashParams[0].length === 1) {
     let data: Poi[];
     // eslint-disable-next-line default-case
-    switch (redirectHash[0].slice(1)) {
+    switch (redirectHash[0]) {
       case 'q': // indoor by name
-        data = await httpClient.mapi.search(redirectHash[1]);
+        data = await httpClient.mapi.search(hashParams[1]);
         if (data.length === 0) {
           console.error('POI not found');
         } else if (data.length === 1) {
@@ -56,7 +57,7 @@ async function handleRedirect(
         }
         break;
       case 'i': // indoor by id
-        data = [await httpClient.mapi.getIndoorById(redirectHash[1])];
+        data = [await httpClient.mapi.getIndoorById(hashParams[1])];
         if (data?.[0]) {
           handleSelect(data[0]);
         } else {
@@ -64,10 +65,27 @@ async function handleRedirect(
         }
         break;
       case 'e': // event by id
-        history.pushState({}, '', `/event/${redirectHash[1]}`);
+        history.pushState({}, '', `/event/${hashParams[1]}`);
         history.go();
         break;
     }
+  }
+}
+const QrControl = ({ handleSelect }: { handleSelect: (poi: Poi) => void }) => {
+  useControl(
+    () => new QrScanner((code) => void handleRedirect(code, handleSelect)),
+    { position: 'bottom-right' },
+  );
+  return null;
+};
+
+function handleLocationHash(
+  location: Location,
+  handleSelect: (poi: Poi) => void,
+) {
+  const redirectHash = location.hash?.slice(1);
+  if (redirectHash) {
+    void handleRedirect(redirectHash, handleSelect);
   }
 }
 
@@ -112,7 +130,7 @@ const MapPage = () => {
   };
 
   React.useEffect(
-    () => void handleRedirect(routerLocation, handleSelect),
+    () => void handleLocationHash(routerLocation, handleSelect),
     [routerLocation],
   );
 
@@ -164,6 +182,7 @@ const MapPage = () => {
           <GeolocateControl position="bottom-right" />
           <NavigationControl position="bottom-right" />
           <IndoorControl ref={indoorControlRef} />
+          <QrControl handleSelect={handleSelect} />
           {markerCoords && (
             <Marker
               latitude={markerCoords.lt}
