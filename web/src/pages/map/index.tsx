@@ -7,7 +7,6 @@ import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search
 import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
-import { parseCoordinatesFromGeometry } from 'psumaps-shared/src/utils/coordinates';
 import React, { forwardRef, MutableRefObject } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
@@ -64,7 +63,7 @@ const MapPage = () => {
   }, []);
 
   const handleSelect = (poi: Poi) => {
-    const { lt, lg } = parseCoordinatesFromGeometry(poi.geometry);
+    const [lg, lt] = poi.properties.point.coordinates;
 
     setMarkerCoords({ lt, lg, level: parseInt(poi.properties.level ?? '1') });
     setSelectedPoi(poi);
@@ -86,8 +85,10 @@ const MapPage = () => {
     );
     setSelectedPoi(data);
     setPopupState('middle');
+    const [lg, lt] = data.properties.point.coordinates;
     setMarkerCoords({
-      ...parseCoordinatesFromGeometry(data.geometry),
+      lt,
+      lg,
       level: parseInt(data.properties.level ?? '1'),
     });
   };
