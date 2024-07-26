@@ -17,6 +17,7 @@ import Map, {
   useControl,
 } from 'react-map-gl/maplibre';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
+import { Location, useLocation } from 'react-router-dom';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import NavigationBar from '~/widgets/navigationBar';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
@@ -35,6 +36,41 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   return null;
 });
 
+async function handleRedirect(
+  location: Location,
+  handleSelect: (poi: Poi) => void,
+) {
+  const redirectHash = location.hash?.split('=');
+  if (redirectHash && redirectHash.length === 2) {
+    let data: Poi[];
+    // eslint-disable-next-line default-case
+    switch (redirectHash[0].slice(1)) {
+      case 'q': // indoor by name
+        data = await httpClient.mapi.search(redirectHash[1]);
+        if (data.length === 0) {
+          console.error('POI not found');
+        } else if (data.length === 1) {
+          handleSelect(data[0]);
+        } else {
+          console.error('too many poi'); // TODO: open search
+        }
+        break;
+      case 'i': // indoor by id
+        data = [await httpClient.mapi.getIndoorById(redirectHash[1])];
+        if (data?.[0]) {
+          handleSelect(data[0]);
+        } else {
+          console.error('POI not found');
+        }
+        break;
+      case 'e': // event by id
+        history.pushState({}, '', `/event/${redirectHash[1]}`);
+        history.go();
+        break;
+    }
+  }
+}
+
 const MapPage = () => {
   const { data: animEnabled } = useAnimEnabled();
   const isKeyboardOpen = useDetectKeyboardOpen();
@@ -50,7 +86,7 @@ const MapPage = () => {
   const [popupState, setPopupState] = React.useState<PopUpState>('closed');
   const [selectedPoi, setSelectedPoi] = React.useState<Poi | null>(null);
   const [indoorLevel, setIndoorLevel] = React.useState(1);
-
+  const routerLocation = useLocation();
   React.useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
   }, [selectedPoi]);
@@ -67,12 +103,18 @@ const MapPage = () => {
 
     setMarkerCoords({ lt, lg, level: parseInt(poi.properties.level ?? '1') });
     setSelectedPoi(poi);
+    setIndoorLevel(parseInt(poi.properties.level ?? '1'));
 
     if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
     if (poi.properties.level)
       indoorControlRef?.current?.setLevel(poi.properties.level);
     setPopupState('middle');
   };
+
+  React.useEffect(
+    () => void handleRedirect(routerLocation, handleSelect),
+    [routerLocation],
+  );
 
   const handlePoiClick = async (
     e: MapMouseEvent & {
