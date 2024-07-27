@@ -1,5 +1,4 @@
 import IndoorEqual from '~/mapEngine/indoorEqual';
-import 'maplibre-gl/dist/maplibre-gl.css';
 
 export default class LevelControl {
   private indoorequal: IndoorEqual;
