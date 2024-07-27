@@ -1,9 +1,12 @@
 import type { Map } from 'maplibre-gl';
 import { IControl } from 'react-map-gl/src/types/lib';
 import bridge from '@vkontakte/vk-bridge';
+import svg from 'psumaps-shared/src/assets/qr.svg';
 
 export default class QrScanner implements IControl<Map> {
-  private container: HTMLElement | undefined;
+  private _container?: HTMLElement;
+
+  private _geolocateButton?: HTMLButtonElement;
 
   private readonly callback: (code: string) => void;
 
@@ -11,29 +14,42 @@ export default class QrScanner implements IControl<Map> {
     this.callback = cb;
   }
 
-  onAdd() {
-    this.container = document.createElement('div');
-    this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group');
+  public create<K extends keyof HTMLElementTagNameMap>(
+    tagName: K,
+    className?: string,
+    container?: HTMLElement,
+  ): HTMLElementTagNameMap[K] {
+    const el = window.document.createElement(tagName);
+    if (className !== undefined) el.className = className;
+    if (container) container.appendChild(el);
+    return el;
+  }
 
-    const button: HTMLButtonElement = document.createElement('button');
-    button.appendChild(document.createTextNode('qr'));
-    button.value = 'qr';
-    button.title = 'qr';
-    button.addEventListener('click', () => {
-      void bridge.send('VKWebAppOpenCodeReader').then((data) => {
-        if (data?.code_data) {
-          this.callback(
-            data.code_data.slice(data.code_data.lastIndexOf('#') + 1), // https://vk.com/apps...#q=512/2
-          );
-        }
-      });
-    });
-    button.classList.add('maplibregl-ctrl-icon');
-    this.container.appendChild(button);
-    return this.container;
+  onAdd() {
+    this._container = document.createElement('div');
+    this._container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group');
+    this._geolocateButton = this.create('button', undefined, this._container);
+    const img = this.create('img', undefined, this._geolocateButton);
+    img.style.margin = '0 auto';
+    img.src = svg;
+    this._geolocateButton.type = 'button';
+    this._geolocateButton.title = 'QR Scanner';
+    this._geolocateButton.setAttribute('aria-label', 'QR Scanner');
+    this._geolocateButton.addEventListener(
+      'click',
+      () =>
+        void bridge.send('VKWebAppOpenCodeReader').then((data) => {
+          if (data?.code_data) {
+            this.callback(
+              data.code_data.slice(data.code_data.lastIndexOf('#') + 1), // https://vk.com/apps...#q=512/2
+            );
+          }
+        }),
+    );
+    return this._container;
   }
 
   onRemove() {
-    this.container?.parentNode?.removeChild(this.container);
+    this._container?.parentNode?.removeChild(this._container);
   }
 }
