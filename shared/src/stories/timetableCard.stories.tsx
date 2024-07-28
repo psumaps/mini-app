@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import TimetableCard from '../components/timetable/timetableCard';
 
 const meta: Meta<typeof TimetableCard> = {
-  title: 'Timetable/Timetable Card ',
+  title: 'Timetable/Timetable card ',
   component: TimetableCard,
   tags: ['autodocs'],
   parameters: {

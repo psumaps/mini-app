@@ -4,7 +4,7 @@ import { eventDefault, eventLongTitle, eventOrganizers } from './data/event';
 import StorageDecorator from './decorators/storage';
 
 const meta: Meta<typeof eventCard> = {
-  title: 'Event-description/Event card',
+  title: 'Timetable/Event desc',
   component: eventCard,
   tags: ['autodocs'],
   decorators: [StorageDecorator],

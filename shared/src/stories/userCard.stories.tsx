@@ -3,7 +3,7 @@ import userCard from '../components/settings/userCard';
 import StorageDecorator from './decorators/storage';
 
 const meta: Meta<typeof userCard> = {
-  title: 'Index/User card ',
+  title: 'Settings/User card ',
   component: userCard,
   tags: ['autodocs'],
   decorators: [StorageDecorator],
