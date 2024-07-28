@@ -5,6 +5,7 @@ export default interface Poi {
   properties: {
     class?: string; // should be room|corridor|area
     id: string;
+    point: Point;
     indoor?: number;
     level?: string;
     name?: string;
