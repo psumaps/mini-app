@@ -37,9 +37,10 @@ const PopUpBody = forwardRef(function PopUpBody(
   return (
     <div
       className={`absolute left-0 right-0 p-4 flex flex-col gap-4 
-          ${animEnabled && 'transition-all duration-500 ease-in-out'} 
-          ${state === 'opened' ? 'top-12' : 'top-12 py-0'}
-          ${state === 'closed' ? 'h-0' : 'bottom-0'}`}
+        ${selectedPoi === null ? 'z-20' : ''} 
+        ${animEnabled && 'transition-all duration-500 ease-in-out'} 
+        ${state === 'opened' ? 'top-12' : 'top-12 py-0'}
+        ${state === 'closed' ? 'h-0' : 'bottom-0'}`}
     >
       <Input
         id={popUpSearchInputId}
