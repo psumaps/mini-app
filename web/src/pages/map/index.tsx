@@ -15,7 +15,6 @@ import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import React, { forwardRef, MutableRefObject } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
-  GeolocateControl,
   MapRef,
   Marker,
   NavigationControl,
@@ -154,10 +153,9 @@ const MapPage = () => {
           {...mapProps}
           onMove={(e) => setViewState(e.viewState)}
         >
-          <GeolocateControl position="bottom-right" />
+          <QrControl handleSelect={handleSelect} handleSearch={searchByName} />
           <NavigationControl position="bottom-right" />
           <IndoorControl ref={indoorControlRef} />
-          <QrControl handleSelect={handleSelect} handleSearch={searchByName} />
           {markerCoords && (
             <Marker
               latitude={markerCoords.lt}
