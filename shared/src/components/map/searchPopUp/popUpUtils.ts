@@ -1,7 +1,7 @@
 import Poi from '../../../network/models/mapi/poi';
 import { node } from '../../../utils/selector';
 import { PopUpState } from './search/searchUtils';
-import httpClient from '~/src/network/httpClient';
+import httpClient from '../../../network/httpClient';
 
 export interface PopUpBodyRef {
   search: (value: string) => void;
