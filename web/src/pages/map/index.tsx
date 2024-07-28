@@ -4,6 +4,8 @@ import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
 import {
   calculateControlsMargin,
+  handleLocationHash,
+  handleRedirect,
   SearchPopUpRef,
 } from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
 import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
@@ -19,7 +21,7 @@ import Map, {
   NavigationControl,
   useControl,
 } from 'react-map-gl/maplibre';
-import { Location, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
@@ -40,42 +42,6 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   return null;
 });
 
-async function handleRedirect(
-  redirectHash: string,
-  handleSelect: (poi: Poi) => void,
-  handleSearch: (query: string) => void,
-) {
-  const hashParams = redirectHash.split('=');
-  if (hashParams.length === 2 && hashParams[0].length === 1) {
-    let data: Poi[];
-    const query = hashParams[1];
-    // eslint-disable-next-line default-case
-    switch (redirectHash[0]) {
-      case 'q': // indoor by name
-        data = await httpClient.mapi.search(query);
-        if (data.length === 0) {
-          console.error('POI not found');
-        } else if (data.length === 1) {
-          handleSelect(data[0]);
-        } else {
-          handleSearch(query);
-        }
-        break;
-      case 'i': // indoor by id
-        data = [await httpClient.mapi.getIndoorById(query)];
-        if (data?.[0]) {
-          handleSelect(data[0]);
-        } else {
-          console.error('POI not found');
-        }
-        break;
-      case 'e': // event by id
-        history.pushState({}, '', `/event/${query}`);
-        history.go();
-        break;
-    }
-  }
-}
 const QrControl = ({
   handleSelect,
   handleSearch,
@@ -92,17 +58,6 @@ const QrControl = ({
   );
   return null;
 };
-
-function handleLocationHash(
-  location: Location,
-  handleSelect: (poi: Poi) => void,
-  handleSearch: (query: string) => void,
-) {
-  const redirectHash = location.hash?.slice(1);
-  if (redirectHash) {
-    void handleRedirect(redirectHash, handleSelect, handleSearch);
-  }
-}
 
 const MapPage = () => {
   const { data: animEnabled } = useAnimEnabled();
@@ -149,7 +104,8 @@ const MapPage = () => {
   };
 
   React.useEffect(
-    () => void handleLocationHash(routerLocation, handleSelect, searchByName),
+    () =>
+      void handleLocationHash(routerLocation.hash, handleSelect, searchByName),
     [routerLocation],
   );
 
