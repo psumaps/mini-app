@@ -40,16 +40,13 @@ const PoiInfoDetails = ({
         {hoursTag.split(',').map((interval) => {
           const [day, time] = interval.trim().split(' ');
           return (
-            <>
-              <div
-                className="flex flex-row justify-between px-4 items-center mx-auto py-2"
-                key={day}
-              >
+            <div key={day}>
+              <div className="flex flex-row justify-between px-4 items-center mx-auto py-2">
                 <p className="c2">{day}</p>
                 <h3 className="text-c_accent font-semibold">{time}</h3>
               </div>
               <Line className="dark:border-cd_border-secondary" />
-            </>
+            </div>
           );
         })}
       </div>
