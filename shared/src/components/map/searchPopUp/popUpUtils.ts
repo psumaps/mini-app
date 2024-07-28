@@ -2,6 +2,15 @@ import Poi from '../../../network/models/mapi/poi';
 import { node } from '../../../utils/selector';
 import { PopUpState } from './search/searchUtils';
 
+export interface PopUpBodyRef {
+  search: (value: string) => void;
+  current: HTMLInputElement | null;
+}
+
+export interface SearchPopUpRef {
+  search: (query: string) => void;
+}
+
 export const popUpBodyPoiContainerId = 'pop-up-body-poi-container';
 export const popUpSearchInputId = 'pop-up-search-input';
 export const controlsSelector = '.maplibregl-ctrl-bottom-right';

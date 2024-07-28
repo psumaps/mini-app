@@ -2,7 +2,10 @@ import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
-import { calculateControlsMargin } from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
+import {
+  calculateControlsMargin,
+  SearchPopUpRef,
+} from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
 import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
 import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
@@ -16,12 +19,12 @@ import Map, {
   NavigationControl,
   useControl,
 } from 'react-map-gl/maplibre';
-import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import { Location, useLocation } from 'react-router-dom';
+import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import IndoorEqual from '~/mapEngine/indoorEqual';
-import NavigationBar from '~/widgets/navigationBar';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
+import NavigationBar from '~/widgets/navigationBar';
 
 const popUpId = 'search-pop-up';
 
@@ -40,24 +43,26 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
 async function handleRedirect(
   redirectHash: string,
   handleSelect: (poi: Poi) => void,
+  handleSearch: (query: string) => void,
 ) {
   const hashParams = redirectHash.split('=');
   if (hashParams.length === 2 && hashParams[0].length === 1) {
     let data: Poi[];
+    const query = hashParams[1];
     // eslint-disable-next-line default-case
     switch (redirectHash[0]) {
       case 'q': // indoor by name
-        data = await httpClient.mapi.search(hashParams[1]);
+        data = await httpClient.mapi.search(query);
         if (data.length === 0) {
           console.error('POI not found');
         } else if (data.length === 1) {
           handleSelect(data[0]);
         } else {
-          console.error('too many poi'); // TODO: open search
+          handleSearch(query);
         }
         break;
       case 'i': // indoor by id
-        data = [await httpClient.mapi.getIndoorById(hashParams[1])];
+        data = [await httpClient.mapi.getIndoorById(query)];
         if (data?.[0]) {
           handleSelect(data[0]);
         } else {
@@ -65,15 +70,24 @@ async function handleRedirect(
         }
         break;
       case 'e': // event by id
-        history.pushState({}, '', `/event/${hashParams[1]}`);
+        history.pushState({}, '', `/event/${query}`);
         history.go();
         break;
     }
   }
 }
-const QrControl = ({ handleSelect }: { handleSelect: (poi: Poi) => void }) => {
+const QrControl = ({
+  handleSelect,
+  handleSearch,
+}: {
+  handleSelect: (poi: Poi) => void;
+  handleSearch: (query: string) => void;
+}) => {
   useControl(
-    () => new QrScanner((code) => void handleRedirect(code, handleSelect)),
+    () =>
+      new QrScanner(
+        (code) => void handleRedirect(code, handleSelect, handleSearch),
+      ),
     { position: 'bottom-right' },
   );
   return null;
@@ -82,10 +96,11 @@ const QrControl = ({ handleSelect }: { handleSelect: (poi: Poi) => void }) => {
 function handleLocationHash(
   location: Location,
   handleSelect: (poi: Poi) => void,
+  handleSearch: (query: string) => void,
 ) {
   const redirectHash = location.hash?.slice(1);
   if (redirectHash) {
-    void handleRedirect(redirectHash, handleSelect);
+    void handleRedirect(redirectHash, handleSelect, handleSearch);
   }
 }
 
@@ -105,6 +120,8 @@ const MapPage = () => {
   const [selectedPoi, setSelectedPoi] = React.useState<Poi | null>(null);
   const [indoorLevel, setIndoorLevel] = React.useState(1);
   const routerLocation = useLocation();
+  const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
+
   React.useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
   }, [selectedPoi]);
@@ -115,6 +132,8 @@ const MapPage = () => {
     }, 33);
     return () => clearInterval(interval);
   }, []);
+
+  const searchByName = (name: string) => searchPopUpRef.current?.search(name);
 
   const handleSelect = (poi: Poi) => {
     const [lg, lt] = poi.properties.point.coordinates;
@@ -130,7 +149,7 @@ const MapPage = () => {
   };
 
   React.useEffect(
-    () => void handleLocationHash(routerLocation, handleSelect),
+    () => void handleLocationHash(routerLocation, handleSelect, searchByName),
     [routerLocation],
   );
 
@@ -182,7 +201,7 @@ const MapPage = () => {
           <GeolocateControl position="bottom-right" />
           <NavigationControl position="bottom-right" />
           <IndoorControl ref={indoorControlRef} />
-          <QrControl handleSelect={handleSelect} />
+          <QrControl handleSelect={handleSelect} handleSearch={searchByName} />
           {markerCoords && (
             <Marker
               latitude={markerCoords.lt}
@@ -201,6 +220,7 @@ const MapPage = () => {
           )}
         </Map>
         <SearchPopUp
+          ref={searchPopUpRef}
           id={popUpId}
           state={popupState}
           setState={setPopupState}

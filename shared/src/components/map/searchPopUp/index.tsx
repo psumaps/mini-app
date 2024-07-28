@@ -1,29 +1,41 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 import Poi from '../../../network/models/mapi/poi';
 import Block from '../../common/block';
 import PopUpBody from './popUpBody';
 import PopUpHeader from './popUpHeader';
+import {
+  calculatePopUpHeight,
+  PopUpBodyRef,
+  SearchPopUpRef,
+} from './popUpUtils';
 import { PopUpState } from './search/searchUtils';
-import { calculatePopUpHeight } from './popUpUtils';
 
-const SearchPopUp = ({
-  state,
-  setState,
-  onSelect,
-  selectedPoi,
-  setSelectedPoi,
-  id,
-}: {
-  state: PopUpState;
-  setState: React.Dispatch<React.SetStateAction<PopUpState>>;
-  onSelect?: (poi: Poi) => void;
-  selectedPoi: Poi | null;
-  setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
-  id: string;
-}) => {
+const SearchPopUp = forwardRef(function SearchPopUp(
+  {
+    state,
+    setState,
+    onSelect,
+    selectedPoi,
+    setSelectedPoi,
+    id,
+  }: {
+    state: PopUpState;
+    setState: React.Dispatch<React.SetStateAction<PopUpState>>;
+    onSelect?: (poi: Poi) => void;
+    selectedPoi: Poi | null;
+    setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
+    id: string;
+  },
+  ref: React.ForwardedRef<SearchPopUpRef>,
+) {
   const { data: animEnabled } = useAnimEnabled();
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<PopUpBodyRef>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,6 +43,12 @@ const SearchPopUp = ({
     }, 33);
     return () => clearInterval(interval);
   }, [state, id, selectedPoi]);
+
+  useImperativeHandle(ref, () => ({
+    search: (query: string) => {
+      if (searchInputRef.current) searchInputRef.current.search(query);
+    },
+  }));
 
   return (
     <Block
@@ -55,6 +73,6 @@ const SearchPopUp = ({
       />
     </Block>
   );
-};
+});
 
 export default SearchPopUp;
