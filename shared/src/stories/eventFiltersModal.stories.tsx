@@ -12,7 +12,7 @@ import httpClient from '../network/httpClient';
 import StorageDecorator from './decorators/storage';
 
 const meta = {
-  title: 'Timetable/EventFilters',
+  title: 'Timetable/Event filters',
   component: Modal,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
