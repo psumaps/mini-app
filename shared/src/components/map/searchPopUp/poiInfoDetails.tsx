@@ -37,8 +37,10 @@ const PoiInfoDetails = ({
           animEnabled ? 'transition-all duration-200 ease-in-out' : ''
         } ${opened ? '' : 'opacity-0 h-0'}`}
       >
-        {hoursTag.split(',').map((interval) => {
-          const [day, time] = interval.trim().split(' ');
+        {hoursTag.split(';').map((interval) => {
+          // eslint-disable-next-line prefer-const
+          let [day, time] = interval.trim().split(' ');
+          if (day.includes(',')) day = day.replace(',', ', ');
           return (
             <div key={day}>
               <div className="flex flex-row justify-between px-4 items-center mx-auto py-2">
