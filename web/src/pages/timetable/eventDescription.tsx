@@ -40,7 +40,7 @@ const EventDescription = () => {
           <p>Загрузка...</p>
         ) : query.isError ? (
           <p>Ошибка!</p>
-        ) : query.data.title ? (
+        ) : query.data.name ? (
           <EventCard event={query.data} />
         ) : (
           <p>Событие не найдено</p>

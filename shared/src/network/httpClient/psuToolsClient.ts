@@ -10,19 +10,19 @@ const client = {
   timetable: {
     getFaculties: async () => {
       const response = await axios.get<Faculty[]>(
-        `${api.psuTools}/v1/faculties?apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}`,
+        `${api.psuTools}/timetable-api/faculties?apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}`,
       );
       return response.data;
     },
     getGroups: async (facultyId: number) => {
       const response = await axios.get<GroupResponse[]>(
-        `${api.psuTools}/v1/groups?facultyId=${facultyId}&apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}`,
+        `${api.psuTools}/timetable-api/groups?facultyId=${facultyId}&apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}`,
       );
       return response.data;
     },
     getGroupTimetable: async (groupId: number, weekNumber?: number) => {
       const response = await axios.get<GroupTimetable>(
-        `${api.psuTools}/v1/groups/${groupId}/timetable?apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}${weekNumber ? `&weekNumber=${weekNumber}` : ''}`,
+        `${api.psuTools}/timetable-api/groups/${groupId}/timetable?apiKey=${import.meta.env.VITE_PSU_TOOLS_KEY}${weekNumber ? `&weekNumber=${weekNumber}` : ''}`,
       );
       return response.data;
     },
@@ -37,20 +37,20 @@ const client = {
       offset: number;
       limit: number;
     }) => {
-      const response = await axios.get<{ events: Event[] }>(
-        `${api.psuTools}/v2/events?offset=${offset}&limit=${limit}&dateFrom=${
+      const response = await axios.get<Event[]>(
+        `${api.psuTools}/events-api/events?pageNumber=${offset}&pageSize=${limit}&dateFrom=${
           new Date(dateFrom.getTime() - dateFrom.getTimezoneOffset() * 60000)
             .toISOString()
             .split('.')[0]
         }`,
       );
-      return response.data.events;
+      return response.data;
     },
     getEvent: async (eventId: number) => {
-      const response = await axios.get<{ event: Event }>(
-        `${api.psuTools}/v2/events/${eventId}`,
+      const response = await axios.get<Event>(
+        `${api.psuTools}/events-api/events/${eventId}`,
       );
-      return response.data.event;
+      return response.data;
     },
     getFilters: async () => {
       const response = await axios.get<Filter[]>(`${api.psuTools}/v2/filters`);

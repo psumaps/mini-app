@@ -69,7 +69,7 @@ const Timetable = () => {
         }),
       gcTime: 10 * 60 * 1000,
       staleTime: 5 * 60 * 1000,
-      initialPageParam: 1,
+      initialPageParam: 0,
       getNextPageParam: (lastPage, _, lastPageParam) => {
         if (lastPage.length < EVENTS_LIMIT) {
           return undefined;
@@ -190,7 +190,9 @@ const Timetable = () => {
                 <React.Fragment key={page[0].id}>
                   {page
                     .sort((a, b) =>
-                      new Date(a.event_date) < new Date(b.event_date) ? -1 : 1,
+                      new Date(a.startDatetime) < new Date(b.startDatetime)
+                        ? -1
+                        : 1,
                     )
                     .map((event) => (
                       <EventListCard
