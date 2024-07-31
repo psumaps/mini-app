@@ -130,6 +130,7 @@ const CustomCalendar = ({
 
   const handleReset = () => {
     setValue(today);
+    onChange?.(today);
     setActiveStartDate(today);
     setResetIconAnimation(true);
     setTimeout(() => setResetIconAnimation(false), 500);
