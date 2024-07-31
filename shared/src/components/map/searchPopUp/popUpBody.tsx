@@ -1,11 +1,21 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import Poi from '../../../network/models/mapi/poi';
 import Input from './input';
 import PoiInfoDetails from './poiInfoDetails';
+import {
+  popUpBodyPoiContainerId,
+  PopUpBodyRef,
+  popUpSearchInputId,
+} from './popUpUtils';
 import Search from './search';
-import useAnimEnabled from '../../../hooks/useAnimEnabled';
 import { PopUpState } from './search/searchUtils';
-import Poi from '../../../network/models/mapi/poi';
-import { popUpBodyPoiContainerId, popUpSearchInputId } from './popUpUtils';
 
 const PopUpBody = forwardRef(function PopUpBody(
   {
@@ -19,15 +29,26 @@ const PopUpBody = forwardRef(function PopUpBody(
     selectedPoi: Poi | null;
     onSelect?: (poi: Poi) => void;
   },
-  ref: React.ForwardedRef<HTMLInputElement>,
+  ref: React.ForwardedRef<PopUpBodyRef>,
 ) {
   const { data: animEnabled } = useAnimEnabled();
   const [selectedPoiInner, setSelectedPoiInner] = useState<Poi | null>(null);
   const [searchValue, setSearchValue] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (selectedPoi !== null) setSelectedPoiInner(selectedPoi);
   }, [selectedPoi]);
+
+  useImperativeHandle(ref, () => ({
+    search: (value: string) => {
+      setSearchValue(value);
+      setState('opened');
+    },
+    get current() {
+      return inputRef.current;
+    },
+  }));
 
   const inputStyles =
     (state === 'opened' || state === 'middle') && selectedPoi === null
@@ -44,7 +65,7 @@ const PopUpBody = forwardRef(function PopUpBody(
     >
       <Input
         id={popUpSearchInputId}
-        ref={ref}
+        ref={inputRef}
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         onSubmit={(e) => {

@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
-import SwipeGesture from '../../common/swipeGesture';
-import DragHandle from '../../common/dragHandle';
-import { PopUpState } from './search/searchUtils';
 import SearchIcon from '../../../assets/search.svg?react';
-import Poi from '../../../network/models/mapi/poi';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import Poi from '../../../network/models/mapi/poi';
+import DragHandle from '../../common/dragHandle';
+import SwipeGesture from '../../common/swipeGesture';
 import PoiInfo from './poiInfo';
+import { PopUpBodyRef } from './popUpUtils';
+import { PopUpState } from './search/searchUtils';
 
 const PopUpHeader = ({
   state,
@@ -16,7 +17,7 @@ const PopUpHeader = ({
 }: {
   state: PopUpState;
   setState: React.Dispatch<PopUpState>;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<PopUpBodyRef>;
   selectedPoi: Poi | null;
   setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
 }) => {
@@ -44,7 +45,7 @@ const PopUpHeader = ({
   const handleClosedClick = useCallback(() => {
     if (state !== 'closed') return;
     setState('middle');
-    if (selectedPoi === null) inputRef.current?.focus?.();
+    if (selectedPoi === null) inputRef.current?.current?.focus?.();
   }, [state, setState, inputRef, selectedPoi]);
 
   const handleClearPoi = (

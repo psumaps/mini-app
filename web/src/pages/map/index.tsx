@@ -2,7 +2,12 @@ import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
-import { calculateControlsMargin } from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
+import {
+  calculateControlsMargin,
+  handleLocationHash,
+  handleRedirect,
+  SearchPopUpRef,
+} from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
 import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
 import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
@@ -10,16 +15,17 @@ import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import React, { forwardRef, MutableRefObject } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
-  GeolocateControl,
   MapRef,
   Marker,
   NavigationControl,
   useControl,
 } from 'react-map-gl/maplibre';
+import { useLocation } from 'react-router-dom';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import IndoorEqual from '~/mapEngine/indoorEqual';
-import NavigationBar from '~/widgets/navigationBar';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
+import QrScanner from '~/mapEngine/qrScanner';
+import NavigationBar from '~/widgets/navigationBar';
 
 const popUpId = 'search-pop-up';
 
@@ -34,6 +40,23 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   );
   return null;
 });
+
+const QrControl = ({
+  handleSelect,
+  handleSearch,
+}: {
+  handleSelect: (poi: Poi) => void;
+  handleSearch: (query: string) => void;
+}) => {
+  useControl(
+    () =>
+      new QrScanner(
+        (code) => void handleRedirect(code, handleSelect, handleSearch),
+      ),
+    { position: 'bottom-right' },
+  );
+  return null;
+};
 
 const MapPage = () => {
   const { data: animEnabled } = useAnimEnabled();
@@ -50,6 +73,8 @@ const MapPage = () => {
   const [popupState, setPopupState] = React.useState<PopUpState>('closed');
   const [selectedPoi, setSelectedPoi] = React.useState<Poi | null>(null);
   const [indoorLevel, setIndoorLevel] = React.useState(1);
+  const routerLocation = useLocation();
+  const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
 
   React.useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
@@ -62,17 +87,26 @@ const MapPage = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const searchByName = (name: string) => searchPopUpRef.current?.search(name);
+
   const handleSelect = (poi: Poi) => {
     const [lg, lt] = poi.properties.point.coordinates;
 
     setMarkerCoords({ lt, lg, level: parseInt(poi.properties.level ?? '1') });
     setSelectedPoi(poi);
+    setIndoorLevel(parseInt(poi.properties.level ?? '1'));
 
     if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
     if (poi.properties.level)
       indoorControlRef?.current?.setLevel(poi.properties.level);
     setPopupState('middle');
   };
+
+  React.useEffect(
+    () =>
+      void handleLocationHash(routerLocation.hash, handleSelect, searchByName),
+    [routerLocation],
+  );
 
   const handlePoiClick = async (
     e: MapMouseEvent & {
@@ -119,7 +153,7 @@ const MapPage = () => {
           {...mapProps}
           onMove={(e) => setViewState(e.viewState)}
         >
-          <GeolocateControl position="bottom-right" />
+          <QrControl handleSelect={handleSelect} handleSearch={searchByName} />
           <NavigationControl position="bottom-right" />
           <IndoorControl ref={indoorControlRef} />
           {markerCoords && (
@@ -140,6 +174,7 @@ const MapPage = () => {
           )}
         </Map>
         <SearchPopUp
+          ref={searchPopUpRef}
           id={popUpId}
           state={popupState}
           setState={setPopupState}
