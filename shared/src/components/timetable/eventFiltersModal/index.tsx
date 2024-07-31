@@ -2,7 +2,6 @@ import React, { ChangeEvent } from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
 import Button from '../../common/button';
 import CheckableText from '../../common/checkableText';
-import Line from '../../common/line';
 import SwipeGesture from '../../common/swipeGesture';
 import CrossIcon from '../../../assets/cross.svg?react';
 import Filter from '../../../network/models/psu-tools/eventFilter';
@@ -65,30 +64,18 @@ const Modal = (props: ModalProps) => {
         ) : query.isError ? (
           <p>Ошибка!</p>
         ) : (
-          filters?.map((filter) => (
-            <div key={filter.id}>
-              <div className="c4 pb-4 text-c_textFilter dark:text-cd_main">
-                {filter.name}
-              </div>
-              <div className="flex gap-x-1.5 gap-y-4 flex-wrap">
-                {filter.values.map((value) => (
-                  <CheckableText
-                    key={value.id}
-                    filterId={filter.id}
-                    valueId={value.id}
-                    label={value.value}
-                    isChecked={value.isChecked}
-                    onChange={setFilters}
-                  />
-                ))}
-              </div>
-              {filter.id !== query.data[query.data.length - 1].id && (
-                <div className="flex pb-4 pt-6 ml-[-1rem] mr-[-1rem]">
-                  <Line className="border-[0.03rem]" />
-                </div>
-              )}
-            </div>
-          ))
+          <div className="flex gap-x-1.5 gap-y-4 flex-wrap justify-center">
+            {filters?.map((filter) => (
+              <CheckableText
+                key={filter.id}
+                filterId={filter.id}
+                valueId={filter.id}
+                label={filter.name}
+                isChecked={filter.isChecked}
+                onChange={setFilters}
+              />
+            ))}
+          </div>
         )}
       </div>
     </div>
