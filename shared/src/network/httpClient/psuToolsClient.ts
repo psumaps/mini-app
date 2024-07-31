@@ -30,19 +30,21 @@ const client = {
   events: {
     getEvents: async ({
       dateFrom,
-      offset = 1,
-      limit,
+      pageNumber = 0,
+      pageSize,
+      filters,
     }: {
       dateFrom: Date;
-      offset: number;
-      limit: number;
+      pageNumber: number;
+      pageSize: number;
+      filters?: number[] | null;
     }) => {
       const response = await axios.get<Event[]>(
-        `${api.psuTools}/events-api/events?pageNumber=${offset}&pageSize=${limit}&dateFrom=${
+        `${api.psuTools}/events-api/events?pageNumber=${pageNumber}&pageSize=${pageSize}&showPastEvents=false&datetimeFrom=${
           new Date(dateFrom.getTime() - dateFrom.getTimezoneOffset() * 60000)
             .toISOString()
             .split('.')[0]
-        }`,
+        }${filters && filters.length ? `&tagId=${JSON.stringify(filters).slice(1, -1).trim()}` : ''}`,
       );
       return response.data;
     },
@@ -53,7 +55,9 @@ const client = {
       return response.data;
     },
     getFilters: async () => {
-      const response = await axios.get<Filter[]>(`${api.psuTools}/v2/filters`);
+      const response = await axios.get<Filter[]>(
+        `${api.psuTools}/events-api/tags?pageSize=50&pageNumber=0`,
+      );
       return response.data;
     },
   },

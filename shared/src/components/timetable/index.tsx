@@ -64,14 +64,17 @@ const Timetable = () => {
       queryFn: (params) =>
         httpClient.psuTools.events.getEvents({
           dateFrom,
-          offset: params.pageParam,
-          limit: EVENTS_LIMIT,
+          pageNumber: params.pageParam,
+          pageSize: EVENTS_LIMIT,
+          filters: filters
+            ?.filter((f) => f.isChecked)
+            .map((f) => parseInt(f.id)),
         }),
       gcTime: 10 * 60 * 1000,
       staleTime: 5 * 60 * 1000,
       initialPageParam: 0,
       getNextPageParam: (lastPage, _, lastPageParam) => {
-        if (lastPage.length < EVENTS_LIMIT) {
+        if (lastPage === undefined || lastPage.length < EVENTS_LIMIT) {
           return undefined;
         }
         return lastPageParam + 1;
@@ -103,21 +106,26 @@ const Timetable = () => {
   );
 
   const handleFilterChange = useCallback(
-    (
-      event: ChangeEvent<HTMLInputElement>,
-      filterId: string,
-      valueId: string,
-    ) => {
+    (event: ChangeEvent<HTMLInputElement>, filterId: string) => {
       setFilters((prevFilters) => {
-        const filterValue = prevFilters
-          ?.find((filter) => filter.id === filterId)
-          ?.values.find((value) => value.id === valueId);
+        const filterValue = prevFilters?.find(
+          (filter) => filter.id === filterId,
+        );
 
         if (filterValue) filterValue.isChecked = event.target.checked;
         return [...prevFilters!];
       });
+
+      setTimeout(
+        // we wait for filters state variable to update
+        () =>
+          void queryClient.invalidateQueries({
+            queryKey: ['event-search', searchValue, dateFrom],
+          }),
+        100,
+      );
     },
-    [],
+    [queryClient, searchValue, dateFrom],
   );
 
   const handleDateChange = (date: Date) => {
@@ -139,11 +147,7 @@ const Timetable = () => {
         <Button
           className="h-10 w-10 rounded-3xl shadow-md dark:shadow-none"
           variant={
-            filters?.some((filter) =>
-              filter.values.some((value) => value.isChecked),
-            )
-              ? 'accent'
-              : 'primary'
+            filters?.some((filter) => filter.isChecked) ? 'accent' : 'primary'
           }
           onClick={() => setFiltersActive(true)}
         >
