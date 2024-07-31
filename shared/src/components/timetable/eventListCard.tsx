@@ -44,7 +44,7 @@ const EventListCard = ({
               <p
                 className={`c3 text-center ${canDrawGradient ? 'text-cd_main' : ''}`}
               >
-                {event.tags[0]}
+                {event.category.name}
               </p>
             </div>
           )}
