@@ -7,6 +7,7 @@ import SwipeGesture from '../../common/swipeGesture';
 import PoiInfo from './poiInfo';
 import { PopUpBodyRef } from './popUpUtils';
 import { PopUpState } from './search/searchUtils';
+import ShareButton from './sharePoiButton';
 
 const PopUpHeader = ({
   state,
@@ -91,6 +92,11 @@ const PopUpHeader = ({
               classNameInner=""
               className="px-4"
             />
+            {selectedPoi && (
+              <div className="absolute right-12">
+                <ShareButton id={selectedPoi.properties.id} />
+              </div>
+            )}
             <button
               type="button"
               onClick={handleClearPoi}
