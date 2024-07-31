@@ -74,7 +74,7 @@ const Timetable = () => {
       staleTime: 5 * 60 * 1000,
       initialPageParam: 0,
       getNextPageParam: (lastPage, _, lastPageParam) => {
-        if (lastPage === undefined || lastPage.length < EVENTS_LIMIT) {
+        if (lastPage.length < EVENTS_LIMIT) {
           return undefined;
         }
         return lastPageParam + 1;
@@ -212,16 +212,16 @@ const Timetable = () => {
                     </React.Fragment>
                   ),
               )}
-              <Button
-                variant="primary"
-                className="w-full rounded-3xl py-2"
-                disabled={
-                  !eventsQuery.hasNextPage || eventsQuery.isFetchingNextPage
-                }
-                onClick={() => void eventsQuery.fetchNextPage()}
-              >
-                Загрузить еще
-              </Button>
+              {eventsQuery.hasNextPage && (
+                <Button
+                  variant="primary"
+                  className="w-full rounded-3xl py-2"
+                  disabled={eventsQuery.isFetchingNextPage}
+                  onClick={() => void eventsQuery.fetchNextPage()}
+                >
+                  Загрузить еще
+                </Button>
+              )}
             </>
           )}
         </div>
