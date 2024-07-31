@@ -2,20 +2,34 @@ export default interface Event {
   id: number;
   name: string;
   description: string;
-  place: {
-    id: number;
-    name: string;
-    description: string;
-    cover: { id: number; name: string; url: string };
-    photos: [];
-  };
+  place: Place;
   organizers: Organizer[];
   startDatetime: string;
   endDatetime?: string;
   registrationUrl?: string;
   registrationCloseDatetime?: string;
+  category: Category;
   tags: string[];
   cover: string;
+  photos: [];
+}
+
+export interface Category {
+  id: number;
+  name: string;
+}
+
+export interface Cover {
+  id: number;
+  name: string;
+  url: string;
+}
+
+export interface Place {
+  id: number;
+  name: string;
+  description: string;
+  cover: Cover;
   photos: [];
 }
 
@@ -23,5 +37,5 @@ export interface Organizer {
   id: number;
   name: string;
   description: string;
-  photo?: { id: number; name: string; url: string };
+  photo?: Cover;
 }
