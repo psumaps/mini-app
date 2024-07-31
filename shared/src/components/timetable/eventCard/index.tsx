@@ -53,7 +53,7 @@ const EventCard = ({ event }: { event: Event }) => {
           {/* </div> */}
 
           <div className="flex py-2 flex-wrap">
-            {event.tags.map((tag, i) => (
+            {[event.category.name, ...event.tags].map((tag, i) => (
               <div
                 key={tag}
                 style={{
@@ -75,7 +75,7 @@ const EventCard = ({ event }: { event: Event }) => {
                 <p className="c3">{tag}</p>
               </div>
             ))}
-            {event.tags.length > 1 && (
+            {event.tags.length > 0 && (
               <Button
                 className="px-3"
                 type="button"
