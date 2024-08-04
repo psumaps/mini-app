@@ -37,7 +37,9 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
       for (const k in groupedEvents) {
         days.push({
           date: k,
-          classes: groupedEvents[k],
+          classes: groupedEvents[k].sort(
+            (a, b) => a.date.getTime() - b.date.getTime(),
+          ),
           dayOfWeek: '',
         });
       }
