@@ -1,28 +1,29 @@
 /// <reference types="vite-plugin-svgr/client" />
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Calendar from 'react-calendar';
 import CalendarDropdown from './calendarDropdown';
 import {
-  Value,
   calculateDiv,
   calculateMinifiedDiv,
+  calendarId,
   classTile,
   classWeekday,
   divActiveId,
   divNowId,
-  calendarId,
   getWeek,
-  weekdaysEqual,
   minificationFrameTime,
+  Value,
+  weekdaysEqual,
 } from './calendarUtils';
-import { nodes, node } from '../../../utils/selector';
+import { node, nodes } from '../../../utils/selector';
 import Button from '../../common/button';
 import Block from '../../common/block';
 import CalendarIcon from '../../../assets/calendar.svg?react';
 import ResetIcon from '../../../assets/reset.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 
-const calculateNowDivMinified = () => calculateMinifiedDiv(divNowId, `${classWeekday}--now-minified`); // prettier-ignore
+const calculateNowDivMinified = () =>
+  calculateMinifiedDiv(divNowId, `${classWeekday}--now-minified`); // prettier-ignore
 const calculateActiveDivMinified = () => calculateMinifiedDiv(divActiveId, `${classWeekday}--active-minified`); // prettier-ignore
 const calculateNowDiv = () => calculateDiv(divNowId, `${classTile}--now`); // prettier-ignore
 const calculateActiveDiv = () => calculateDiv(divActiveId, `${classTile}--active`); // prettier-ignore
@@ -125,6 +126,7 @@ const CustomCalendar = ({
     newValue.setMonth(month);
     newValue.setFullYear(year);
     setValue(newValue);
+    onChange?.(newValue);
     setActiveStartDate(newValue);
   };
 
