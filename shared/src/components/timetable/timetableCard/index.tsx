@@ -61,34 +61,37 @@ const TimetableCard = ({ classData, classDate }: Props) => {
     }
 
     return (
-      <Button
-        onClick={() => {
-          if (audStr) navigator.navigate(`/#q=${audStr}`);
-        }}
-      >
+      <div className="grid gap-2 grid-cols-[80%_20%]">
         <div>
-          <h3 className={`${cardClassNameText} line-clamp-2 overflow-hidden`}>
-            {classData.discipline}&nbsp;
-            {classData.type}
+          <h3 className={`${cardClassNameText}  line-clamp-2 overflow-hidden`}>
+            {classData.discipline}
           </h3>
           <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
             {classData.teacher}
           </div>
-          <div className={`${cardClassNameText} c2`}>
-            {classData.classNumber}&nbsp; ({classData.place})
-          </div>
+          <div className={`${cardClassNameText} c2`}>{classData.place}</div>
         </div>
-        <h3 className={`${cardClassNameText} text-right ml-10`}>{time}</h3>
-      </Button>
+        <div>
+          <h3 className={`${cardClassNameText} text-center`}>{time}</h3>
+          <h3 className={`${cardClassNameText} text-center `}>
+            {classData.type}
+          </h3>
+        </div>
+      </div>
     );
   };
 
   return (
-    <div className={cardClassName}>
-      <div className=" py-7 pl-6 pr-8 flex justify-between items-start min-h-[120px]">
+    <Button
+      onClick={() => {
+        if (audStr) navigator.navigate(`/#q=${audStr}`);
+      }}
+      className={`${cardClassName} text-start`}
+    >
+      <div className="py-7 pl-6 pr-8 flex justify-between items-start min-h-[120px]">
         {renderContent()}
       </div>
-    </div>
+    </Button>
   );
 };
 
