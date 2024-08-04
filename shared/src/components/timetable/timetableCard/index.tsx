@@ -12,28 +12,6 @@ const audRegex = /(\d{3}\/\d{1,2})/;
 
 const TimetableCard = ({ classData, classDate }: Props) => {
   const [isError, setIsError] = React.useState(false);
-
-  const time = useMemo(() => {
-    try {
-      if (!classDate || !classDate.date) {
-        throw new Error('Invalid class date');
-      }
-      const date = new Date(classDate.date);
-      if (Number.isNaN(date.getTime())) {
-        throw new Error('Invalid date');
-      }
-      let timeStr = date.toLocaleTimeString('ru', {
-        hour: 'numeric',
-        minute: 'numeric',
-      });
-      timeStr = timeStr.replace(/^0+(\d)/, '$1');
-      return timeStr;
-    } catch (error) {
-      setIsError(true);
-      return '';
-    }
-  }, [classDate]);
-
   const navigator = new Navigator();
   const audStr = audRegex.exec(classData.place)?.[1];
   const isClassInProgress = useMemo(() => {
@@ -72,7 +50,9 @@ const TimetableCard = ({ classData, classDate }: Props) => {
           <div className={`${cardClassNameText} c2`}>{classData.place}</div>
         </div>
         <div>
-          <h3 className={`${cardClassNameText} text-center`}>{time}</h3>
+          <h3 className={`${cardClassNameText} text-center`}>
+            {classData.time}
+          </h3>
           <h3 className={`${cardClassNameText} text-center `}>
             {classData.type}
           </h3>
