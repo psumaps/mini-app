@@ -5,6 +5,7 @@ export namespace Timetable {
     type: string;
     place: string;
     teacher: string;
+    time: string;
   }
   export interface Day {
     date: string;

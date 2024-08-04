@@ -8,10 +8,12 @@ API запросы в приложении разбиты на две групп
 
 import mapiClient from './mapiClient';
 import psuToolsClient from './psuToolsClient';
+import icalClient from './icalClient';
 
 const httpClient = {
   mapi: mapiClient,
   psuTools: psuToolsClient,
+  ical: icalClient,
 };
 
 export default httpClient;

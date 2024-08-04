@@ -24,10 +24,6 @@ import TimetableCard from './timetableCard';
 import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
 import { StorageContext } from '../../models/storage';
-import {
-  GROUP_INFO_KEY,
-  GroupData,
-} from '../settings/groupChooser/groupChooserUtils';
 
 const EVENTS_LIMIT = 10;
 
@@ -84,23 +80,12 @@ const Timetable = () => {
     queryClient,
   );
 
-  const groupInfoQuery = useQuery<GroupData>(
-    {
-      queryKey: [GROUP_INFO_KEY],
-      queryFn: async () =>
-        JSON.parse((await storage?.get(GROUP_INFO_KEY)) ?? '') as GroupData,
-    },
-    queryClient,
-  );
-
   const classesQuery = useQuery(
     {
       queryKey: ['classes'],
-      queryFn: () =>
-        httpClient.psuTools.timetable.getGroupTimetable(
-          groupInfoQuery.data!.groupId ?? 1010,
-        ),
-      enabled: !groupInfoQuery.isPending && currentFeed === 'classes',
+      queryFn: () => httpClient.ical.getTimetable(`${token}`),
+      enabled: currentFeed === 'classes',
+      retry: false,
     },
     queryClient,
   );
@@ -236,17 +221,19 @@ const Timetable = () => {
           ) : classesQuery.isError ? (
             <p>Ошибка!</p>
           ) : (
-            classesQuery.data.days.map((day) => (
-              <React.Fragment key={day.date}>
-                {day.classes.map((lesson) => (
-                  <TimetableCard
-                    key={`${day.date}-${lesson.classNumber}`}
-                    classDate={day}
-                    classData={lesson}
-                  />
-                ))}
-              </React.Fragment>
-            ))
+            classesQuery.data
+              .filter((day) => day.date === dateFrom.toLocaleDateString('ru'))
+              .map((day) => (
+                <React.Fragment key={day.date}>
+                  {day.classes.map((lesson) => (
+                    <TimetableCard
+                      key={`${lesson.classNumber}`}
+                      classDate={day}
+                      classData={lesson}
+                    />
+                  ))}
+                </React.Fragment>
+              ))
           )}
         </div>
       </div>
