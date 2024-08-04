@@ -1,11 +1,14 @@
 import React, { useMemo } from 'react';
 import { Timetable } from '../../../network/models/psu-tools/timetable';
 import classStatus from './classStatus';
+import Button from '../../common/button';
+import Navigator from '~/app/navigator';
 
 interface Props {
   classData: Timetable.Class;
   classDate: Timetable.Day;
 }
+const audRegex = /(\d{3}\/\d{1,2})/;
 
 const TimetableCard = ({ classData, classDate }: Props) => {
   const [isError, setIsError] = React.useState(false);
@@ -31,6 +34,8 @@ const TimetableCard = ({ classData, classDate }: Props) => {
     }
   }, [classDate]);
 
+  const navigator = new Navigator();
+  const audStr = audRegex.exec(classData.place)?.[1];
   const isClassInProgress = useMemo(() => {
     if (!classDate || !classDate.date) {
       return false;
@@ -56,7 +61,11 @@ const TimetableCard = ({ classData, classDate }: Props) => {
     }
 
     return (
-      <>
+      <Button
+        onClick={() => {
+          if (audStr) navigator.navigate(`/#q=${audStr}`);
+        }}
+      >
         <div>
           <h3 className={`${cardClassNameText} line-clamp-2 overflow-hidden`}>
             {classData.discipline}&nbsp;
@@ -70,7 +79,7 @@ const TimetableCard = ({ classData, classDate }: Props) => {
           </div>
         </div>
         <h3 className={`${cardClassNameText} text-right ml-10`}>{time}</h3>
-      </>
+      </Button>
     );
   };
 
