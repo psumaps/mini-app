@@ -143,7 +143,7 @@ const MapPage = () => {
       mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
-      void handleLocationHash(routerLocation.hash, handleSelect, searchByName);
+      void handleLocationHash(routerLocation.hash, handleSelect, searchByName, icalTokenQuery.data!);
     }
     if (indoorControlRef.current) {
       indoorControlRef.current.on('levelchange', () =>
