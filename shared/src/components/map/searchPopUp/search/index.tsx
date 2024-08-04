@@ -10,6 +10,7 @@ import SearchResult from './searchResult';
 import AmenityIcon from '../amenityIcon';
 import Button from '../../../common/button';
 import useAnimEnabled from '../../../../hooks/useAnimEnabled';
+import useIcalToken from '../../../../hooks/useIcalToken';
 
 const queryOptions = {
   staleTime: 1000 * 60 * 5,
@@ -29,12 +30,13 @@ const Search = ({
 }) => {
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
+  const icalTokenQuery = useIcalToken();
   const storage = useContext(StorageContext);
   const [selectedAmenity, setSelectedAmenity] = useState<string | null>(null);
   const search = useQuery(
     {
       queryKey: ['search', entry],
-      queryFn: async () => httpClient.mapi.search(entry!),
+      queryFn: async () => httpClient.mapi.search(entry!, icalTokenQuery.data!),
       enabled: !!entry && state === 'opened',
       ...queryOptions,
     },
@@ -42,13 +44,14 @@ const Search = ({
   );
   const amenities = useQuery({
     queryKey: ['amenities'],
-    queryFn: async () => httpClient.mapi.getAmenityList(),
+    queryFn: async () => httpClient.mapi.getAmenityList(icalTokenQuery.data!),
     ...queryOptions,
     enabled: state === 'opened',
   });
   const amenityPois = useQuery({
     queryKey: ['amenity-pois', selectedAmenity],
-    queryFn: async () => httpClient.mapi.getPoiByAmenity(selectedAmenity!),
+    queryFn: async () =>
+      httpClient.mapi.getPoiByAmenity(selectedAmenity!, icalTokenQuery.data!),
     enabled: !!selectedAmenity && state === 'opened',
     ...queryOptions,
   });

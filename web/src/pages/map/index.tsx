@@ -45,14 +45,17 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
 const QrControl = ({
   handleSelect,
   handleSearch,
+  icalToken,
 }: {
   handleSelect: (poi: Poi) => void;
   handleSearch: (query: string) => void;
+  icalToken: string;
 }) => {
   useControl(
     () =>
       new QrScanner(
-        (code) => void handleRedirect(code, handleSelect, handleSearch),
+        (code) =>
+          void handleRedirect(code, handleSelect, handleSearch, icalToken),
       ),
     { position: 'bottom-right' },
   );
@@ -106,8 +109,13 @@ const MapPage = () => {
 
   React.useEffect(
     () =>
-      void handleLocationHash(routerLocation.hash, handleSelect, searchByName),
-    [routerLocation],
+      void handleLocationHash(
+        routerLocation.hash,
+        handleSelect,
+        searchByName,
+        icalTokenQuery.data!,
+      ),
+    [icalTokenQuery.data, routerLocation],
   );
 
   const handlePoiClick = async (
@@ -118,6 +126,7 @@ const MapPage = () => {
     const data = await httpClient.mapi.getIndoorById(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
+      icalTokenQuery.data!,
     );
     setSelectedPoi(data);
     setPopupState('middle');
@@ -175,6 +184,7 @@ const MapPage = () => {
             <QrControl
               handleSelect={handleSelect}
               handleSearch={searchByName}
+              icalToken={icalTokenQuery.data}
             />
             <NavigationControl position="bottom-right" />
             <IndoorControl ref={indoorControlRef} />
