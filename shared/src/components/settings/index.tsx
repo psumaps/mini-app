@@ -4,6 +4,7 @@ import Button from '../common/button';
 import AnimSwitch from './animSwitch';
 import ThemeSwitch from './themeSwitch';
 import GroupChooser from './groupChooser';
+import IcalTokenInput from './IcalTokenInput';
 
 const Settings = ({ storage }: { storage: IStorage }) => {
   return (
@@ -33,6 +34,7 @@ const Settings = ({ storage }: { storage: IStorage }) => {
         Группа в Telegram
       </Button>
       <GroupChooser storage={storage} className="mt-3" />
+      <IcalTokenInput storage={storage} className="mt-3" />
       <div className="mt-auto w-full h-fit">
         <Button
           className="rounded-3xl h-12 w-full mt-3 c1"

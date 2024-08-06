@@ -21,6 +21,8 @@ const Input = forwardRef(function Input(
   );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     reference?.current?.blur?.();
     onSubmit?.(e);
   };

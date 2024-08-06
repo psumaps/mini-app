@@ -22,6 +22,7 @@ import Map, {
 } from 'react-map-gl/maplibre';
 import { useLocation } from 'react-router-dom';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
+import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
@@ -75,6 +76,7 @@ const MapPage = () => {
   const [indoorLevel, setIndoorLevel] = React.useState(1);
   const routerLocation = useLocation();
   const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
+  const icalTokenQuery = useIcalToken();
 
   React.useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
@@ -143,46 +145,67 @@ const MapPage = () => {
 
   return (
     <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
-      <div
-        className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
-      >
-        <Map
-          ref={mapRef}
-          onLoad={handleLoad}
-          {...viewState}
-          {...mapProps}
-          onMove={(e) => setViewState(e.viewState)}
+      {/* eslint-disable-next-line no-nested-ternary */}
+      {icalTokenQuery.isLoading ? (
+        <div className="relative flex-[0_0_92%]">Загрузка...</div>
+      ) : /* eslint-disable-next-line no-nested-ternary */
+      icalTokenQuery.isError ? (
+        <div className="relative flex-[0_0_92%]">
+          {icalTokenQuery.error.message}
+        </div>
+      ) : !icalTokenQuery.data ? (
+        <div className="relative flex flex-[0_0_92%] justify-center items-center">
+          <h1>Ошибка...</h1>
+        </div>
+      ) : (
+        <div
+          className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
         >
-          <QrControl handleSelect={handleSelect} handleSearch={searchByName} />
-          <NavigationControl position="bottom-right" />
-          <IndoorControl ref={indoorControlRef} />
-          {markerCoords && (
-            <Marker
-              latitude={markerCoords.lt}
-              longitude={markerCoords.lg}
-              anchor="bottom"
-              onClick={(e) => {
-                e.originalEvent.stopPropagation();
-                setMarkerCoords(null);
-              }}
-            >
-              <MarkerIcon
-                className={`${animEnabled && 'transition-all duration-200 ease-in-out'} 
+          <Map
+            ref={mapRef}
+            onLoad={handleLoad}
+            {...viewState}
+            {...mapProps}
+            onMove={(e) => setViewState(e.viewState)}
+            transformRequest={(url) => ({
+              url,
+              headers: { Authorization: `Bearer ${icalTokenQuery.data}` },
+            })}
+          >
+            <QrControl
+              handleSelect={handleSelect}
+              handleSearch={searchByName}
+            />
+            <NavigationControl position="bottom-right" />
+            <IndoorControl ref={indoorControlRef} />
+            {markerCoords && (
+              <Marker
+                latitude={markerCoords.lt}
+                longitude={markerCoords.lg}
+                anchor="bottom"
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  setMarkerCoords(null);
+                }}
+              >
+                <MarkerIcon
+                  className={`${animEnabled && 'transition-all duration-200 ease-in-out'} 
                     ${markerCoords.level === indoorLevel ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
-              />
-            </Marker>
-          )}
-        </Map>
-        <SearchPopUp
-          ref={searchPopUpRef}
-          id={popUpId}
-          state={popupState}
-          setState={setPopupState}
-          onSelect={handleSelect}
-          selectedPoi={selectedPoi}
-          setSelectedPoi={setSelectedPoi}
-        />
-      </div>
+                />
+              </Marker>
+            )}
+          </Map>
+          <SearchPopUp
+            ref={searchPopUpRef}
+            id={popUpId}
+            state={popupState}
+            setState={setPopupState}
+            onSelect={handleSelect}
+            selectedPoi={selectedPoi}
+            setSelectedPoi={setSelectedPoi}
+          />
+        </div>
+      )}
       <NavigationBar
         className={`${animEnabled && 'transition-all duration-200 ease-in-out'} origin-bottom flex-[0_0_8%] 
             ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
