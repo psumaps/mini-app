@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import CheckSvg from '../../assets/check-circle.svg?react';
 import InfoSvg from '../../assets/information-circle.svg?react';
 import MinusSvg from '../../assets/minus-circle.svg?react';
@@ -48,15 +48,27 @@ const IcalTokenInput = ({
 
     void storage.set('ical_token', value);
     void queryClient.invalidateQueries({ queryKey: ['ical_token'] });
-    void queryClient.invalidateQueries({ queryKey: ['ical_token_validation'] });
+    // icalValidationQuery.data = undefined;
+    setTimeout(
+      () => void queryClient.invalidateQueries({ queryKey: ['ical_token'] }),
+      500,
+    );
     setState('closed');
     inputRef.current!.value = '';
   };
 
+  const icalTokenPresent = useMemo(
+    () =>
+      icalValidationQuery.data &&
+      icalTokenQuery.data &&
+      icalTokenQuery.data.length > 0,
+    [icalTokenQuery.data, icalValidationQuery.data],
+  );
+
   const AuthResultIcon = useCallback(
     () =>
       // eslint-disable-next-line no-nested-ternary
-      icalValidationQuery.data ? (
+      icalTokenPresent ? (
         icalValidationQuery.data === true ? (
           <CheckSvg className="stroke-green-700 size-10" />
         ) : (
@@ -65,11 +77,11 @@ const IcalTokenInput = ({
       ) : (
         <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
       ),
-    [icalValidationQuery.data],
+    [icalValidationQuery.data, icalTokenPresent],
   );
 
   // eslint-disable-next-line no-nested-ternary
-  const authResultText = icalValidationQuery.data
+  const authResultText = icalTokenPresent
     ? icalValidationQuery.data === true
       ? 'Авторизация успешна'
       : 'Токен не прошел проверку'
@@ -109,18 +121,9 @@ const IcalTokenInput = ({
           alwaysShowClear={false}
         />
       </div>
-      <Button
-        onClick={() => setModalValidationOpened(true)}
-        className="relative flex rounded-3xl h-12 w-12 mr-2 bg-c_bg-block dark:bg-cd_bg-block justify-center items-center"
-      >
-        <AuthResultIcon />
-      </Button>
-      <Button
-        onClick={() => setModalInstructionsOpened(true)}
-        className="relative flex rounded-3xl h-12 w-12 bg-c_bg-block dark:bg-cd_bg-block justify-center items-center"
-      >
-        <InfoSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
-      </Button>
+
+      {/* Modal background */}
+
       {(modalInstructionsOpened || modalValidationOpened) && (
         <div
           className="absolute top-0 left-0 w-full h-full z-40"
@@ -130,6 +133,15 @@ const IcalTokenInput = ({
           }}
         />
       )}
+
+      {/* Auth Modal */}
+
+      <Button
+        onClick={() => setModalValidationOpened(true)}
+        className="relative flex rounded-3xl h-12 w-12 mr-2 bg-c_bg-block dark:bg-cd_bg-block justify-center items-center"
+      >
+        <AuthResultIcon />
+      </Button>
       <Modal
         title="Статус авторизации"
         onClose={() => setModalValidationOpened(false)}
@@ -144,6 +156,15 @@ const IcalTokenInput = ({
           <p>{authResultText}</p>
         </div>
       </Modal>
+
+      {/* Instructions Modal */}
+
+      <Button
+        onClick={() => setModalInstructionsOpened(true)}
+        className="relative flex rounded-3xl h-12 w-12 bg-c_bg-block dark:bg-cd_bg-block justify-center items-center"
+      >
+        <InfoSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
+      </Button>
       <Modal
         title="Авторизация ETIS"
         onClose={() => setModalInstructionsOpened(false)}
