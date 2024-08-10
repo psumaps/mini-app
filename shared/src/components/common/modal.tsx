@@ -1,46 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import Block from './block';
+import DragHandle from './dragHandle';
+import SwipeGesture from './swipeGesture';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 
 const Modal = ({
   children,
   className,
-  target,
+  onClose,
+  title,
 }: {
   children: React.ReactNode;
   className?: string;
-  target: React.RefObject<HTMLDivElement>;
+  onClose: () => void;
+  title: string;
 }) => {
-  const [top, setTop] = useState(0);
-  const [left, setLeft] = useState(0);
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    const {
-      top: targetTop,
-      left: targetLeft,
-      width: targetWidth,
-      height: targetHeight,
-    } = target.current?.getBoundingClientRect() ?? {
-      top: 0,
-      left: 0,
-      width: 0,
-      height: 0,
-    };
-    setTop(targetTop);
-    setLeft(targetLeft);
-    setWidth(targetWidth);
-    setHeight(targetHeight);
-  }, [target]);
-
+  const { data: animEnabled } = useAnimEnabled();
   return (
-    <div className="absolute top-0 left-0 h-screen w-screen">
-      <div
-        className={`${className} relative translate-x--1/2`}
-        style={{ top: top + height, left: left + width / 2 }}
-      >
-        {children}
+    <Block
+      className={`fixed left-0 right-0 h-[92dvh] rounded-none rounded-t-3xl flex flex-col z-40 ${
+        animEnabled ? 'transition-all duration-500 ease-in-out' : ''
+      } ${className}`}
+    >
+      <div className="h-20 w-full">
+        <SwipeGesture
+          onSwipe={(direction) => direction === 'down' && onClose()}
+          onTouch={() => {}}
+          id={title}
+        >
+          <DragHandle className="mb-4" />
+          <h2 className="w-fit mx-auto flex mb-4">{title}</h2>
+        </SwipeGesture>
       </div>
-    </div>
+      <div className="overflow-y-auto">{children}</div>
+    </Block>
   );
 };
 
