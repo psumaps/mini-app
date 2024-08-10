@@ -1,12 +1,17 @@
-import React, { useRef } from 'react';
-import ClearableInput from '../common/clearableInput';
-import IStorage from '../../models/storage';
-import Button from '../common/button';
+import { useQuery } from '@tanstack/react-query';
+import React, { useCallback, useRef } from 'react';
+import CheckSvg from '../../assets/check-circle.svg?react';
+import InfoSvg from '../../assets/information-circle.svg?react';
+import MinusSvg from '../../assets/minus-circle.svg?react';
+import CrossSvg from '../../assets/x-circle.svg?react';
+import useAnimEnabled from '../../hooks/useAnimEnabled';
 import useIcalToken from '../../hooks/useIcalToken';
 import useTryQueryClient from '../../hooks/useTryQueryClient';
-import useAnimEnabled from '../../hooks/useAnimEnabled';
+import IStorage from '../../models/storage';
+import httpClient from '../../network/httpClient';
+import Button from '../common/button';
+import ClearableInput from '../common/clearableInput';
 import Modal from '../common/modal';
-import QuestionSvg from '../../assets/question.svg?react';
 
 const IcalTokenInput = ({
   storage,
@@ -20,7 +25,18 @@ const IcalTokenInput = ({
   const icalTokenQuery = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const [state, setState] = React.useState<'opened' | 'closed'>('closed');
-  const [modalOpened, setModalOpened] = React.useState(false);
+  const [modalInstructionsOpened, setModalInstructionsOpened] =
+    React.useState(false);
+  const [modalValidationOpened, setModalValidationOpened] =
+    React.useState(false);
+  const icalValidationQuery = useQuery(
+    {
+      queryKey: ['ical_token_validation'],
+      queryFn: () => httpClient.mapi.validateIcal(icalTokenQuery.data!),
+      enabled: !!icalTokenQuery.data && icalTokenQuery.data.length > 0,
+    },
+    queryClient,
+  );
 
   const handleSubmit: React.FormEventHandler<HTMLInputElement> &
     React.FormEventHandler<HTMLFormElement> = () => {
@@ -32,9 +48,32 @@ const IcalTokenInput = ({
 
     void storage.set('ical_token', value);
     void queryClient.invalidateQueries({ queryKey: ['ical_token'] });
+    void queryClient.invalidateQueries({ queryKey: ['ical_token_validation'] });
     setState('closed');
     inputRef.current!.value = '';
   };
+
+  const AuthResultIcon = useCallback(
+    () =>
+      // eslint-disable-next-line no-nested-ternary
+      icalValidationQuery.data ? (
+        icalValidationQuery.data === true ? (
+          <CheckSvg className="stroke-green-700 size-10" />
+        ) : (
+          <CrossSvg className="stroke-red-700 size-10" />
+        )
+      ) : (
+        <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
+      ),
+    [icalValidationQuery.data],
+  );
+
+  // eslint-disable-next-line no-nested-ternary
+  const authResultText = icalValidationQuery.data
+    ? icalValidationQuery.data === true
+      ? 'Авторизация успешна'
+      : 'Токен не прошел проверку'
+    : 'В ожидании токена';
 
   return (
     <div className={`flex flex-row ${className}`}>
@@ -43,7 +82,10 @@ const IcalTokenInput = ({
           className={`absolute top-0 h-full w-fit left-1/2 -translate-x-1/2 c3 origin-top ${state === 'closed' ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'} ${
             animEnabled ? 'transition-all duration-200 ease-in-out' : ''
           }`}
-          onClick={() => setState('opened')}
+          onClick={() => {
+            inputRef.current?.focus();
+            setState('opened');
+          }}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {icalTokenQuery.isPending
@@ -51,8 +93,8 @@ const IcalTokenInput = ({
             : icalTokenQuery.isError
               ? 'Ошибка при получении токена'
               : icalTokenQuery.data === null
-                ? 'Введите ваш ical токен'
-                : `Ваш ical токен: ${icalTokenQuery.data}`}
+                ? 'Введите ваш токен'
+                : `Ваш токен: ${`${icalTokenQuery.data?.substring(0, 8)}********`}`}
         </Button>
         <ClearableInput
           className={`absolute top-1/2 -translate-y-1/2 origin-bottom w-[96%] mx-auto ${
@@ -60,7 +102,7 @@ const IcalTokenInput = ({
               ? 'scale-y-100 opacity-100'
               : 'scale-y-0 opacity-0'
           } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
-          placeholder="Ваш ical токен"
+          placeholder="Ваш токен"
           onSubmit={handleSubmit}
           onClear={() => setState('closed')}
           ref={inputRef}
@@ -68,31 +110,58 @@ const IcalTokenInput = ({
         />
       </div>
       <Button
-        onClick={() => setModalOpened(true)}
+        onClick={() => setModalValidationOpened(true)}
+        className="relative flex rounded-3xl h-12 w-12 mr-2 bg-c_bg-block dark:bg-cd_bg-block justify-center items-center"
+      >
+        <AuthResultIcon />
+      </Button>
+      <Button
+        onClick={() => setModalInstructionsOpened(true)}
         className="relative flex rounded-3xl h-12 w-12 bg-c_bg-block dark:bg-cd_bg-block justify-center items-center"
       >
-        <QuestionSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
+        <InfoSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
       </Button>
-      {modalOpened && (
+      {(modalInstructionsOpened || modalValidationOpened) && (
         <div
           className="absolute top-0 left-0 w-full h-full z-40"
-          onClick={() => setModalOpened(false)}
+          onClick={() => {
+            setModalValidationOpened(false);
+            setModalInstructionsOpened(false);
+          }}
         />
       )}
       <Modal
-        title="Токен ical"
-        onClose={() => setModalOpened(false)}
+        title="Статус авторизации"
+        onClose={() => setModalValidationOpened(false)}
         className={`origin-bottom z-50 bottom-[8dvh] h-[fit-content_!important] ${
-          modalOpened ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
+          modalValidationOpened
+            ? 'scale-y-100 opacity-100'
+            : 'scale-y-0 opacity-0'
         } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
       >
-        <p>Ваш ical токен: {icalTokenQuery.data}</p>
+        <div className="flex flex-row gap-4 items-center">
+          <AuthResultIcon />
+          <p>{authResultText}</p>
+        </div>
+      </Modal>
+      <Modal
+        title="Авторизация ETIS"
+        onClose={() => setModalInstructionsOpened(false)}
+        className={`origin-bottom z-50 bottom-[8dvh] h-[fit-content_!important] ${
+          modalInstructionsOpened
+            ? 'scale-y-100 opacity-100'
+            : 'scale-y-0 opacity-0'
+        } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
+      >
+        <p>Ваш токен: {`${icalTokenQuery.data?.substring(0, 8)}********`}</p>
         <br />
         <p>
           Токен доступен на&nbsp;
           <a
             href="https://student.psu.ru/pls/stu_cus_et/stu.timetable"
+            target="_blank"
             className="underline text-c_accent"
+            rel="noreferrer"
           >
             странице раписания
           </a>

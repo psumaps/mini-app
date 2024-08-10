@@ -3,6 +3,15 @@ import Poi from '../models/mapi/poi';
 import api from '../api';
 
 const client = {
+  validateIcal: async (token: string) => {
+    const response = await axios.get(`${api.mapi}/amenitys`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 401) return false;
+    return true;
+  },
   getIndoorById: async (id: string) => {
     const response = await axios.get<Poi>(`${api.mapi}/indoor?query_id=${id}`);
     return response.data;
