@@ -29,11 +29,16 @@ const IcalTokenInput = ({
     React.useState(false);
   const [modalValidationOpened, setModalValidationOpened] =
     React.useState(false);
+
+  const icalTokenCorrect = useMemo<boolean>(
+    () => !!icalTokenQuery.data && icalTokenQuery.data.length === 16,
+    [icalTokenQuery.data],
+  );
   const icalValidationQuery = useQuery(
     {
       queryKey: ['ical_token_validation'],
       queryFn: () => httpClient.mapi.validateIcal(icalTokenQuery.data!),
-      enabled: !!icalTokenQuery.data && icalTokenQuery.data.length > 0,
+      enabled: icalTokenCorrect,
       retry: false,
       refetchOnWindowFocus: false,
     },
@@ -41,11 +46,8 @@ const IcalTokenInput = ({
   );
 
   const icalTokenPresent = useMemo<boolean>(
-    () =>
-      icalValidationQuery.data !== undefined &&
-      !!icalTokenQuery.data &&
-      icalTokenQuery.data.length > 0,
-    [icalTokenQuery.data, icalValidationQuery.data],
+    () => icalValidationQuery.data !== undefined && icalTokenCorrect,
+    [icalTokenCorrect, icalValidationQuery.data],
   );
 
   const AuthResultIcon = useCallback(
@@ -95,14 +97,14 @@ const IcalTokenInput = ({
       : icalValidationQuery.data === null
         ? 'Сервер авторизации недоступен'
         : 'Токен не прошел проверку'
-    : 'В ожидании токена';
+    : 'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
 
   const tokenMasked = useMemo(() => {
     if (icalTokenPresent) {
       const icalToken = icalTokenQuery.data!;
       return (
         icalToken.substring(0, icalToken.length / 2) +
-        '*'.repeat(icalToken.length / 2)
+        '*'.repeat(Math.ceil(icalToken.length / 2.0))
       );
     }
     return '';
@@ -174,7 +176,7 @@ const IcalTokenInput = ({
       >
         <div className="flex flex-row gap-4 items-center">
           <AuthResultIcon />
-          <p>{authResultText}</p>
+          <p className="flex-[1_0_0]">{authResultText}</p>
         </div>
       </Modal>
 
