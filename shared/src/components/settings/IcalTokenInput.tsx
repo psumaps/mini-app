@@ -38,6 +38,32 @@ const IcalTokenInput = ({
     queryClient,
   );
 
+  const icalTokenPresent = useMemo<boolean>(
+    () =>
+      icalValidationQuery.data !== undefined &&
+      !!icalTokenQuery.data &&
+      icalTokenQuery.data.length > 0,
+    [icalTokenQuery.data, icalValidationQuery.data],
+  );
+
+  const AuthResultIcon = useCallback(
+    () =>
+      // if more conditions are needed, unwrap this into if statements
+      // eslint-disable-next-line no-nested-ternary
+      icalTokenPresent ? ( // eslint-disable-next-line no-nested-ternary
+        icalValidationQuery.data === true ? (
+          <CheckSvg className="size-10 stroke-green-700" />
+        ) : icalValidationQuery.data === null ? (
+          <MinusSvg className="size-10 stroke-red-700" />
+        ) : (
+          <CrossSvg className="size-10 stroke-red-700" />
+        )
+      ) : (
+        <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
+      ),
+    [icalValidationQuery.data, icalTokenPresent],
+  );
+
   const handleSubmit: React.FormEventHandler<HTMLInputElement> &
     React.FormEventHandler<HTMLFormElement> = () => {
     let { value } = inputRef.current!;
@@ -48,44 +74,37 @@ const IcalTokenInput = ({
 
     void storage.set('ical_token', value);
     void queryClient.invalidateQueries({ queryKey: ['ical_token'] });
-    // icalValidationQuery.data = undefined;
     setTimeout(
-      () => void queryClient.invalidateQueries({ queryKey: ['ical_token'] }),
-      500,
+      () =>
+        void queryClient.invalidateQueries({
+          queryKey: ['ical_token_validation'],
+        }),
+      100,
     );
     setState('closed');
     inputRef.current!.value = '';
   };
 
-  const icalTokenPresent = useMemo(
-    () =>
-      icalValidationQuery.data &&
-      icalTokenQuery.data &&
-      icalTokenQuery.data.length > 0,
-    [icalTokenQuery.data, icalValidationQuery.data],
-  );
-
-  const AuthResultIcon = useCallback(
-    () =>
-      // eslint-disable-next-line no-nested-ternary
-      icalTokenPresent ? (
-        icalValidationQuery.data === true ? (
-          <CheckSvg className="stroke-green-700 size-10" />
-        ) : (
-          <CrossSvg className="stroke-red-700 size-10" />
-        )
-      ) : (
-        <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
-      ),
-    [icalValidationQuery.data, icalTokenPresent],
-  );
-
+  // if more conditions are needed, unwrap this into if statements
   // eslint-disable-next-line no-nested-ternary
-  const authResultText = icalTokenPresent
+  const authResultText = icalTokenPresent // eslint-disable-next-line no-nested-ternary
     ? icalValidationQuery.data === true
       ? 'Авторизация успешна'
-      : 'Токен не прошел проверку'
+      : icalValidationQuery.data === null
+        ? 'Сервер авторизации недоступен'
+        : 'Токен не прошел проверку'
     : 'В ожидании токена';
+
+  const tokenMasked = useMemo(() => {
+    if (icalTokenPresent) {
+      const icalToken = icalTokenQuery.data!;
+      return (
+        icalToken.substring(0, icalToken.length / 2) +
+        '*'.repeat(icalToken.length / 2)
+      );
+    }
+    return '';
+  }, [icalTokenPresent, icalTokenQuery.data]);
 
   return (
     <div className={`flex flex-row ${className}`}>
@@ -104,9 +123,9 @@ const IcalTokenInput = ({
             ? 'Загрузка...' /* eslint-disable-next-line no-nested-ternary */
             : icalTokenQuery.isError
               ? 'Ошибка при получении токена'
-              : icalTokenQuery.data === null
-                ? 'Введите ваш токен'
-                : `Ваш токен: ${`${icalTokenQuery.data?.substring(0, 8)}********`}`}
+              : icalTokenPresent
+                ? `Ваш токен: ${tokenMasked}`
+                : 'Введите ваш токен'}
         </Button>
         <ClearableInput
           className={`absolute top-1/2 -translate-y-1/2 origin-bottom w-[96%] mx-auto ${
@@ -174,7 +193,7 @@ const IcalTokenInput = ({
             : 'scale-y-0 opacity-0'
         } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
       >
-        <p>Ваш токен: {`${icalTokenQuery.data?.substring(0, 8)}********`}</p>
+        <p>Ваш токен: {tokenMasked}</p>
         <br />
         <p>
           Токен доступен на&nbsp;

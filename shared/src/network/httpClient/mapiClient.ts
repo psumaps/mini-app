@@ -1,15 +1,21 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import Poi from '../models/mapi/poi';
 import api from '../api';
 
 const client = {
   validateIcal: async (token: string) => {
-    const response = await axios.get(`${api.mapi}/amenitys`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.status === 401) return false;
+    try {
+      await axios.get(`${api.mapi}/ping`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        if (e.response?.status === 401) return false;
+      }
+      return null;
+    }
     return true;
   },
   getIndoorById: async (id: string) => {
