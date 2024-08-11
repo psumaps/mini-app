@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useCallback, useMemo, useRef } from 'react';
 import CheckSvg from '../../assets/check-circle.svg?react';
-import InfoSvg from '../../assets/information-circle.svg?react';
 import MinusSvg from '../../assets/minus-circle.svg?react';
 import CrossSvg from '../../assets/x-circle.svg?react';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
@@ -25,10 +24,6 @@ const IcalTokenInput = ({
   const icalTokenQuery = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const [state, setState] = React.useState<'opened' | 'closed'>('closed');
-  const [modalInstructionsOpened, setModalInstructionsOpened] =
-    React.useState(false);
-  const [modalValidationOpened, setModalValidationOpened] =
-    React.useState(false);
 
   const icalTokenCorrect = useMemo<boolean>(
     () => !!icalTokenQuery.data && icalTokenQuery.data.length === 16,
@@ -50,23 +45,45 @@ const IcalTokenInput = ({
     [icalTokenCorrect, icalValidationQuery.data],
   );
 
-  const AuthResultIcon = useCallback(
-    () =>
-      // if more conditions are needed, unwrap this into if statements
-      // eslint-disable-next-line no-nested-ternary
-      icalTokenPresent ? ( // eslint-disable-next-line no-nested-ternary
-        icalValidationQuery.data === true ? (
-          <CheckSvg className="size-10 stroke-green-700" />
-        ) : icalValidationQuery.data === null ? (
-          <MinusSvg className="size-10 stroke-red-700" />
-        ) : (
-          <CrossSvg className="size-10 stroke-red-700" />
-        )
-      ) : (
-        <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
-      ),
-    [icalValidationQuery.data, icalTokenPresent],
-  );
+  const authResult = useMemo<
+    'valid' | 'invalid' | 'missing' | 'server_error'
+  >(() => {
+    if (!icalTokenPresent) return 'missing';
+    if (icalValidationQuery.data === true) return 'valid';
+    if (icalValidationQuery.data === false) return 'invalid';
+    return 'server_error';
+  }, [icalTokenPresent, icalValidationQuery.data]);
+
+  const AuthResultIcon = useCallback(() => {
+    switch (authResult) {
+      case 'valid':
+        return <CheckSvg className="size-10 stroke-green-700" />;
+      case 'invalid':
+        return <CrossSvg className="size-10 stroke-red-700" />;
+      case 'server_error':
+        return <MinusSvg className="size-10 stroke-red-700" />;
+      default:
+        return (
+          <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
+        );
+    }
+  }, [authResult]);
+
+  let authResultText: string;
+  switch (authResult) {
+    case 'valid':
+      authResultText = 'Авторизация успешна';
+      break;
+    case 'invalid':
+      authResultText = 'Токен не прошел проверку';
+      break;
+    case 'server_error':
+      authResultText = 'Сервер авторизации недоступен';
+      break;
+    default:
+      authResultText =
+        'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
+  }
 
   const handleSubmit: React.FormEventHandler<HTMLInputElement> &
     React.FormEventHandler<HTMLFormElement> = () => {
@@ -85,19 +102,8 @@ const IcalTokenInput = ({
         }),
       100,
     );
-    setState('closed');
     inputRef.current!.value = '';
   };
-
-  // if more conditions are needed, unwrap this into if statements
-  // eslint-disable-next-line no-nested-ternary
-  const authResultText = icalTokenPresent // eslint-disable-next-line no-nested-ternary
-    ? icalValidationQuery.data === true
-      ? 'Авторизация успешна'
-      : icalValidationQuery.data === null
-        ? 'Сервер авторизации недоступен'
-        : 'Токен не прошел проверку'
-    : 'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
 
   const tokenMasked = useMemo(() => {
     if (icalTokenPresent) {
@@ -114,7 +120,7 @@ const IcalTokenInput = ({
     <div className={`flex flex-row ${className}`}>
       <div className="relative rounded-3xl flex-[1_0_0] mr-2 h-12 bg-c_bg-block dark:bg-cd_bg-block">
         <Button
-          className={`absolute top-0 h-full w-fit left-1/2 -translate-x-1/2 c3 origin-top ${state === 'closed' ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'} ${
+          className={`h-full w-full rounded-3xl c3 ${
             animEnabled ? 'transition-all duration-200 ease-in-out' : ''
           }`}
           onClick={() => {
@@ -122,82 +128,44 @@ const IcalTokenInput = ({
             setState('opened');
           }}
         >
-          {/* eslint-disable-next-line no-nested-ternary */}
-          {icalTokenQuery.isPending
-            ? 'Загрузка...' /* eslint-disable-next-line no-nested-ternary */
-            : icalTokenQuery.isError
-              ? 'Ошибка при получении токена'
-              : icalTokenPresent
-                ? `Ваш токен: ${tokenMasked}`
-                : 'Введите ваш токен'}
+          <p
+            className={`c3 ${
+              // eslint-disable-next-line no-nested-ternary
+              authResult === 'invalid'
+                ? 'text-red-700'
+                : authResult === 'valid'
+                  ? 'text-green-700'
+                  : ''
+            }`}
+          >
+            Авторизация
+          </p>
         </Button>
-        <ClearableInput
-          className={`absolute top-1/2 -translate-y-1/2 origin-bottom w-[96%] mx-auto ${
-            state === 'opened'
-              ? 'scale-y-100 opacity-100'
-              : 'scale-y-0 opacity-0'
-          } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
-          placeholder="Ваш токен"
-          onSubmit={handleSubmit}
-          onClear={() => setState('closed')}
-          ref={inputRef}
-          alwaysShowClear={false}
-        />
       </div>
 
-      {/* Modal background */}
-
-      {(modalInstructionsOpened || modalValidationOpened) && (
+      {state === 'opened' && (
         <div
           className="absolute top-0 left-0 w-full h-full z-40"
-          onClick={() => {
-            setModalValidationOpened(false);
-            setModalInstructionsOpened(false);
-          }}
+          onClick={() => setState('closed')}
         />
       )}
 
-      {/* Auth Modal */}
-
-      <Button
-        onClick={() => setModalValidationOpened(true)}
-        className="relative flex rounded-3xl h-12 w-12 mr-2 bg-c_bg-block dark:bg-cd_bg-block justify-center items-center"
-      >
-        <AuthResultIcon />
-      </Button>
-      <Modal
-        title="Статус авторизации"
-        onClose={() => setModalValidationOpened(false)}
-        className={`origin-bottom z-50 bottom-[8dvh] h-[fit-content_!important] ${
-          modalValidationOpened
-            ? 'scale-y-100 opacity-100'
-            : 'scale-y-0 opacity-0'
-        } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
-      >
-        <div className="flex flex-row gap-4 items-center">
-          <AuthResultIcon />
-          <p className="flex-[1_0_0]">{authResultText}</p>
-        </div>
-      </Modal>
-
-      {/* Instructions Modal */}
-
-      <Button
-        onClick={() => setModalInstructionsOpened(true)}
-        className="relative flex rounded-3xl h-12 w-12 bg-c_bg-block dark:bg-cd_bg-block justify-center items-center"
-      >
-        <InfoSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
-      </Button>
       <Modal
         title="Авторизация ETIS"
-        onClose={() => setModalInstructionsOpened(false)}
+        onClose={() => setState('closed')}
         className={`origin-bottom z-50 bottom-[8dvh] h-[fit-content_!important] ${
-          modalInstructionsOpened
-            ? 'scale-y-100 opacity-100'
-            : 'scale-y-0 opacity-0'
+          state === 'opened' ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
         } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
       >
-        <p>Ваш токен: {tokenMasked}</p>
+        {icalTokenPresent && <p>Ваш токен: {tokenMasked}</p>}
+        <br />
+        <ClearableInput
+          placeholder="Ваш токен"
+          onSubmit={handleSubmit}
+          onBlur={handleSubmit}
+          ref={inputRef}
+          alwaysShowClear={false}
+        />
         <br />
         <p>
           Токен доступен на&nbsp;
@@ -214,6 +182,12 @@ const IcalTokenInput = ({
           ссылку. Вставьте ссылку в поле, доступное по нажатию на кнопку
           &quot;Введите ваш ical токен&quot;.
         </p>
+        <br />
+        <h4>Статус авторизации</h4>
+        <div className="flex flex-row gap-4 items-center mt-2">
+          <AuthResultIcon />
+          <p className="flex-[1_0_0]">{authResultText}</p>
+        </div>
       </Modal>
     </div>
   );
