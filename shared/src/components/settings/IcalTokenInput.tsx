@@ -26,7 +26,9 @@ const IcalTokenInput = ({
   const [state, setState] = React.useState<'opened' | 'closed'>('closed');
 
   const icalTokenCorrect = useMemo<boolean>(
-    () => !!icalTokenQuery.data && icalTokenQuery.data.length === 16,
+    () =>
+      !!icalTokenQuery.data &&
+      icalTokenQuery.data.match(/^[0-9A-Z]{16}$/)?.length === 1,
     [icalTokenQuery.data],
   );
   const icalValidationQuery = useQuery(
