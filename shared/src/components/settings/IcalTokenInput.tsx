@@ -34,6 +34,8 @@ const IcalTokenInput = ({
       queryKey: ['ical_token_validation'],
       queryFn: () => httpClient.mapi.validateIcal(icalTokenQuery.data!),
       enabled: !!icalTokenQuery.data && icalTokenQuery.data.length > 0,
+      retry: false,
+      refetchOnWindowFocus: false,
     },
     queryClient,
   );
