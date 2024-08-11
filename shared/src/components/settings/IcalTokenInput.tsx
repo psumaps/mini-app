@@ -85,8 +85,7 @@ const IcalTokenInput = ({
         'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
   }
 
-  const handleSubmit: React.FormEventHandler<HTMLInputElement> &
-    React.FormEventHandler<HTMLFormElement> = () => {
+  const internalHandler = () => {
     let { value } = inputRef.current!;
     if (value.startsWith('https://')) {
       const words = value.split('/');
@@ -102,7 +101,16 @@ const IcalTokenInput = ({
         }),
       100,
     );
-    inputRef.current!.value = '';
+    inputRef.current!.value = value;
+  };
+
+  const handleSubmit: React.FormEventHandler<HTMLInputElement> &
+    React.FormEventHandler<HTMLFormElement> = () => {
+    internalHandler();
+  };
+
+  const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => {
+    internalHandler();
   };
 
   const tokenMasked = useMemo(() => {
@@ -162,7 +170,10 @@ const IcalTokenInput = ({
         <ClearableInput
           placeholder="Ваш токен"
           onSubmit={handleSubmit}
-          onBlur={handleSubmit}
+          onBlur={handleBlur}
+          onClear={() => {
+            inputRef.current!.value = '';
+          }}
           ref={inputRef}
           alwaysShowClear={false}
         />
