@@ -22,6 +22,7 @@ import Map, {
 } from 'react-map-gl/maplibre';
 import { useLocation } from 'react-router-dom';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
+import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
@@ -44,14 +45,17 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
 const QrControl = ({
   handleSelect,
   handleSearch,
+  icalToken,
 }: {
   handleSelect: (poi: Poi) => void;
   handleSearch: (query: string) => void;
+  icalToken: string;
 }) => {
   useControl(
     () =>
       new QrScanner(
-        (code) => void handleRedirect(code, handleSelect, handleSearch),
+        (code) =>
+          void handleRedirect(code, handleSelect, handleSearch, icalToken),
       ),
     { position: 'bottom-right' },
   );
@@ -75,6 +79,7 @@ const MapPage = () => {
   const [indoorLevel, setIndoorLevel] = React.useState(1);
   const routerLocation = useLocation();
   const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
+  const icalTokenQuery = useIcalToken();
 
   React.useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
@@ -104,8 +109,13 @@ const MapPage = () => {
 
   React.useEffect(
     () =>
-      void handleLocationHash(routerLocation.hash, handleSelect, searchByName),
-    [routerLocation],
+      void handleLocationHash(
+        routerLocation.hash,
+        handleSelect,
+        searchByName,
+        icalTokenQuery.data!,
+      ),
+    [icalTokenQuery.data, routerLocation],
   );
 
   const handlePoiClick = async (
@@ -116,6 +126,7 @@ const MapPage = () => {
     const data = await httpClient.mapi.getIndoorById(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
+      icalTokenQuery.data!,
     );
     setSelectedPoi(data);
     setPopupState('middle');
@@ -143,46 +154,68 @@ const MapPage = () => {
 
   return (
     <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
-      <div
-        className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
-      >
-        <Map
-          ref={mapRef}
-          onLoad={handleLoad}
-          {...viewState}
-          {...mapProps}
-          onMove={(e) => setViewState(e.viewState)}
+      {/* eslint-disable-next-line no-nested-ternary */}
+      {icalTokenQuery.isLoading ? (
+        <div className="relative flex-[0_0_92%]">Загрузка...</div>
+      ) : /* eslint-disable-next-line no-nested-ternary */
+      icalTokenQuery.isError ? (
+        <div className="relative flex-[0_0_92%]">
+          {icalTokenQuery.error.message}
+        </div>
+      ) : !icalTokenQuery.data ? (
+        <div className="relative flex flex-[0_0_92%] justify-center items-center">
+          <h1>Ошибка...</h1>
+        </div>
+      ) : (
+        <div
+          className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
         >
-          <QrControl handleSelect={handleSelect} handleSearch={searchByName} />
-          <NavigationControl position="bottom-right" />
-          <IndoorControl ref={indoorControlRef} />
-          {markerCoords && (
-            <Marker
-              latitude={markerCoords.lt}
-              longitude={markerCoords.lg}
-              anchor="bottom"
-              onClick={(e) => {
-                e.originalEvent.stopPropagation();
-                setMarkerCoords(null);
-              }}
-            >
-              <MarkerIcon
-                className={`${animEnabled && 'transition-all duration-200 ease-in-out'} 
+          <Map
+            ref={mapRef}
+            onLoad={handleLoad}
+            {...viewState}
+            {...mapProps}
+            onMove={(e) => setViewState(e.viewState)}
+            transformRequest={(url) => ({
+              url,
+              headers: { Authorization: `Bearer ${icalTokenQuery.data}` },
+            })}
+          >
+            <QrControl
+              handleSelect={handleSelect}
+              handleSearch={searchByName}
+              icalToken={icalTokenQuery.data}
+            />
+            <NavigationControl position="bottom-right" />
+            <IndoorControl ref={indoorControlRef} />
+            {markerCoords && (
+              <Marker
+                latitude={markerCoords.lt}
+                longitude={markerCoords.lg}
+                anchor="bottom"
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  setMarkerCoords(null);
+                }}
+              >
+                <MarkerIcon
+                  className={`${animEnabled && 'transition-all duration-200 ease-in-out'} 
                     ${markerCoords.level === indoorLevel ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
-              />
-            </Marker>
-          )}
-        </Map>
-        <SearchPopUp
-          ref={searchPopUpRef}
-          id={popUpId}
-          state={popupState}
-          setState={setPopupState}
-          onSelect={handleSelect}
-          selectedPoi={selectedPoi}
-          setSelectedPoi={setSelectedPoi}
-        />
-      </div>
+                />
+              </Marker>
+            )}
+          </Map>
+          <SearchPopUp
+            ref={searchPopUpRef}
+            id={popUpId}
+            state={popupState}
+            setState={setPopupState}
+            onSelect={handleSelect}
+            selectedPoi={selectedPoi}
+            setSelectedPoi={setSelectedPoi}
+          />
+        </div>
+      )}
       <NavigationBar
         className={`${animEnabled && 'transition-all duration-200 ease-in-out'} origin-bottom flex-[0_0_8%] 
             ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}

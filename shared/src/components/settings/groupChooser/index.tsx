@@ -47,6 +47,7 @@ const GroupChooser = <T extends IStorage>({
       queryKey: ['faculties'],
       queryFn: httpClient.psuTools.timetable.getFaculties,
       staleTime: Infinity,
+      enabled: false,
     },
     queryClient,
   );

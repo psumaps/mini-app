@@ -66,6 +66,7 @@ export const handleRedirect = async (
   redirectHash: string,
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
+  token: string,
 ) => {
   const hashParams = redirectHash.split('=');
   if (hashParams.length === 2 && hashParams[0].length === 1) {
@@ -74,7 +75,7 @@ export const handleRedirect = async (
     // eslint-disable-next-line default-case
     switch (redirectHash[0]) {
       case 'q': // indoor by name
-        data = await httpClient.mapi.search(query);
+        data = await httpClient.mapi.search(query, token);
         if (data.length === 0) {
           console.error('POI not found');
         } else if (data.length === 1) {
@@ -84,7 +85,7 @@ export const handleRedirect = async (
         }
         break;
       case 'i': // indoor by id
-        data = [await httpClient.mapi.getIndoorById(query)];
+        data = [await httpClient.mapi.getIndoorById(query, token)];
         if (data?.[0]) {
           handleSelect(data[0]);
         } else {
@@ -102,9 +103,10 @@ export const handleLocationHash = (
   hash: string,
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
+  token: string,
 ) => {
   const redirectHash = hash.slice(1); // hash includes #
   if (redirectHash) {
-    void handleRedirect(redirectHash, handleSelect, handleSearch);
+    void handleRedirect(redirectHash, handleSelect, handleSearch, token);
   }
 };
