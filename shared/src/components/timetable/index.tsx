@@ -23,13 +23,13 @@ import EventListCard from './eventListCard';
 import TimetableCard from './timetableCard';
 import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
-import { StorageContext } from '../../models/storage';
+import useIcalToken from '../../hooks/useIcalToken';
 
 const EVENTS_LIMIT = 10;
 
 const Timetable = () => {
   const navigator = useContext(NavigatorContext);
-  const storage = useContext(StorageContext);
+  const icalTokenQuery = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const [currentFeed, setCurrentFeed] = useState<'events' | 'classes'>(
@@ -83,7 +83,7 @@ const Timetable = () => {
   const classesQuery = useQuery(
     {
       queryKey: ['classes'],
-      queryFn: () => httpClient.ical.getTimetable(`${token}`),
+      queryFn: () => httpClient.ical.getTimetable(icalTokenQuery.data!),
       enabled: currentFeed === 'classes',
       retry: false,
     },
