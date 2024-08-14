@@ -84,8 +84,9 @@ const Timetable = () => {
     {
       queryKey: ['classes'],
       queryFn: () => httpClient.ical.getTimetable(icalTokenQuery.data!),
-      enabled: currentFeed === 'classes',
+      enabled: currentFeed === 'classes' && !!icalTokenQuery.data,
       retry: false,
+      refetchOnWindowFocus: false,
     },
     queryClient,
   );
@@ -216,7 +217,10 @@ const Timetable = () => {
             ${currentFeed === 'classes' ? 'left-0 right-0 scale-y-100 opacity-100' : 'opacity-0 scale-y-0 ml-10 left-full -right-full'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
-          {classesQuery.isPending ? (
+          {!icalTokenQuery.data ? (
+            <p>Авторизация не пройдена</p>
+          ) : // eslint-disable-next-line no-nested-ternary
+          classesQuery.isPending ? (
             <p>Загрузка...</p>
           ) : classesQuery.isError ? (
             <p>Ошибка!</p>
