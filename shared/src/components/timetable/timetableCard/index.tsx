@@ -10,14 +10,14 @@ interface Props {
 const audRegex = /(\d{3}\/\d{1,2})/;
 
 const TimetableCard = ({ classData, navigate }: Props) => {
-  const [isError, setIsError] = React.useState(false);
+  const [isError] = React.useState(false);
   const audStr = audRegex.exec(classData.place)?.[1];
   const isClassInProgress = useMemo(() => {
-    if (!classDate || !classDate.date) {
+    if (!classData?.date) {
       return false;
     }
-    return classStatus(classDate.date);
-  }, [classDate]);
+    return classStatus(classData.date);
+  }, [classData.date]);
 
   const cardClassName = `${
     isClassInProgress

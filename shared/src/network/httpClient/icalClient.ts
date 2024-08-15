@@ -1,4 +1,4 @@
-import { async, DateWithTimeZone, VEvent } from 'node-ical';
+import { async, VEvent } from 'node-ical';
 import api from '../api';
 import { Timetable } from '~/src/network/models/psu-tools/timetable';
 import 'setimmediatenew'; // handle nodejs env
@@ -10,9 +10,7 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
     async
       .fromURL(`https://tiles2.ijo42.ru/proxy/${api.ical}${token}`)
       .then((calendar) => {
-        const groupedEvents = groupBy<
-          Timetable.Class & { date: DateWithTimeZone }
-        >(
+        const groupedEvents = groupBy<Timetable.Class & { d: Date }>(
           Object.values(calendar)
             .filter((k) => k.type === EVENT_KEY)
             .map((e) => e as VEvent)
@@ -26,19 +24,20 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
                 teacher: event.description,
                 type,
                 classId: event.uid,
-                date: event.start,
+                date: event.start.toISOString(),
+                d: event.start,
                 time: event.start.toLocaleTimeString('ru', {
                   hour: 'numeric',
                   minute: 'numeric',
                 }),
               };
             }),
-          (s) => s.date.toLocaleDateString('ru'),
+          (s) => s.d.toLocaleDateString('ru'),
         );
 
         return Object.entries(groupedEvents).map(([key, value]) => ({
           date: key,
-          classes: value.sort((a, b) => a.date.getTime() - b.date.getTime()),
+          classes: value.sort((a, b) => a.d.getTime() - b.d.getTime()),
           dayOfWeek: '',
         }));
       }),
