@@ -3,7 +3,6 @@ import IStorage from '../../models/storage';
 import Button from '../common/button';
 import AnimSwitch from './animSwitch';
 import ThemeSwitch from './themeSwitch';
-import GroupChooser from './groupChooser';
 import IcalTokenInput from './IcalTokenInput';
 
 const Settings = ({ storage }: { storage: IStorage }) => {
@@ -18,22 +17,12 @@ const Settings = ({ storage }: { storage: IStorage }) => {
         <AnimSwitch storage={storage} />
       </div>
       <Button
-        className="rounded-3xl py-4 min-h-12 w-full mt-5 c3"
-        variant="contrast"
-        onClick={() =>
-          window.open(import.meta.env.VITE_URL_BIND_ETIS, '_blank')
-        }
-      >
-        Привязать профиль ЕТИС
-      </Button>
-      <Button
         className="rounded-3xl bg-c_secondary dark:bg-cd_telegram dark:text-cd_main py-4 min-h-12 w-full mt-3 c3"
         variant="contrast"
         onClick={() => window.open(import.meta.env.VITE_URL_TG_GROUP, '_blank')}
       >
         Группа в Telegram
       </Button>
-      <GroupChooser storage={storage} className="mt-3" />
       <IcalTokenInput storage={storage} className="mt-3" />
       <div className="mt-auto w-full h-fit">
         <Button
