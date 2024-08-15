@@ -4,6 +4,7 @@ import { Timetable } from '~/src/network/models/psu-tools/timetable';
 import 'setimmediatenew'; // handle nodejs env
 import { disciplineRegex, groupBy } from '../../utils/ical';
 
+const EVENT_KEY = 'VEVENT';
 const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
   getTimetable: (token: string) =>
     async
@@ -13,7 +14,7 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
           Timetable.Class & { date: DateWithTimeZone }
         >(
           Object.values(calendar)
-            .filter((k) => k.type === 'VEVENT')
+            .filter((k) => k.type === EVENT_KEY)
             .map((e) => e as VEvent)
             .map((event) => {
               const [, discipline, type] = disciplineRegex.exec(
@@ -35,17 +36,11 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
           (s) => s.date.toLocaleDateString('ru'),
         );
 
-        const days: Timetable.Day[] = [];
-        for (const k in groupedEvents) {
-          days.push({
-            date: k,
-            classes: groupedEvents[k].sort(
-              (a, b) => a.date.getTime() - b.date.getTime(),
-            ),
-            dayOfWeek: '',
-          });
-        }
-        return days;
+        return Object.entries(groupedEvents).map(([key, value]) => ({
+          date: key,
+          classes: value.sort((a, b) => a.date.getTime() - b.date.getTime()),
+          dayOfWeek: '',
+        }));
       }),
 };
 
