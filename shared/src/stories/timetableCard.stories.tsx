@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     classData: {
-      classNumber: '341/1',
+      classId: '1',
       discipline: 'Электричество и магнетизм',
       type: '(лек)',
       place: '1 корпус, 3 этаж',
@@ -32,7 +32,7 @@ export const Default: Story = {
 export const LongDiscipline: Story = {
   args: {
     classData: {
-      classNumber: '341/1',
+      classId: '2',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
       type: '(практика)',
       place: '1 корпус, 3 этаж',
@@ -49,7 +49,7 @@ const now = new Date();
 export const ClassStarted: Story = {
   args: {
     classData: {
-      classNumber: '341/1',
+      classId: '341/1',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
       type: '(практика)',
       place: '1 корпус, 3 этаж',
@@ -65,7 +65,7 @@ export const ClassStarted: Story = {
 export const Error: Story = {
   args: {
     classData: {
-      classNumber: '341/1',
+      classId: '5',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
       type: '(практика)',
       place: '1 корпус, 3 этаж',

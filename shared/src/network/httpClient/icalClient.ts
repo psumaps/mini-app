@@ -25,7 +25,7 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
                 discipline,
                 teacher: event.description,
                 type,
-                classNumber: event.uid,
+                classId: event.uid,
                 date: event.start,
                 time: event.start.toLocaleTimeString('ru', {
                   hour: 'numeric',

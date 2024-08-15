@@ -1,6 +1,6 @@
 export namespace Timetable {
   export interface Class {
-    classNumber: string;
+    classId: string;
     discipline: string;
     type: string;
     place: string;
