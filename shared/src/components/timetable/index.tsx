@@ -231,9 +231,9 @@ const Timetable = () => {
                 <React.Fragment key={day.date}>
                   {day.classes.map((lesson) => (
                     <TimetableCard
-                      key={`${lesson.classNumber}`}
-                      classDate={day}
+                      key={`${lesson.classId}`}
                       classData={lesson}
+                      navigate={(s) => navigator?.navigate(s)}
                     />
                   ))}
                 </React.Fragment>
