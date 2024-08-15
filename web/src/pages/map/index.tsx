@@ -1,4 +1,8 @@
-import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
+import {
+  MapGeoJSONFeature,
+  MapMouseEvent,
+  VectorSourceSpecification,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
@@ -68,7 +72,6 @@ const MapPage = () => {
   const mapRef = React.useRef<MapRef | null>(null);
   const indoorControlRef = React.useRef<IndoorEqual | null>(null);
   const [viewState, setViewState] = React.useState(initialView);
-  const mapProps = React.useMemo<MapConfigProps>(() => mapConfig, []);
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
     lg: number;
@@ -80,6 +83,13 @@ const MapPage = () => {
   const routerLocation = useLocation();
   const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
   const icalTokenQuery = useIcalToken();
+  const mapProps = React.useMemo<MapConfigProps>(() => {
+    const config = mapConfig;
+    if (icalTokenQuery.data)
+      (config.mapStyle.sources.indoorequal as VectorSourceSpecification).tiles =
+        [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}.pbf`];
+    return config;
+  }, [icalTokenQuery]);
 
   React.useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
@@ -108,12 +118,12 @@ const MapPage = () => {
   };
 
   React.useEffect(() => {
-    if (mapRef.current?.areTilesLoaded)
+    if (icalTokenQuery.data && mapRef.current?.areTilesLoaded)
       void handleLocationHash(
         routerLocation.hash,
         handleSelect,
         searchByName,
-        icalTokenQuery.data!,
+        icalTokenQuery.data,
       );
   }, [icalTokenQuery.data, routerLocation]);
 
@@ -138,7 +148,7 @@ const MapPage = () => {
   };
 
   const handleLoad = () => {
-    if (mapRef.current) {
+    if (mapRef.current && icalTokenQuery.data) {
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -147,7 +157,7 @@ const MapPage = () => {
         routerLocation.hash,
         handleSelect,
         searchByName,
-        icalTokenQuery.data!,
+        icalTokenQuery.data,
       );
     }
     if (indoorControlRef.current) {
@@ -162,15 +172,6 @@ const MapPage = () => {
       {/* eslint-disable-next-line no-nested-ternary */}
       {icalTokenQuery.isLoading ? (
         <div className="relative flex-[0_0_92%]">Загрузка...</div>
-      ) : /* eslint-disable-next-line no-nested-ternary */
-      icalTokenQuery.isError ? (
-        <div className="relative flex-[0_0_92%]">
-          {icalTokenQuery.error.message}
-        </div>
-      ) : !icalTokenQuery.data ? (
-        <div className="relative flex flex-[0_0_92%] justify-center items-center">
-          <h1>Ошибка...</h1>
-        </div>
       ) : (
         <div
           className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
@@ -195,7 +196,7 @@ const MapPage = () => {
             <QrControl
               handleSelect={handleSelect}
               handleSearch={searchByName}
-              icalToken={icalTokenQuery.data}
+              icalToken={icalTokenQuery.data!}
             />
             <NavigationControl position="bottom-right" />
             <IndoorControl ref={indoorControlRef} />

@@ -4,10 +4,12 @@ import mapLayers from '~/mapEngine/layers';
 
 const mapStyle: StyleSpecification = {
   version: 8,
-  name: 'basemap',
+  name: 'map',
   sources: {
     indoorequal: {
-      tiles: [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}.pbf`],
+      tiles: [
+        `${import.meta.env.VITE_URL_IJO42_PUB_TILES}tiles/{z}/{x}/{y}.pbf`,
+      ],
       type: 'vector',
     },
   },
