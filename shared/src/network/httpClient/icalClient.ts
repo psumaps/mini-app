@@ -4,6 +4,27 @@ import { Timetable } from '~/src/network/models/psu-tools/timetable';
 import 'setimmediatenew'; // handle nodejs env
 import { disciplineRegex, groupBy } from '../../utils/ical';
 
+const mapFunc = (event: VEvent) => {
+  const [, discipline, type] = disciplineRegex.exec(event.summary) ?? [
+    undefined,
+    event.summary,
+    '',
+  ];
+  return {
+    type,
+    discipline,
+    d: event.start,
+    place: event.location,
+    teacher: event.description,
+    classId: event.uid,
+    date: event.start.toISOString(),
+    time: event.start.toLocaleTimeString('ru', {
+      hour: 'numeric',
+      minute: 'numeric',
+    }),
+  };
+};
+
 const EVENT_KEY = 'VEVENT';
 const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
   getTimetable: (token: string) =>
@@ -14,24 +35,7 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
           Object.values(calendar)
             .filter((k) => k.type === EVENT_KEY)
             .map((e) => e as VEvent)
-            .map((event) => {
-              const [, discipline, type] = disciplineRegex.exec(
-                event.summary,
-              ) ?? [undefined, event.summary, ''];
-              return {
-                place: event.location,
-                discipline,
-                teacher: event.description,
-                type,
-                classId: event.uid,
-                date: event.start.toISOString(),
-                d: event.start,
-                time: event.start.toLocaleTimeString('ru', {
-                  hour: 'numeric',
-                  minute: 'numeric',
-                }),
-              };
-            }),
+            .map(mapFunc),
           (s) => s.d.toLocaleDateString('ru'),
         );
 
