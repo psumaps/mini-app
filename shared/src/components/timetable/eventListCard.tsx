@@ -14,9 +14,14 @@ const EventListCard = ({
   onOpenDesc: (id: string) => void;
 }) => {
   const date = new Date(event.startDatetime);
-  const { data } = usePalette(event.cover, 2, 'rgbString', {
-    crossOrigin: 'anonymous',
-  });
+  const { data } = usePalette(
+    `https://tiles.ijo42.ru/proxy/${event.cover}`,
+    2,
+    'rgbString',
+    {
+      crossOrigin: 'anonymous',
+    },
+  );
 
   const canDrawGradient = data?.[0] && data?.[1];
 

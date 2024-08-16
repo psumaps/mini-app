@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import {
@@ -23,17 +24,13 @@ import EventListCard from './eventListCard';
 import TimetableCard from './timetableCard';
 import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
-import { StorageContext } from '../../models/storage';
-import {
-  GROUP_INFO_KEY,
-  GroupData,
-} from '../settings/groupChooser/groupChooserUtils';
+import useIcalToken from '../../hooks/useIcalToken';
 
 const EVENTS_LIMIT = 10;
 
 const Timetable = () => {
   const navigator = useContext(NavigatorContext);
-  const storage = useContext(StorageContext);
+  const icalTokenQuery = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const [currentFeed, setCurrentFeed] = useState<'events' | 'classes'>(
@@ -84,23 +81,13 @@ const Timetable = () => {
     queryClient,
   );
 
-  const groupInfoQuery = useQuery<GroupData>(
-    {
-      queryKey: [GROUP_INFO_KEY],
-      queryFn: async () =>
-        JSON.parse((await storage?.get(GROUP_INFO_KEY)) ?? '') as GroupData,
-    },
-    queryClient,
-  );
-
   const classesQuery = useQuery(
     {
       queryKey: ['classes'],
-      queryFn: () =>
-        httpClient.psuTools.timetable.getGroupTimetable(
-          groupInfoQuery.data!.groupId ?? 1010,
-        ),
-      enabled: !groupInfoQuery.isPending && currentFeed === 'classes',
+      queryFn: () => httpClient.ical.getTimetable(icalTokenQuery.data!),
+      enabled: currentFeed === 'classes' && !!icalTokenQuery.data,
+      retry: false,
+      refetchOnWindowFocus: false,
     },
     queryClient,
   );
@@ -131,6 +118,11 @@ const Timetable = () => {
   const handleDateChange = (date: Date) => {
     setDateFrom(date);
   };
+
+  const chosenTimetable = useMemo(() => {
+    const formattedDate = dateFrom.toLocaleDateString('ru');
+    return classesQuery.data?.filter((day) => day.date === formattedDate);
+  }, [classesQuery.data, dateFrom]);
 
   return (
     <>
@@ -231,18 +223,24 @@ const Timetable = () => {
             ${currentFeed === 'classes' ? 'left-0 right-0 scale-y-100 opacity-100' : 'opacity-0 scale-y-0 ml-10 left-full -right-full'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
-          {classesQuery.isPending ? (
+          {!icalTokenQuery.data ? (
+            <p>Авторизация не пройдена</p>
+          ) : // eslint-disable-next-line no-nested-ternary
+          classesQuery.isPending ? (
             <p>Загрузка...</p>
-          ) : classesQuery.isError ? (
+          ) : // eslint-disable-next-line no-nested-ternary
+          classesQuery.isError ? (
             <p>Ошибка!</p>
+          ) : !chosenTimetable || chosenTimetable.length === 0 ? (
+            <p>Выходной!</p>
           ) : (
-            classesQuery.data.days.map((day) => (
+            chosenTimetable.map((day) => (
               <React.Fragment key={day.date}>
                 {day.classes.map((lesson) => (
                   <TimetableCard
-                    key={`${day.date}-${lesson.classNumber}`}
-                    classDate={day}
+                    key={`${lesson.classId}`}
                     classData={lesson}
+                    navigate={(s) => navigator?.navigate(s)}
                   />
                 ))}
               </React.Fragment>

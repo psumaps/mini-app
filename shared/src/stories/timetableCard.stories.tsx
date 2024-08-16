@@ -16,32 +16,26 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     classData: {
-      classNumber: '341/1',
+      classId: '1',
       discipline: 'Электричество и магнетизм',
       type: '(лек)',
-      place: '1 корпус, 3 этаж',
+      place: '1 корпус, 3 этаж, 341/1 ауд.',
       teacher: 'Бабушкин И.А.',
-    },
-    classDate: {
+      time: '8:00',
       date: '2023-09-14T08:00:00',
-      dayOfWeek: '',
-      classes: [],
     },
   },
 };
 export const LongDiscipline: Story = {
   args: {
     classData: {
-      classNumber: '341/1',
+      classId: '2',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
       type: '(практика)',
-      place: '1 корпус, 3 этаж',
+      place: '1 корпус, 3 этаж, 341/1 ауд.',
       teacher: 'Бабушкин И.А.',
-    },
-    classDate: {
+      time: '19:30',
       date: '2023-09-14T19:30:00',
-      dayOfWeek: '',
-      classes: [],
     },
   },
 };
@@ -49,32 +43,29 @@ const now = new Date();
 export const ClassStarted: Story = {
   args: {
     classData: {
-      classNumber: '341/1',
+      classId: '341/1',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
       type: '(практика)',
-      place: '1 корпус, 3 этаж',
+      place: '1 корпус, 3 этаж, 341/1 ауд.',
       teacher: 'Бабушкин И.А.',
-    },
-    classDate: {
+      time: now.toLocaleTimeString('ru', {
+        hour: 'numeric',
+        minute: 'numeric',
+      }),
       date: now.toISOString(),
-      dayOfWeek: '',
-      classes: [],
     },
   },
 };
 export const Error: Story = {
   args: {
     classData: {
-      classNumber: '341/1',
+      classId: '5',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
       type: '(практика)',
-      place: '1 корпус, 3 этаж',
+      place: '1 корпус, 3 этаж, 341/1 ауд.',
       teacher: 'Бабушкин И.А.',
-    },
-    classDate: {
-      date: '2023a-09-14T19:30:00',
-      dayOfWeek: '',
-      classes: [],
+      time: '19:30',
+      date: '2023-09-14T19:30:00',
     },
   },
 };

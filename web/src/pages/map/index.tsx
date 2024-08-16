@@ -107,16 +107,15 @@ const MapPage = () => {
     setPopupState('middle');
   };
 
-  React.useEffect(
-    () =>
+  React.useEffect(() => {
+    if (mapRef.current?.areTilesLoaded)
       void handleLocationHash(
         routerLocation.hash,
         handleSelect,
         searchByName,
         icalTokenQuery.data!,
-      ),
-    [icalTokenQuery.data, routerLocation],
-  );
+      );
+  }, [icalTokenQuery.data, routerLocation]);
 
   const handlePoiClick = async (
     e: MapMouseEvent & {
@@ -144,6 +143,12 @@ const MapPage = () => {
       mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
+      void handleLocationHash(
+        routerLocation.hash,
+        handleSelect,
+        searchByName,
+        icalTokenQuery.data!,
+      );
     }
     if (indoorControlRef.current) {
       indoorControlRef.current.on('levelchange', () =>
@@ -176,10 +181,16 @@ const MapPage = () => {
             {...viewState}
             {...mapProps}
             onMove={(e) => setViewState(e.viewState)}
-            transformRequest={(url) => ({
-              url,
-              headers: { Authorization: `Bearer ${icalTokenQuery.data}` },
-            })}
+            transformRequest={(url) => {
+              return {
+                url,
+                headers: url.includes('tiles2')
+                  ? {
+                      Authorization: `Bearer ${icalTokenQuery.data}`,
+                    }
+                  : {},
+              };
+            }}
           >
             <QrControl
               handleSelect={handleSelect}
