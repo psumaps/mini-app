@@ -10,7 +10,7 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
     async
       .fromURL(`https://tiles2.ijo42.ru/proxy/${api.ical}${token}`)
       .then((calendar) => {
-        const groupedEvents = groupBy<Timetable.Class & { d: Date }>(
+        const groupedEvents = groupBy<Timetable.Class & { d: Date }, string>(
           Object.values(calendar)
             .filter((k) => k.type === EVENT_KEY)
             .map((e) => e as VEvent)
