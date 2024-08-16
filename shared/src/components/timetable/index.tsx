@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import {
@@ -118,6 +119,11 @@ const Timetable = () => {
     setDateFrom(date);
   };
 
+  const chosenTimetable = useMemo(() => {
+    const formattedDate = dateFrom.toLocaleDateString('ru');
+    return classesQuery.data?.filter((day) => day.date === formattedDate);
+  }, [classesQuery.data, dateFrom]);
+
   return (
     <>
       <Calendar
@@ -222,22 +228,23 @@ const Timetable = () => {
           ) : // eslint-disable-next-line no-nested-ternary
           classesQuery.isPending ? (
             <p>Загрузка...</p>
-          ) : classesQuery.isError ? (
+          ) : // eslint-disable-next-line no-nested-ternary
+          classesQuery.isError ? (
             <p>Ошибка!</p>
+          ) : !chosenTimetable || chosenTimetable.length === 0 ? (
+            <p>Выходной!</p>
           ) : (
-            classesQuery.data
-              .filter((day) => day.date === dateFrom.toLocaleDateString('ru'))
-              .map((day) => (
-                <React.Fragment key={day.date}>
-                  {day.classes.map((lesson) => (
-                    <TimetableCard
-                      key={`${lesson.classId}`}
-                      classData={lesson}
-                      navigate={(s) => navigator?.navigate(s)}
-                    />
-                  ))}
-                </React.Fragment>
-              ))
+            chosenTimetable.map((day) => (
+              <React.Fragment key={day.date}>
+                {day.classes.map((lesson) => (
+                  <TimetableCard
+                    key={`${lesson.classId}`}
+                    classData={lesson}
+                    navigate={(s) => navigator?.navigate(s)}
+                  />
+                ))}
+              </React.Fragment>
+            ))
           )}
         </div>
       </div>
