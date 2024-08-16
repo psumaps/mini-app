@@ -5,7 +5,7 @@ import Button from '../../common/button';
 
 interface Props {
   classData: Timetable.Class;
-  navigate: ((s: string) => void) | undefined;
+  navigate?: ((s: string) => void);
 }
 const audRegex = /(\d{3}\/\d{1,2})/;
 
