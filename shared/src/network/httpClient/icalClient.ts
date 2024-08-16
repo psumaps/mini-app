@@ -4,7 +4,9 @@ import { Timetable } from '~/src/network/models/psu-tools/timetable';
 import 'setimmediatenew'; // handle nodejs env
 import { disciplineRegex, groupBy } from '../../utils/ical';
 
-const mapFunc = (event: VEvent) => {
+const formClassObject: (event: VEvent) => Timetable.Class & { d: Date } = (
+  event: VEvent,
+) => {
   const [, discipline, type] = disciplineRegex.exec(event.summary) ?? [
     undefined,
     event.summary,
@@ -31,11 +33,11 @@ const client: { getTimetable: (token: string) => Promise<Timetable.Day[]> } = {
     async
       .fromURL(`https://tiles2.ijo42.ru/proxy/${api.ical}${token}`)
       .then((calendar) => {
-        const groupedEvents = groupBy<Timetable.Class & { d: Date }, string>(
+        const groupedEvents = groupBy(
           Object.values(calendar)
             .filter((k) => k.type === EVENT_KEY)
             .map((e) => e as VEvent)
-            .map(mapFunc),
+            .map(formClassObject),
           (s) => s.d.toLocaleDateString('ru'),
         );
 
