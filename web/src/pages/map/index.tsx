@@ -87,7 +87,7 @@ const MapPage = () => {
     const config = mapConfig;
     if (icalTokenQuery.data)
       (config.mapStyle.sources.indoorequal as VectorSourceSpecification).tiles =
-        [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}.pbf`];
+        [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}`];
     return config;
   }, [icalTokenQuery]);
 

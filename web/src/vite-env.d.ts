@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_URL_IJO42_PUB_TILES: string;
   readonly VITE_URL_IJO42_TILES: string;
   readonly VITE_URL_MAP_ASSETS: string;
   readonly VITE_URL_IJO42_MAPI: string;
