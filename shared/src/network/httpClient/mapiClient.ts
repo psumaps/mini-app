@@ -35,7 +35,9 @@ const client = {
       `${api.mapi}/amenitys`,
       tokenHeader(token),
     );
-    return response.data.collection.filter((item) => item && item !== 'yes');
+    return response.data.collection.filter(
+      (item) => item && item !== 'yes' && item !== 'community_centre',
+    );
   },
   getPoiByAmenity: async (amenity: string, token: string) => {
     const response = await axios.get<{ collection: Poi[] }>(
