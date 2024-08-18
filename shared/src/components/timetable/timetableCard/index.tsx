@@ -2,10 +2,11 @@ import React, { useMemo } from 'react';
 import { Timetable } from '../../../network/models/psu-tools/timetable';
 import classStatus from './classStatus';
 import Button from '../../common/button';
+import SearchIcon from '../../../assets/search.svg?react';
 
 interface Props {
   classData: Timetable.Class;
-  navigate?: ((s: string) => void);
+  navigate?: (s: string) => void;
 }
 const audRegex = /(\d{3}\/\d{1,2})/;
 
@@ -35,6 +36,7 @@ const TimetableCard = ({ classData, navigate }: Props) => {
         </div>
       );
     }
+    const url = classData.teacher?.match(/(https:[^"]+)/)?.[0];
 
     return (
       <div className="grid gap-2 grid-cols-[80%_20%]">
@@ -42,10 +44,39 @@ const TimetableCard = ({ classData, navigate }: Props) => {
           <h3 className={`${cardClassNameText}  line-clamp-2 overflow-hidden`}>
             {classData.discipline}
           </h3>
-          <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
-            {classData.teacher}
+          {url ? (
+            <>
+              <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
+                {classData.teacher.replace(url, '').trim()}
+              </div>
+              <a
+                href={url}
+                onClick={() => window.open(url)}
+                className="underline"
+              >
+                {url}
+              </a>
+            </>
+          ) : (
+            <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
+              {classData.teacher}
+            </div>
+          )}
+          <div className="flex gap-3">
+            <div className={`${cardClassNameText} pt-2 c2`}>
+              {classData.place}
+            </div>
+            {audStr ? (
+              <Button
+                onClick={() => {
+                  if (audStr) navigate?.(`/#q=${audStr}`);
+                }}
+                variant={isClassInProgress ? 'accent' : 'primary'}
+              >
+                <SearchIcon className="h-6 w-6" />
+              </Button>
+            ) : null}
           </div>
-          <div className={`${cardClassNameText} c2`}>{classData.place}</div>
         </div>
         <div>
           <h3 className={`${cardClassNameText} text-center`}>
@@ -60,16 +91,11 @@ const TimetableCard = ({ classData, navigate }: Props) => {
   };
 
   return (
-    <Button
-      onClick={() => {
-        if (audStr) navigate?.(`/#q=${audStr}`);
-      }}
-      className={`${cardClassName} text-start`}
+    <div
+      className={`${cardClassName} text-start py-7 pl-6 pr-8 flex justify-between items-start min-h-[120px]`}
     >
-      <div className="py-7 pl-6 pr-8 flex justify-between items-start min-h-[120px]">
-        {renderContent()}
-      </div>
-    </Button>
+      {renderContent()}
+    </div>
   );
 };
 
