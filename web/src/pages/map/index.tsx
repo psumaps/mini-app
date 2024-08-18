@@ -133,19 +133,21 @@ const MapPage = () => {
       features?: MapGeoJSONFeature[] | undefined;
     },
   ) => {
-    const data = await httpClient.mapi.getIndoorById(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
-      icalTokenQuery.data!,
-    );
-    setSelectedPoi(data);
-    setPopupState('middle');
-    const [lg, lt] = data.properties.point.coordinates;
-    setMarkerCoords({
-      lt,
-      lg,
-      level: parseInt(data.properties.level ?? '1'),
-    });
+    if (!(e.features![0].properties.class === 'entrance')) {
+      const data = await httpClient.mapi.getIndoorById(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
+        icalTokenQuery.data!,
+      );
+
+      setSelectedPoi(data);
+      setPopupState('middle');
+      const [lg, lt] = data.properties.point.coordinates;
+      setMarkerCoords({
+        lt,
+        lg,
+      });
+    }
   };
 
   const handleLoad = () => {
