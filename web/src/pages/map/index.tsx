@@ -19,6 +19,7 @@ import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import React, { forwardRef, MutableRefObject } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
+  AttributionControl,
   MapRef,
   Marker,
   NavigationControl,
@@ -193,6 +194,11 @@ const MapPage = () => {
               };
             }}
           >
+            <AttributionControl
+              position="top-right"
+              compact
+              customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
+            />
             <QrControl
               handleSelect={handleSelect}
               handleSearch={searchByName}
