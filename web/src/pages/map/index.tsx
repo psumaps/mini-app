@@ -146,6 +146,7 @@ const MapPage = () => {
       setMarkerCoords({
         lt,
         lg,
+        level: parseInt(data.properties.tags.level ?? '1'),
       });
     }
   };
