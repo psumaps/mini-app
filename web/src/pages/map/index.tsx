@@ -152,17 +152,19 @@ const MapPage = () => {
   };
 
   const handleLoad = () => {
-    if (mapRef.current && icalTokenQuery.data) {
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
+    if (mapRef.current) {
       void handleLocationHash(
         routerLocation.hash,
         handleSelect,
         searchByName,
         icalTokenQuery.data,
       );
+      if (icalTokenQuery.data) {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
+      }
     }
     if (indoorControlRef.current) {
       indoorControlRef.current.on('levelchange', () =>
