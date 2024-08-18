@@ -191,7 +191,9 @@ const MapPage = () => {
             transformRequest={(url) => {
               return {
                 url,
-                headers: url.includes('tiles2')
+                headers: url.startsWith(
+                  `${import.meta.env.VITE_URL_IJO42_TILES}tiles`,
+                )
                   ? {
                       Authorization: `Bearer ${icalTokenQuery.data}`,
                     }
