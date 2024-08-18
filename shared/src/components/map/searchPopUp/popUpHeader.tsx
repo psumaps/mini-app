@@ -92,9 +92,9 @@ const PopUpHeader = ({
               classNameInner=""
               className="px-4"
             />
-            {selectedPoi && (
+            {selectedPoi && selectedPoi.properties.tags.id && (
               <div className="absolute right-12">
-                <ShareButton id={selectedPoi.properties.id} />
+                <ShareButton id={selectedPoi.properties.tags.id} />
               </div>
             )}
             <button
