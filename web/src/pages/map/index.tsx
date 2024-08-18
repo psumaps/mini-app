@@ -54,7 +54,7 @@ const QrControl = ({
 }: {
   handleSelect: (poi: Poi) => void;
   handleSearch: (query: string) => void;
-  icalToken: string;
+  icalToken: string | null | undefined;
 }) => {
   useControl(
     () =>
@@ -119,7 +119,7 @@ const MapPage = () => {
   };
 
   React.useEffect(() => {
-    if (icalTokenQuery.data && mapRef.current?.areTilesLoaded)
+    if (mapRef.current?.areTilesLoaded)
       void handleLocationHash(
         routerLocation.hash,
         handleSelect,
@@ -202,7 +202,7 @@ const MapPage = () => {
             <QrControl
               handleSelect={handleSelect}
               handleSearch={searchByName}
-              icalToken={icalTokenQuery.data!}
+              icalToken={icalTokenQuery.data}
             />
             <NavigationControl position="bottom-right" />
             <IndoorControl ref={indoorControlRef} />

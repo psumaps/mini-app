@@ -24,6 +24,12 @@ const client = {
     );
     return response.data;
   },
+  getPublicIndoorById: async (id: string) => {
+    const response = await axios.get<Poi>(
+      `${api.mapi}/public/indoor?query_id=${id}`,
+    );
+    return response.data;
+  },
   getAmenityList: async (token: string) => {
     const response = await axios.get<{ collection: string[] }>(
       `${api.mapi}/amenitys`,
