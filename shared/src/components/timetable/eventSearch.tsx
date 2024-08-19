@@ -31,6 +31,7 @@ const EventSearch = ({
         className={`absolute inset-0 flex bg-transparent items-center justify-center transition-all ease-in-out duration-300 origin-top
           ${isInputShown ? 'scale-y-0 opacity-0' : 'scale-y-100 opacity-100'}`}
         onClick={handleToggleInputShown}
+        disabled // todo: make
       >
         <p>Поиск</p>
       </button>
