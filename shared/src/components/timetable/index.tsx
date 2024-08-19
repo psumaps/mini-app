@@ -241,6 +241,7 @@ const Timetable = () => {
                     key={`${lesson.classId}`}
                     classData={lesson}
                     navigate={(s) => navigator?.navigate(s)}
+                    icalToken={icalTokenQuery.data!}
                   />
                 ))}
               </React.Fragment>
