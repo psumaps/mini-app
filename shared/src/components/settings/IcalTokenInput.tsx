@@ -161,7 +161,7 @@ const IcalTokenInput = ({
       )}
 
       <Modal
-        title="Авторизация ETIS"
+        title="Авторизация ЕТИС"
         onClose={() => setState('closed')}
         className={`origin-bottom z-50 bottom-[8dvh] h-[fit-content_!important] ${
           state === 'opened' ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
@@ -181,20 +181,23 @@ const IcalTokenInput = ({
         />
         <br />
         <p>
-          Токен доступен на&nbsp;
+          1. Перейдите на &nbsp;
           <a
             href="https://student.psu.ru/pls/stu_cus_et/stu.timetable"
             target="_blank"
             className="underline text-c_accent"
             rel="noreferrer"
           >
-            странице раписания
+            страницу расписания
           </a>
-          &nbsp; в ETIS. Нажмите &quot;Показать&quot; рядом с надписью
-          &quot;Синхронизация календаря с внешними сервисами&quot; и скопируйте
-          ссылку. Вставьте ссылку в поле, доступное по нажатию на кнопку
-          &quot;Введите ваш ical токен&quot;.
+          &nbsp; в ЕТИС.
         </p>
+        <p>
+          2. Нажмите кнопку &quot;Показать&quot; рядом с надписью
+          &quot;Синхронизация календаря с внешними сервисами&quot;, при наличии
+          нажмите кнопку &quot;Подписаться&quot;
+        </p>
+        <p>3. Скопируйте ссылку, затем вставьте её в поле выше.</p>
         <br />
         <h4>Статус авторизации</h4>
         <div className="flex flex-row gap-4 items-center mt-2">
