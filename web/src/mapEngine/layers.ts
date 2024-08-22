@@ -125,6 +125,7 @@ const layers: LayerSpecification[] = [
   {
     id: 'indoor-transportation',
     type: 'line',
+    source: 'indoorequal',
     'source-layer': 'transportation',
     filter: ['all'],
     paint: {

@@ -24,12 +24,20 @@ const client = {
     );
     return response.data;
   },
+  getPublicIndoorById: async (id: string) => {
+    const response = await axios.get<Poi>(
+      `${api.mapi}/public/indoor?query_id=${id}`,
+    );
+    return response.data;
+  },
   getAmenityList: async (token: string) => {
     const response = await axios.get<{ collection: string[] }>(
       `${api.mapi}/amenitys`,
       tokenHeader(token),
     );
-    return response.data.collection.filter((item) => item && item !== 'yes');
+    return response.data.collection.filter(
+      (item) => item && item !== 'yes' && item !== 'community_centre',
+    );
   },
   getPoiByAmenity: async (amenity: string, token: string) => {
     const response = await axios.get<{ collection: Poi[] }>(

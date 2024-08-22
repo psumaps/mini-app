@@ -66,7 +66,7 @@ export const handleRedirect = async (
   redirectHash: string,
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
-  token: string,
+  token: string | null | undefined,
 ) => {
   const hashParams = redirectHash.split('=');
   if (hashParams.length === 2 && hashParams[0].length === 1) {
@@ -75,21 +75,29 @@ export const handleRedirect = async (
     // eslint-disable-next-line default-case
     switch (redirectHash[0]) {
       case 'q': // indoor by name
-        data = await httpClient.mapi.search(query, token);
-        if (data.length === 0) {
-          console.error('POI not found');
-        } else if (data.length === 1) {
-          handleSelect(data[0]);
+        if (!token) {
+          console.log('unauthorized'); // todo: make toast
         } else {
-          handleSearch(query);
+          data = await httpClient.mapi.search(query, token);
+          if (data.length === 0) {
+            console.error('POI not found');
+          } else if (data.length === 1) {
+            handleSelect(data[0]);
+          } else {
+            handleSearch(query);
+          }
         }
         break;
       case 'i': // indoor by id
-        data = [await httpClient.mapi.getIndoorById(query, token)];
+        data = [
+          await (token
+            ? httpClient.mapi.getIndoorById(query, token)
+            : httpClient.mapi.getPublicIndoorById(query)),
+        ];
         if (data?.[0]) {
           handleSelect(data[0]);
         } else {
-          console.error('POI not found');
+          console.error('POI not found'); // todo: make toast on nil token
         }
         break;
       case 'e': // event by id
@@ -103,7 +111,7 @@ export const handleLocationHash = (
   hash: string,
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
-  token: string,
+  token: string | null | undefined,
 ) => {
   const redirectHash = hash.slice(1); // hash includes #
   if (redirectHash) {

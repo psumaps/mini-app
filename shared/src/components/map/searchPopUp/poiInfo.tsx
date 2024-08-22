@@ -13,8 +13,7 @@ const PoiInfo = ({
   className?: string;
   classNameInner?: string;
 }) => {
-  const building =
-    item?.properties.tags?.building ?? item?.properties.tags?.corpus;
+  const building = item?.properties.tags?.building;
   const level = item?.properties.tags?.level ?? '1';
 
   return (

@@ -4,11 +4,15 @@ import mapLayers from '~/mapEngine/layers';
 
 const mapStyle: StyleSpecification = {
   version: 8,
-  name: 'basemap',
+  name: 'map',
   sources: {
     indoorequal: {
-      tiles: [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}.pbf`],
+      tiles: [`${import.meta.env.VITE_URL_IJO42_TILES}pubtiles/{z}/{x}/{y}`],
+      maxzoom: 20,
+      minzoom: 10,
+      bounds: [56.174769, 58.00363, 56.20024, 58.011303],
       type: 'vector',
+      volatile: true,
     },
   },
   layers: [

@@ -13,12 +13,13 @@ export default interface Poi {
     subclass?: string;
     similarity?: number;
     tags: {
-      corpus?: string;
+      id?: string;
       building?: string;
       amenity?: string;
       indoor?: string;
       level?: string;
       name?: string;
+      door?: string;
       opening_hours?: string;
       wheelchair?: 'yes';
     };

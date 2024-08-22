@@ -1,4 +1,8 @@
-import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
+import {
+  MapGeoJSONFeature,
+  MapMouseEvent,
+  VectorSourceSpecification,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
@@ -15,6 +19,7 @@ import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import React, { forwardRef, MutableRefObject } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
+  AttributionControl,
   MapRef,
   Marker,
   NavigationControl,
@@ -49,7 +54,7 @@ const QrControl = ({
 }: {
   handleSelect: (poi: Poi) => void;
   handleSearch: (query: string) => void;
-  icalToken: string;
+  icalToken: string | null | undefined;
 }) => {
   useControl(
     () =>
@@ -68,7 +73,6 @@ const MapPage = () => {
   const mapRef = React.useRef<MapRef | null>(null);
   const indoorControlRef = React.useRef<IndoorEqual | null>(null);
   const [viewState, setViewState] = React.useState(initialView);
-  const mapProps = React.useMemo<MapConfigProps>(() => mapConfig, []);
   const [markerCoords, setMarkerCoords] = React.useState<{
     lt: number;
     lg: number;
@@ -80,6 +84,13 @@ const MapPage = () => {
   const routerLocation = useLocation();
   const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
   const icalTokenQuery = useIcalToken();
+  const mapProps = React.useMemo<MapConfigProps>(() => {
+    const config = mapConfig;
+    if (icalTokenQuery.data)
+      (config.mapStyle.sources.indoorequal as VectorSourceSpecification).tiles =
+        [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}`];
+    return config;
+  }, [icalTokenQuery]);
 
   React.useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
@@ -113,7 +124,7 @@ const MapPage = () => {
         routerLocation.hash,
         handleSelect,
         searchByName,
-        icalTokenQuery.data!,
+        icalTokenQuery.data,
       );
   }, [icalTokenQuery.data, routerLocation]);
 
@@ -122,33 +133,38 @@ const MapPage = () => {
       features?: MapGeoJSONFeature[] | undefined;
     },
   ) => {
-    const data = await httpClient.mapi.getIndoorById(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
-      icalTokenQuery.data!,
-    );
-    setSelectedPoi(data);
-    setPopupState('middle');
-    const [lg, lt] = data.properties.point.coordinates;
-    setMarkerCoords({
-      lt,
-      lg,
-      level: parseInt(data.properties.level ?? '1'),
-    });
+    if (!(e.features![0].properties.class === 'entrance')) {
+      const data = await httpClient.mapi.getIndoorById(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
+        icalTokenQuery.data!,
+      );
+
+      setSelectedPoi(data);
+      setPopupState('middle');
+      const [lg, lt] = data.properties.point.coordinates;
+      setMarkerCoords({
+        lt,
+        lg,
+        level: parseInt(data.properties.tags.level ?? '1'),
+      });
+    }
   };
 
   const handleLoad = () => {
     if (mapRef.current) {
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
       void handleLocationHash(
         routerLocation.hash,
         handleSelect,
         searchByName,
-        icalTokenQuery.data!,
+        icalTokenQuery.data,
       );
+      if (icalTokenQuery.data) {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
+      }
     }
     if (indoorControlRef.current) {
       indoorControlRef.current.on('levelchange', () =>
@@ -162,15 +178,6 @@ const MapPage = () => {
       {/* eslint-disable-next-line no-nested-ternary */}
       {icalTokenQuery.isLoading ? (
         <div className="relative flex-[0_0_92%]">Загрузка...</div>
-      ) : /* eslint-disable-next-line no-nested-ternary */
-      icalTokenQuery.isError ? (
-        <div className="relative flex-[0_0_92%]">
-          {icalTokenQuery.error.message}
-        </div>
-      ) : !icalTokenQuery.data ? (
-        <div className="relative flex flex-[0_0_92%] justify-center items-center">
-          <h1>Ошибка...</h1>
-        </div>
       ) : (
         <div
           className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
@@ -184,7 +191,9 @@ const MapPage = () => {
             transformRequest={(url) => {
               return {
                 url,
-                headers: url.includes('tiles2')
+                headers: url.startsWith(
+                  `${import.meta.env.VITE_URL_IJO42_TILES}tiles`,
+                )
                   ? {
                       Authorization: `Bearer ${icalTokenQuery.data}`,
                     }
@@ -192,6 +201,11 @@ const MapPage = () => {
               };
             }}
           >
+            <AttributionControl
+              position="top-right"
+              compact
+              customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
+            />
             <QrControl
               handleSelect={handleSelect}
               handleSearch={searchByName}
