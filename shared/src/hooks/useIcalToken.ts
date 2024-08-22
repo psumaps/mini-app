@@ -9,7 +9,7 @@ const useIcalToken = () => {
   const storage = useContext(StorageContext);
   return useQuery(
     {
-      queryKey: ['ical_token'],
+      queryKey: ['storage', 'ical_token'],
       queryFn: async () => getStoredIcalToken(storage!),
     },
     queryClient,

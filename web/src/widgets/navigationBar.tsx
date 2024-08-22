@@ -6,6 +6,8 @@ import getStoredTheme from 'psumaps-shared/src/utils/readTheme';
 import MapIcon from 'psumaps-shared/src/assets/map.svg?react';
 import TimetableIcon from 'psumaps-shared/src/assets/timetable.svg?react';
 import SettingsIcon from 'psumaps-shared/src/assets/settings.svg?react';
+import useTryQueryClient from 'psumaps-shared/src/hooks/useTryQueryClient';
+import { useQuery } from '@tanstack/react-query';
 import Storage from '~/app/storage';
 import Navigator from '~/app/navigator';
 
@@ -13,14 +15,20 @@ const NavigationBar = ({ className }: { className?: string }) => {
   const location = useLocation();
   const navigator = new Navigator();
   const navigate = (path: string) => navigator.navigate(path);
+  const queryClient = useTryQueryClient();
+
+  const themeQuery = useQuery(
+    {
+      queryKey: ['storage', 'theme'],
+      queryFn: () => getStoredTheme(new Storage()),
+    },
+    queryClient,
+  );
 
   useEffect(() => {
-    const loadTheme = async () => {
-      const theme = await getStoredTheme(new Storage());
-      if (theme) document.documentElement.classList.add('dark');
-    };
-    void loadTheme();
-  }, []);
+    if (themeQuery.data)
+      document.documentElement.classList.toggle('dark', themeQuery.data);
+  }, [themeQuery.data]);
 
   // Определяем цвет иконки на основе текущего пути
   const fill = (path: string) => {

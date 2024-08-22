@@ -7,13 +7,28 @@ import '@fontsource/montserrat/700.css';
 
 import { StorageContext } from 'psumaps-shared/src/models/storage';
 import { NavigatorContext } from 'psumaps-shared/src/models/navigator';
-import Storage from './storage';
+import bridge from '@vkontakte/vk-bridge';
+import Storage, { VK_BRIDGE_STATUS_KEY } from './storage';
 import Navigator from './navigator';
 
 import router from './router';
 import '~/tw.css';
 
 const queryClient = new QueryClient();
+
+bridge.send('VKWebAppInit', {}).then(
+  ({ result }) => {
+    if (result) localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'true');
+    else localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
+
+    void queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey.includes('storage'),
+    });
+  },
+  () => {
+    localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
+  },
+);
 
 const App = () => {
   return (
