@@ -61,11 +61,6 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
       .replace(textUrl ? textUrl[0] : '', '')
       .trim();
 
-    const rega = /(\S+.\S+)(http\S+)?/;
-    const arrsa = rega.exec(
-      'Шилова Е.А. https://docs.google.com/spreadsheets/d/1wL8AeLGVME5aXLr8JKzIQXKiXBdmlRVxbxtI4QJlQaA/edit?usp=sharing в аудитории 30 мест! Запись обязательна!!!',
-    );
-
     return (
       <div className="grid gap-2 grid-cols-[80%_20%]">
         <div>
@@ -89,9 +84,9 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
               >
                 {url}
               </a>
-              {arrsa ? (
+              {textUrl ? (
                 <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
-                  {arrsa[0]}
+                  {textUrl}
                 </div>
               ) : null}
             </div>
