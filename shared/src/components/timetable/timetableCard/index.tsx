@@ -53,7 +53,18 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
         </div>
       );
     }
-    const url = classData.teacher?.match(/(https:[^"]+)/)?.[0];
+    const textUrl = classData.teacher
+      ?.match(/(http[^"]+)/)?.[0]
+      ?.match(/\s[^]+/);
+    const url = classData.teacher
+      ?.match(/(http[^"]+)/)?.[0]
+      .replace(textUrl ? textUrl[0] : '', '')
+      .trim();
+
+    const rega = /(\S+.\S+)(http\S+)?/;
+    const arrsa = rega.exec(
+      'Шилова Е.А. https://docs.google.com/spreadsheets/d/1wL8AeLGVME5aXLr8JKzIQXKiXBdmlRVxbxtI4QJlQaA/edit?usp=sharing в аудитории 30 мест! Запись обязательна!!!',
+    );
 
     return (
       <div className="grid gap-2 grid-cols-[80%_20%]">
@@ -62,18 +73,28 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
             {classData.discipline}
           </h3>
           {url ? (
-            <>
+            <div className="grid grid-cols-[95%]">
               <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
-                {classData.teacher.replace(url, '').trim()}
+                {classData.teacher
+                  .replace(url, '')
+                  .replace(textUrl ? textUrl[0] : '', '')
+                  .trim()}
               </div>
               <a
                 href={url}
+                target="_blank"
                 onClick={() => window.open(url)}
-                className="underline"
+                className={`${cardClassNameText} underline c1 line-clamp-1`}
+                rel="noreferrer"
               >
                 {url}
               </a>
-            </>
+              {arrsa ? (
+                <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
+                  {arrsa[0]}
+                </div>
+              ) : null}
+            </div>
           ) : (
             <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
               {classData.teacher}
@@ -109,7 +130,7 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
 
   return (
     <div
-      className={`${cardClassName} text-start py-7 pl-6 pr-8 flex justify-between items-start min-h-[120px]`}
+      className={`${cardClassName}  text-start py-7 pl-6 pr-8 justify-between items-start min-h-[120px]`}
     >
       {renderContent()}
     </div>
