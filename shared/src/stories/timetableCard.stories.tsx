@@ -39,6 +39,20 @@ export const LongDiscipline: Story = {
     },
   },
 };
+export const ExtraDescription: Story = {
+  args: {
+    classData: {
+      classId: '2',
+      discipline: 'Численные методы моделирования радиоэлектронных схем',
+      type: '(практика)',
+      place: '1 корпус, 3 этаж, 341/1 ауд.',
+      teacher:
+        'Шилова Е.А.\n\nhttps://docs.google.com/spreadsheets/d/1wL8AeLGVME5aXLr8JKzIQXKiXBdmlRVxbxtI4QJlQaA/edit?usp=sharing\nв аудитории 30 мест! Запись обязательна!!!',
+      time: '19:30',
+      date: '2023-09-14T19:30:00',
+    },
+  },
+};
 const now = new Date();
 export const ClassStarted: Story = {
   args: {
