@@ -134,7 +134,6 @@ const IcalTokenInput = ({
             animEnabled ? 'transition-all duration-200 ease-in-out' : ''
           }`}
           onClick={() => {
-            inputRef.current?.focus();
             setState('opened');
           }}
         >
