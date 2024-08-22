@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Timetable } from '../../../network/models/psu-tools/timetable';
 import classStatus from './classStatus';
 import Button from '../../common/button';
 import httpClient from '../../../network/httpClient';
 import SearchIcon from '../../../assets/search.svg?react';
+import useTryQueryClient from '../../../hooks/useTryQueryClient';
 
 interface Props {
   classData: Timetable.Class;
@@ -24,7 +25,7 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
   }, [classData.date]);
 
   const cardClassNameText = isClassInProgress ? 'text-c_bg-block' : '';
-  const queryClient = useQueryClient();
+  const queryClient = useTryQueryClient();
   const cardClassName = `${
     isClassInProgress
       ? 'bg-c_accent dark:bg-c_accent text-c_bg-block shadow-md'
