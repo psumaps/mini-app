@@ -25,22 +25,35 @@ import TimetableCard from './timetableCard';
 import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
 import useIcalToken from '../../hooks/useIcalToken';
+import { StorageContext } from '../../models/storage';
 
 const EVENTS_LIMIT = 10;
+const CURRENT_FEED_KEY = 'current-feed';
+const DEFAULT_FEED = 'events';
 
 const Timetable = () => {
   const navigator = useContext(NavigatorContext);
+  const storageContext = useContext(StorageContext);
   const icalTokenQuery = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
-  const [currentFeed, setCurrentFeed] = useState<'events' | 'classes'>(
-    'events',
-  );
   const [searchValue, setSearchValue] = useState<string>('');
   const [filtersActive, setFiltersActive] = useState<boolean>(false);
   const [dateFrom, setDateFrom] = useState<Date>(new Date());
-
   const [filters, setFilters] = useState<Filter[] | null>(null);
+
+  const currentFeedQuery = useQuery(
+    {
+      queryKey: ['storage', CURRENT_FEED_KEY],
+      queryFn: async () =>
+        (await storageContext?.get(CURRENT_FEED_KEY)) ?? DEFAULT_FEED,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    },
+    queryClient,
+  );
+
+  const currentFeed = currentFeedQuery.data ?? DEFAULT_FEED;
 
   const filtersQuery = useQuery(
     {
@@ -123,6 +136,13 @@ const Timetable = () => {
     const formattedDate = dateFrom.toLocaleDateString('ru');
     return classesQuery.data?.filter((day) => day.date === formattedDate);
   }, [classesQuery.data, dateFrom]);
+
+  const setCurrentFeed = (feed: string) => {
+    void storageContext?.set(CURRENT_FEED_KEY, feed);
+    void queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey.includes(CURRENT_FEED_KEY),
+    });
+  };
 
   return (
     <>

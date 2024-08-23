@@ -1,6 +1,21 @@
 /// <reference types="vite-plugin-svgr/client" />
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import Calendar from 'react-calendar';
+import CalendarIcon from '../../../assets/calendar.svg?react';
+import ResetIcon from '../../../assets/reset.svg?react';
+import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import useTryQueryClient from '../../../hooks/useTryQueryClient';
+import { StorageContext } from '../../../models/storage';
+import { node, nodes } from '../../../utils/selector';
+import Block from '../../common/block';
+import Button from '../../common/button';
 import CalendarDropdown from './calendarDropdown';
 import {
   calculateDiv,
@@ -15,12 +30,8 @@ import {
   Value,
   weekdaysEqual,
 } from './calendarUtils';
-import { node, nodes } from '../../../utils/selector';
-import Button from '../../common/button';
-import Block from '../../common/block';
-import CalendarIcon from '../../../assets/calendar.svg?react';
-import ResetIcon from '../../../assets/reset.svg?react';
-import useAnimEnabled from '../../../hooks/useAnimEnabled';
+
+const CALENDAR_MINIFIED_KEY = 'calendar-minified';
 
 const calculateNowDivMinified = () =>
   calculateMinifiedDiv(divNowId, `${classWeekday}--now-minified`); // prettier-ignore
@@ -37,11 +48,27 @@ const CustomCalendar = ({
 }) => {
   const { data: animEnabled } = useAnimEnabled();
   const today = useMemo(() => new Date(), []);
+  const queryClient = useTryQueryClient();
+  const storageContext = useContext(StorageContext);
   const [activeStartDate, setActiveStartDate] = useState(today);
   const [value, setValue] = useState<Value>(today);
-  const [isMinified, setIsMinified] = useState(false);
   const [showNowDiv, setShowNowDiv] = useState(true);
   const [resetIconAnimation, setResetIconAnimation] = useState(false);
+
+  const isMinifiedQuery = useQuery(
+    {
+      queryKey: ['storage', CALENDAR_MINIFIED_KEY],
+      queryFn: async () => {
+        const savedEntry = await storageContext?.get(CALENDAR_MINIFIED_KEY);
+        return savedEntry === 'true';
+      },
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    },
+    queryClient,
+  );
+
+  const isMinified = isMinifiedQuery.data ?? false;
 
   let activeInterval: NodeJS.Timeout | null = null;
   let nowInterval: NodeJS.Timeout | null = null;
@@ -170,7 +197,13 @@ const CustomCalendar = ({
     );
     nowInterval = setInterval(nowDivFn, minificationFrameTime);
     activeInterval = setInterval(activeDivFn, minificationFrameTime);
-    setIsMinified(!isMinified);
+    void storageContext?.set(
+      CALENDAR_MINIFIED_KEY,
+      isMinified ? 'false' : 'true',
+    );
+    void queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey.includes(CALENDAR_MINIFIED_KEY),
+    });
   };
 
   return (
