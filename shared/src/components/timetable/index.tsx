@@ -150,7 +150,7 @@ const Timetable = () => {
         className="h-fit"
         onChange={(date) => date instanceof Date && handleDateChange(date)}
       />
-      <div className="flex flex-row gap-4 mt-3">
+      <div className="flex flex-row gap-4 mt-5">
         <Button
           variant={currentFeed === 'events' ? 'contrast' : 'primary'}
           className="rounded-3xl flex-1 h-10 shadow-md dark:shadow-none"
@@ -186,7 +186,7 @@ const Timetable = () => {
             <p>Ошибка!</p>
           ) : (
             <>
-              <div className="flex flex-row gap-4 mt-3">
+              <div className="flex flex-row gap-4">
                 <EventSearch
                   searchValue={searchValue}
                   setSearchValue={setSearchValue}
