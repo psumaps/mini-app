@@ -140,10 +140,10 @@
   box-sizing: border-box;
   cursor: pointer;
   display: block;
-  height: 29px;
+  height: 35px;
   outline: none;
   padding: 0;
-  width: 29px;
+  width: 35px;
 }
 
 .maplibregl-ctrl-group button + button {
