@@ -28,7 +28,7 @@ const setValue = (value: string) => {
   /*  return void bridge.send('VKWebAppStorageSet', {
     key: ONBOARDING_KEY,
     value,
-  });*/
+  }); */
 };
 
 const showOnboarding = async () => {
