@@ -25,14 +25,13 @@ const onboardingText = [
 ];
 
 const setValue = (value: string) => {
-  /*  return void bridge.send('VKWebAppStorageSet', {
+  return void bridge.send('VKWebAppStorageSet', {
     key: ONBOARDING_KEY,
     value,
-  }); */
+  });
 };
 
 const showOnboarding = async () => {
-  /*
   let alreadyShow = await bridge
     .send('VKWebAppStorageGet', {
       keys: [ONBOARDING_KEY],
@@ -44,11 +43,7 @@ const showOnboarding = async () => {
     .catch(() => {
       return null;
     });
-*/
 
-  //
-  let alreadyShow = false;
-  //
   const leftLaunches = Number(alreadyShow);
   if (!isNaN(leftLaunches)) {
     if (leftLaunches > 0) {
