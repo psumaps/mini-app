@@ -34,6 +34,10 @@ export default class LevelControl {
         this.indoorequal.setLevel(level);
       });
       button.classList.add('maplibregl-ctrl-icon');
+
+      if (level === this.indoorequal.level) {
+        button.style.backgroundColor = 'rgba(200, 100, 100, 0.4)';
+      }
       this.container.appendChild(button);
     });
   }

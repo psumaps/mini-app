@@ -87,7 +87,7 @@ const IcalTokenInput = ({
         'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
   }
 
-  const internalHandler = () => {
+  const handleTokenSubmit = () => {
     let { value } = inputRef.current!;
     if (value.startsWith('https://')) {
       const words = value.split('/');
@@ -95,7 +95,9 @@ const IcalTokenInput = ({
     }
 
     void storage.set('ical_token', value);
-    void queryClient.invalidateQueries({ queryKey: ['ical_token'] });
+    void queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey.includes('ical_token'),
+    });
     setTimeout(
       () =>
         void queryClient.invalidateQueries({
@@ -104,15 +106,6 @@ const IcalTokenInput = ({
       100,
     );
     inputRef.current!.value = value;
-  };
-
-  const handleSubmit: React.FormEventHandler<HTMLInputElement> &
-    React.FormEventHandler<HTMLFormElement> = () => {
-    internalHandler();
-  };
-
-  const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => {
-    internalHandler();
   };
 
   const tokenMasked = useMemo(() => {
@@ -160,7 +153,7 @@ const IcalTokenInput = ({
       )}
 
       <Modal
-        title="Авторизация ETIS"
+        title="Авторизация ЕТИС"
         onClose={() => setState('closed')}
         className={`origin-bottom z-50 bottom-[8dvh] h-[fit-content_!important] ${
           state === 'opened' ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
@@ -170,8 +163,8 @@ const IcalTokenInput = ({
         <br />
         <ClearableInput
           placeholder="Ваш токен"
-          onSubmit={handleSubmit}
-          onBlur={handleBlur}
+          onSubmit={() => handleTokenSubmit()}
+          onBlur={() => handleTokenSubmit()}
           onClear={() => {
             inputRef.current!.value = '';
           }}
@@ -180,20 +173,23 @@ const IcalTokenInput = ({
         />
         <br />
         <p>
-          Токен доступен на&nbsp;
+          1. Перейдите на &nbsp;
           <a
             href="https://student.psu.ru/pls/stu_cus_et/stu.timetable"
             target="_blank"
             className="underline text-c_accent"
             rel="noreferrer"
           >
-            странице раписания
+            страницу расписания
           </a>
-          &nbsp; в ETIS. Нажмите &quot;Показать&quot; рядом с надписью
-          &quot;Синхронизация календаря с внешними сервисами&quot; и скопируйте
-          ссылку. Вставьте ссылку в поле, доступное по нажатию на кнопку
-          &quot;Введите ваш ical токен&quot;.
+          &nbsp; в ЕТИС.
         </p>
+        <p>
+          2. Нажмите кнопку &quot;Показать&quot; рядом с надписью
+          &quot;Синхронизация календаря с внешними сервисами&quot;, при наличии
+          нажмите кнопку &quot;Подписаться&quot;
+        </p>
+        <p>3. Скопируйте ссылку, затем вставьте её в поле выше.</p>
         <br />
         <h4>Статус авторизации</h4>
         <div className="flex flex-row gap-4 items-center mt-2">

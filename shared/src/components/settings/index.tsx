@@ -26,7 +26,7 @@ const Settings = ({ storage }: { storage: IStorage }) => {
       <IcalTokenInput storage={storage} className="mt-3" />
       <div className="mt-auto w-full h-fit">
         <Button
-          className="rounded-3xl h-12 w-full mt-3 c1"
+          className="rounded-3xl h-12 w-full mt-3 c2"
           onClick={() =>
             window.open(import.meta.env.VITE_URL_SUPPORT, '_blank')
           }
