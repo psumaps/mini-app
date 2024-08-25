@@ -3,7 +3,7 @@ import {
   MapMouseEvent,
   VectorSourceSpecification,
 } from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import 'psumaps-shared/src/assets/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
 import {

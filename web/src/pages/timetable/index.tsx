@@ -1,4 +1,3 @@
-import 'maplibre-gl/dist/maplibre-gl.css';
 import Layout from 'psumaps-shared/src/components/common/layout';
 import TimetableContent from 'psumaps-shared/src/components/timetable';
 import React from 'react';
