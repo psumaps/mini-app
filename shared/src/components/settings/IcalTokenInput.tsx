@@ -87,7 +87,7 @@ const IcalTokenInput = ({
         'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
   }
 
-  const internalHandler = () => {
+  const handleTokenSubmit = () => {
     let { value } = inputRef.current!;
     if (value.startsWith('https://')) {
       const words = value.split('/');
@@ -95,7 +95,9 @@ const IcalTokenInput = ({
     }
 
     void storage.set('ical_token', value);
-    void queryClient.invalidateQueries({ queryKey: ['ical_token'] });
+    void queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey.includes('ical_token'),
+    });
     setTimeout(
       () =>
         void queryClient.invalidateQueries({
@@ -104,15 +106,6 @@ const IcalTokenInput = ({
       100,
     );
     inputRef.current!.value = value;
-  };
-
-  const handleSubmit: React.FormEventHandler<HTMLInputElement> &
-    React.FormEventHandler<HTMLFormElement> = () => {
-    internalHandler();
-  };
-
-  const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => {
-    internalHandler();
   };
 
   const tokenMasked = useMemo(() => {
@@ -170,8 +163,8 @@ const IcalTokenInput = ({
         <br />
         <ClearableInput
           placeholder="Ваш токен"
-          onSubmit={handleSubmit}
-          onBlur={handleBlur}
+          onSubmit={() => handleTokenSubmit()}
+          onBlur={() => handleTokenSubmit()}
           onClear={() => {
             inputRef.current!.value = '';
           }}
