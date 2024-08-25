@@ -18,7 +18,7 @@ export const Default: Story = {
     classData: {
       classId: '1',
       discipline: 'Электричество и магнетизм',
-      type: '(лек)',
+      type: 'лек',
       place: '1 корпус, 3 этаж, 341/1 ауд.',
       teacher: 'Бабушкин И.А.',
       time: '8:00',
@@ -31,9 +31,23 @@ export const LongDiscipline: Story = {
     classData: {
       classId: '2',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
-      type: '(практика)',
+      type: 'практ',
       place: '1 корпус, 3 этаж, 341/1 ауд.',
       teacher: 'Бабушкин И.А.',
+      time: '19:30',
+      date: '2023-09-14T19:30:00',
+    },
+  },
+};
+export const ExtraDescription: Story = {
+  args: {
+    classData: {
+      classId: '2',
+      discipline: 'Численные методы моделирования радиоэлектронных схем',
+      type: 'практ',
+      place: '1 корпус, 3 этаж, 341/1 ауд.',
+      teacher:
+        'Шилова Е.А.\n\nhttps://docs.google.com/spreadsheets/d/1wL8AeLGVME5aXLr8JKzIQXKiXBdmlRVxbxtI4QJlQaA/edit?usp=sharing\nв аудитории 30 мест! Запись обязательна!!!',
       time: '19:30',
       date: '2023-09-14T19:30:00',
     },
@@ -45,7 +59,7 @@ export const ClassStarted: Story = {
     classData: {
       classId: '341/1',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
-      type: '(практика)',
+      type: 'практ',
       place: '1 корпус, 3 этаж, 341/1 ауд.',
       teacher: 'Бабушкин И.А.',
       time: now.toLocaleTimeString('ru', {
@@ -61,7 +75,7 @@ export const Error: Story = {
     classData: {
       classId: '5',
       discipline: 'Численные методы моделирования радиоэлектронных схем',
-      type: '(практика)',
+      type: 'практ',
       place: '1 корпус, 3 этаж, 341/1 ауд.',
       teacher: 'Бабушкин И.А.',
       time: '19:30',
