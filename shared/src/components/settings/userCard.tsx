@@ -1,20 +1,12 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import { useQuery } from '@tanstack/react-query';
-import { User } from '../../models/user';
 import AvatarIcon from '../../assets/avatar.svg?react';
 import Block from '../common/block';
 import useTryQueryClient from '../../hooks/useTryQueryClient';
 
 const UserCard = () => {
   const queryClient = useTryQueryClient();
-  const user: User = useMemo(
-    () => ({
-      status: 'Студент',
-      major: 'ИКНТ ПМИ-1 2023',
-    }),
-    [],
-  );
 
   const query = useQuery(
     {
@@ -44,8 +36,6 @@ const UserCard = () => {
               ? 'Загрузка...'
               : `${query.data.first_name} ${query.data.last_name}`}
           </h2>
-          <h4 className="mt-2 mb-1">{user.status}</h4>
-          <h5>{user.major}</h5>
         </div>
       </div>
     </Block>

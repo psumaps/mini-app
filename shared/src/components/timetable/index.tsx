@@ -150,30 +150,7 @@ const Timetable = () => {
         className="h-fit"
         onChange={(date) => date instanceof Date && handleDateChange(date)}
       />
-      <div className="flex flex-row gap-4 mt-3">
-        <EventSearch
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          className="h-10 flex-auto shadow-md"
-        />
-        <Button
-          className="h-10 w-10 rounded-3xl shadow-md dark:shadow-none"
-          variant={
-            filters?.some((filter) => filter.isChecked) ? 'accent' : 'primary'
-          }
-          onClick={() => setFiltersActive(true)}
-        >
-          <FilterIcon />
-        </Button>
-        <EventFiltersModal
-          active={filtersActive}
-          setActive={setFiltersActive}
-          filters={filters}
-          setFilters={handleFilterChange}
-          query={filtersQuery}
-        />
-      </div>
-      <div className="flex flex-row gap-4 mt-3">
+      <div className="flex flex-row gap-4 mt-5">
         <Button
           variant={currentFeed === 'events' ? 'contrast' : 'primary'}
           className="rounded-3xl flex-1 h-10 shadow-md dark:shadow-none"
@@ -189,6 +166,13 @@ const Timetable = () => {
           Расписание
         </Button>
       </div>
+      <EventFiltersModal
+        active={filtersActive}
+        setActive={setFiltersActive}
+        filters={filters}
+        setFilters={handleFilterChange}
+        query={filtersQuery}
+      />
       <div className="relative mt-3">
         <div
           className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top
@@ -202,6 +186,24 @@ const Timetable = () => {
             <p>Ошибка!</p>
           ) : (
             <>
+              <div className="flex flex-row gap-4">
+                <EventSearch
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                  className="h-10 flex-auto shadow-md"
+                />
+                <Button
+                  className="h-10 w-10 rounded-3xl shadow-md dark:shadow-none"
+                  variant={
+                    filters?.some((filter) => filter.isChecked)
+                      ? 'accent'
+                      : 'primary'
+                  }
+                  onClick={() => setFiltersActive(true)}
+                >
+                  <FilterIcon />
+                </Button>
+              </div>
               {eventsQuery.data.pages.map(
                 (page) =>
                   page[0] && (
