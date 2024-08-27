@@ -96,7 +96,9 @@ const Search = ({
         };
 
       if (storage) await storage.set('history', JSON.stringify(data));
-      void queryClient.invalidateQueries({ queryKey: ['history'] });
+      void queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey.includes('history'),
+      });
     },
     [history, storage, queryClient],
   );
