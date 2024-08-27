@@ -22,6 +22,7 @@ class Storage implements IStorage {
         keys: [key],
       })
       .then((data) => {
+        if (data.keys[0].value.length === 0) return null;
         if (data.keys) return data.keys[0].value;
         return null;
       })
