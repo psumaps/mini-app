@@ -6,7 +6,7 @@ import bridge from '@vkontakte/vk-bridge';
 export const VK_BRIDGE_STATUS_KEY = 'vkWebAppInitStatus';
 
 class Storage implements IStorage {
-  async isDarkPreffered(): Promise<boolean> {
+  async isDarkPreferred(): Promise<boolean> {
     return (
       window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches
