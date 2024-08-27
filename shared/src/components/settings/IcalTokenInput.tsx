@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import CheckSvg from '../../assets/check-circle.svg?react';
 import MinusSvg from '../../assets/minus-circle.svg?react';
 import CrossSvg from '../../assets/x-circle.svg?react';
@@ -55,6 +55,12 @@ const IcalTokenInput = ({
     if (icalValidationQuery.data === false) return 'invalid';
     return 'server_error';
   }, [icalTokenPresent, icalValidationQuery.data]);
+
+  useEffect(() => {
+    if (icalTokenPresent && icalValidationQuery.data !== true)
+      void storage.set('ical_token', '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [icalValidationQuery.data]);
 
   const AuthResultIcon = useCallback(() => {
     switch (authResult) {
