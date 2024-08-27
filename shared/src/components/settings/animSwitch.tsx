@@ -32,7 +32,8 @@ const AnimSwitch = <T extends IStorage>({
       if (fetched !== isAnimEnabled) setIsAnimEnabled(fetched);
     };
     void getAnimEnabled();
-  }, [isAnimEnabled, storage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storage]);
 
   return (
     // eslint-disable-next-line jsx-a11y/control-has-associated-label
