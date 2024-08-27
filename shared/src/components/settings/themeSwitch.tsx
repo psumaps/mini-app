@@ -33,9 +33,13 @@ const ThemeSwitch = <T extends IStorage>({
       if (fetched !== isDark) setIsDark(fetched);
     };
     void getTheme();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storage]);
+
+  useEffect(() => {
     if (isDark) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
-  }, [isDark, storage]);
+  }, [isDark]);
 
   return (
     // eslint-disable-next-line jsx-a11y/control-has-associated-label
