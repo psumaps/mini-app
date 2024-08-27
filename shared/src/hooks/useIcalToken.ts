@@ -14,7 +14,6 @@ const useIcalToken = () => {
       refetchOnWindowFocus: false,
       retry: false,
       staleTime: Infinity,
-      notifyOnChangeProps: [],
     },
     queryClient,
   );
