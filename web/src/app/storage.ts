@@ -15,14 +15,14 @@ class Storage implements IStorage {
 
   async get(key: string): Promise<string | null> {
     const vkBridgeStatus = localStorage.getItem(VK_BRIDGE_STATUS_KEY);
-    const localValue = localStorage.getItem(key);
+    const localValue = localStorage.getItem(key)?.trim();
     const queryBridge = () =>
       bridge
         .send('VKWebAppStorageGet', {
           keys: [key],
         })
         .then((data) => {
-          if (data.keys[0].value.length === 0) return null;
+          if (data.keys[0].value.trim().length === 0) return null;
           if (data.keys) return data.keys[0].value;
           return null;
         })
@@ -30,8 +30,7 @@ class Storage implements IStorage {
           return null;
         });
 
-    if (vkBridgeStatus !== 'true') return localValue;
-
+    if (vkBridgeStatus !== 'true') return localValue as string | null;
     if (!!localValue && localValue.length !== 0) {
       return localValue;
     }
