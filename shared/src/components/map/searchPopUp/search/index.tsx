@@ -111,9 +111,11 @@ const Search = ({
   }, []);
 
   useEffect(() => {
-    if (selectedPoi === null) return;
-    void updateHistory(selectedPoi);
-  }, [selectedPoi, updateHistory, handleAmenityReset]);
+    if (selectedPoi !== null) {
+      void updateHistory(selectedPoi);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPoi, handleAmenityReset]);
 
   const handleAmenityClick = (amenity: string, index: number) => {
     setSelectedAmenity(amenity);
