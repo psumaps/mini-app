@@ -15,6 +15,7 @@ import useIcalToken from '../../../../hooks/useIcalToken';
 const queryOptions = {
   staleTime: 1000 * 60 * 5,
   refetchOnWindowFocus: false,
+  retry: false,
 };
 
 const Search = ({
@@ -57,7 +58,7 @@ const Search = ({
   });
   const history = useQuery<SearchHistory>(
     {
-      queryKey: ['history'],
+      queryKey: ['storage', 'history'],
       queryFn: async () => {
         if (!storage) return {};
         const data = await storage.get('history');

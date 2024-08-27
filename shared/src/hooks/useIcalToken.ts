@@ -11,6 +11,10 @@ const useIcalToken = () => {
     {
       queryKey: ['storage', 'ical_token'],
       queryFn: async () => getStoredIcalToken(storage!),
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
+      notifyOnChangeProps: [],
     },
     queryClient,
   );
