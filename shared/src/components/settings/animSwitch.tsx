@@ -29,10 +29,9 @@ const AnimSwitch = <T extends IStorage>({
   useEffect(() => {
     const getAnimEnabled = async () => {
       const fetched = await getStoredAnimEnabled(storage);
-      if (fetched !== isAnimEnabled) setIsAnimEnabled(fetched);
+      if (fetched === false) setIsAnimEnabled(fetched);
     };
     void getAnimEnabled();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storage]);
 
   return (
