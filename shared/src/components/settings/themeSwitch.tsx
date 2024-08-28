@@ -4,6 +4,8 @@ import IStorage from '../../models/storage';
 import getStoredTheme from '../../utils/readTheme';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
 
+const INITIAL_STATE = false;
+
 /**
  * Рисует переключатель темы. Работает вместе с навигацией
  * (внутри навигации читается текущая тема и применяется)
@@ -20,7 +22,7 @@ const ThemeSwitch = <T extends IStorage>({
   storage: T;
 }) => {
   const { data: animEnabled } = useAnimEnabled();
-  const [isDark, setIsDark] = React.useState(false);
+  const [isDark, setIsDark] = React.useState(INITIAL_STATE);
 
   const toggleTheme = () => {
     void storage.set('theme', !isDark ? 'dark' : 'light');
@@ -30,10 +32,9 @@ const ThemeSwitch = <T extends IStorage>({
   useEffect(() => {
     const getTheme = async () => {
       const fetched = await getStoredTheme(storage);
-      if (fetched !== isDark) setIsDark(fetched);
+      if (fetched !== INITIAL_STATE) setIsDark(fetched);
     };
     void getTheme();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storage]);
 
   useEffect(() => {
