@@ -26,6 +26,7 @@ import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
 import useIcalToken from '../../hooks/useIcalToken';
 import { StorageContext } from '../../models/storage';
+import ScrollToTop from './ScrollToTop';
 
 const EVENTS_LIMIT = 10;
 const CURRENT_FEED_KEY = 'current-feed';
@@ -146,6 +147,7 @@ const Timetable = () => {
 
   return (
     <>
+      <ScrollToTop />
       <Calendar
         className="h-fit"
         onChange={(date) => date instanceof Date && handleDateChange(date)}
