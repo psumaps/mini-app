@@ -15,7 +15,7 @@ const EventListCard = ({
 }) => {
   const date = new Date(event.startDatetime);
   const { data } = usePalette(
-    `https://tiles2.ijo42.ru/proxy/${event.cover}`,
+    `${import.meta.env.VITE_URL_MAP_ASSETS}proxy/${event.cover}`,
     2,
     'rgbString',
     {
