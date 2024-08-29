@@ -1,5 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import CheckSvg from '../../assets/check-circle.svg?react';
 import MinusSvg from '../../assets/minus-circle.svg?react';
 import CrossSvg from '../../assets/x-circle.svg?react';
@@ -24,18 +30,21 @@ const IcalTokenInput = ({
   const icalTokenQuery = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const [state, setState] = React.useState<'opened' | 'closed'>('closed');
-
+  const [stageToken, setStageToken] = useState<string | null>(null);
   const icalTokenCorrect = useMemo<boolean>(
-    () =>
-      !!icalTokenQuery.data &&
-      icalTokenQuery.data.match(/^[0-9A-Z]{16}$/)?.length === 1,
+    () => !!icalTokenQuery.data && icalTokenQuery.data.length !== 0,
     [icalTokenQuery.data],
+  );
+  const stageIcalTokenCorrect = useMemo<boolean>(
+    () => !!stageToken && stageToken.match(/^[0-9A-Z]{16}$/)?.length === 1,
+    [stageToken],
   );
   const icalValidationQuery = useQuery(
     {
       queryKey: ['ical_token_validation'],
-      queryFn: () => httpClient.mapi.validateIcal(icalTokenQuery.data!),
-      enabled: icalTokenCorrect,
+      queryFn: () =>
+        httpClient.mapi.validateIcal(stageToken || icalTokenQuery.data!),
+      enabled: icalTokenCorrect || stageIcalTokenCorrect,
       retry: false,
       refetchOnWindowFocus: false,
     },
@@ -43,8 +52,10 @@ const IcalTokenInput = ({
   );
 
   const icalTokenPresent = useMemo<boolean>(
-    () => icalValidationQuery.data !== undefined && icalTokenCorrect,
-    [icalTokenCorrect, icalValidationQuery.data],
+    () =>
+      icalValidationQuery.data !== undefined &&
+      (icalTokenCorrect || stageIcalTokenCorrect),
+    [icalTokenCorrect, icalValidationQuery.data, stageIcalTokenCorrect],
   );
 
   const authResult = useMemo<
@@ -57,8 +68,13 @@ const IcalTokenInput = ({
   }, [icalTokenPresent, icalValidationQuery.data]);
 
   useEffect(() => {
-    if (icalTokenPresent && icalValidationQuery.data !== true)
-      void storage.set('ical_token', '');
+    if (icalTokenPresent) {
+      if (icalValidationQuery.data) {
+        if (stageIcalTokenCorrect) void storage.set('ical_token', stageToken!);
+      } else if (icalTokenQuery.data) {
+        void storage.set('ical_token', '');
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [icalValidationQuery.data]);
 
@@ -100,10 +116,7 @@ const IcalTokenInput = ({
       value = words[words.length - 1];
     }
 
-    void storage.set('ical_token', value);
-    void queryClient.invalidateQueries({
-      predicate: (query) => query.queryKey.includes('ical_token'),
-    });
+    setStageToken(value);
     setTimeout(
       () =>
         void queryClient.invalidateQueries({
@@ -116,14 +129,14 @@ const IcalTokenInput = ({
 
   const tokenMasked = useMemo(() => {
     if (icalTokenPresent) {
-      const icalToken = icalTokenQuery.data!;
+      const token = stageToken || icalTokenQuery.data!;
       return (
-        icalToken.substring(0, icalToken.length / 2) +
-        '*'.repeat(Math.ceil(icalToken.length / 2.0))
+        token.substring(0, token.length / 2) +
+        '*'.repeat(Math.ceil(token.length / 2.0))
       );
     }
     return '';
-  }, [icalTokenPresent, icalTokenQuery.data]);
+  }, [icalTokenPresent, icalTokenQuery.data, stageToken]);
 
   return (
     <div className={`flex flex-row ${className}`}>
