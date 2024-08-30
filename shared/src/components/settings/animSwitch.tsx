@@ -4,6 +4,8 @@ import useTryQueryClient from '../../hooks/useTryQueryClient';
 import IStorage from '../../models/storage';
 import { getStoredAnimEnabled } from '../../utils/readStorage';
 
+const INITIAL_STATE = true;
+
 /**
  * Рисует переключатель анимаций.
  *
@@ -18,7 +20,7 @@ const AnimSwitch = <T extends IStorage>({
   storage: T;
 }) => {
   const queryClient = useTryQueryClient();
-  const [isAnimEnabled, setIsAnimEnabled] = React.useState(true);
+  const [isAnimEnabled, setIsAnimEnabled] = React.useState(INITIAL_STATE);
 
   const toggleAnimEnabled = () => {
     void storage.set('animation_enabled', !isAnimEnabled ? '1' : '0');
@@ -29,10 +31,10 @@ const AnimSwitch = <T extends IStorage>({
   useEffect(() => {
     const getAnimEnabled = async () => {
       const fetched = await getStoredAnimEnabled(storage);
-      if (fetched !== isAnimEnabled) setIsAnimEnabled(fetched);
+      if (fetched !== INITIAL_STATE) setIsAnimEnabled(fetched);
     };
     void getAnimEnabled();
-  }, [isAnimEnabled, storage]);
+  }, [storage]);
 
   return (
     // eslint-disable-next-line jsx-a11y/control-has-associated-label

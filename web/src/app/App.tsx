@@ -21,7 +21,8 @@ const App = () => {
     bridge.send('VKWebAppInit', {}).then(
       ({ result }) => {
         if (result) localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'true');
-        else localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
+        else if (!localStorage.getItem(VK_BRIDGE_STATUS_KEY))
+          localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
 
         void queryClient.invalidateQueries({
           predicate: (query) => query.queryKey.includes('storage'),

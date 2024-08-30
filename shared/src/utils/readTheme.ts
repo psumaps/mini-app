@@ -10,7 +10,7 @@ async function getStoredTheme<T extends IStorage>(
     case 'light':
       return false;
     default:
-      return storage.isDarkPreffered();
+      return storage.isDarkPreferred();
   }
 }
 

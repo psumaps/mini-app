@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import getStoredTheme from 'psumaps-shared/src/utils/readTheme';
 import MapIcon from 'psumaps-shared/src/assets/map.svg?react';
@@ -8,7 +8,7 @@ import TimetableIcon from 'psumaps-shared/src/assets/timetable.svg?react';
 import SettingsIcon from 'psumaps-shared/src/assets/settings.svg?react';
 import useTryQueryClient from 'psumaps-shared/src/hooks/useTryQueryClient';
 import { useQuery } from '@tanstack/react-query';
-import Storage from '~/app/storage';
+import { StorageContext } from 'psumaps-shared/src/models/storage';
 import Navigator from '~/app/navigator';
 
 const NavigationBar = ({ className }: { className?: string }) => {
@@ -16,11 +16,15 @@ const NavigationBar = ({ className }: { className?: string }) => {
   const navigator = new Navigator();
   const navigate = (path: string) => navigator.navigate(path);
   const queryClient = useTryQueryClient();
+  const storage = useContext(StorageContext);
 
   const themeQuery = useQuery(
     {
       queryKey: ['storage', 'theme'],
-      queryFn: () => getStoredTheme(new Storage()),
+      queryFn: () => getStoredTheme(storage!),
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
     },
     queryClient,
   );

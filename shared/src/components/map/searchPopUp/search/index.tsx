@@ -15,6 +15,7 @@ import useIcalToken from '../../../../hooks/useIcalToken';
 const queryOptions = {
   staleTime: 1000 * 60 * 5,
   refetchOnWindowFocus: false,
+  retry: false,
 };
 
 const Search = ({
@@ -57,7 +58,7 @@ const Search = ({
   });
   const history = useQuery<SearchHistory>(
     {
-      queryKey: ['history'],
+      queryKey: ['storage', 'history'],
       queryFn: async () => {
         if (!storage) return {};
         const data = await storage.get('history');
@@ -95,7 +96,9 @@ const Search = ({
         };
 
       if (storage) await storage.set('history', JSON.stringify(data));
-      void queryClient.invalidateQueries({ queryKey: ['history'] });
+      void queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey.includes('history'),
+      });
     },
     [history, storage, queryClient],
   );
@@ -110,9 +113,11 @@ const Search = ({
   }, []);
 
   useEffect(() => {
-    if (selectedPoi === null) return;
-    void updateHistory(selectedPoi);
-  }, [selectedPoi, updateHistory, handleAmenityReset]);
+    if (selectedPoi !== null) {
+      void updateHistory(selectedPoi);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPoi, handleAmenityReset]);
 
   const handleAmenityClick = (amenity: string, index: number) => {
     setSelectedAmenity(amenity);

@@ -1,19 +1,5 @@
 import IStorage from '../models/storage';
 
-export async function getStoredTheme<T extends IStorage>(
-  storage: T,
-): Promise<boolean> {
-  const theme: string = (await storage.get('theme')) ?? '';
-  switch (theme) {
-    case 'dark':
-      return true;
-    case 'light':
-      return false;
-    default:
-      return storage.isDarkPreffered();
-  }
-}
-
 export async function getStoredAnimEnabled<T extends IStorage>(
   storage: T,
 ): Promise<boolean> {
@@ -32,5 +18,5 @@ export async function getStoredAnimEnabled<T extends IStorage>(
 export async function getStoredIcalToken<T extends IStorage>(
   storage: T,
 ): Promise<string | null> {
-  return (await storage.get('ical_token')) ?? null;
+  return storage.get('ical_token');
 }
