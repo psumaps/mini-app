@@ -30,20 +30,20 @@ const IcalTokenInput = ({
   const icalTokenQuery = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const [state, setState] = React.useState<'opened' | 'closed'>('closed');
-  const [stageToken, setStageToken] = useState<string | null>(null);
+  const [stagedToken, setStagedToken] = useState<string | null>(null);
   const icalTokenCorrect = useMemo<boolean>(
     () => !!icalTokenQuery.data && icalTokenQuery.data.length !== 0,
     [icalTokenQuery.data],
   );
   const stageIcalTokenCorrect = useMemo<boolean>(
-    () => !!stageToken && stageToken.match(/^[0-9A-Z]{16}$/)?.length === 1,
-    [stageToken],
+    () => !!stagedToken && stagedToken.match(/^[0-9A-Z]{16}$/)?.length === 1,
+    [stagedToken],
   );
   const icalValidationQuery = useQuery(
     {
       queryKey: ['ical_token_validation'],
       queryFn: () =>
-        httpClient.mapi.validateIcal(stageToken || icalTokenQuery.data!),
+        httpClient.mapi.validateIcal(stagedToken || icalTokenQuery.data!),
       enabled: icalTokenCorrect || stageIcalTokenCorrect,
       retry: false,
       refetchOnWindowFocus: false,
@@ -70,7 +70,7 @@ const IcalTokenInput = ({
   useEffect(() => {
     if (!icalTokenPresent) return;
     if (icalValidationQuery.data) {
-      if (stageIcalTokenCorrect) void storage.set('ical_token', stageToken!);
+      if (stageIcalTokenCorrect) void storage.set('ical_token', stagedToken!);
     } else if (icalTokenQuery.data) {
       void storage.set('ical_token', '');
     }
@@ -115,7 +115,7 @@ const IcalTokenInput = ({
       value = words[words.length - 1];
     }
 
-    setStageToken(value);
+    setStagedToken(value);
     setTimeout(
       () =>
         void queryClient.invalidateQueries({
@@ -128,14 +128,14 @@ const IcalTokenInput = ({
 
   const tokenMasked = useMemo(() => {
     if (icalTokenPresent) {
-      const token = stageToken || icalTokenQuery.data!;
+      const token = stagedToken || icalTokenQuery.data!;
       return (
         token.substring(0, token.length / 2) +
         '*'.repeat(Math.ceil(token.length / 2.0))
       );
     }
     return '';
-  }, [icalTokenPresent, icalTokenQuery.data, stageToken]);
+  }, [icalTokenPresent, icalTokenQuery.data, stagedToken]);
 
   return (
     <div className={`flex flex-row ${className}`}>
