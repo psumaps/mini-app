@@ -30,9 +30,9 @@ const ScrollToTop = () => {
     <div>
       {visible && (
         <div
-          className={`fixed bottom-32 right-4 z-10 w-5 h-5 bg-white flex justify-center items-center p-4 rounded-lg bg-opacity-5 backdrop-blur-sm  ${
+          className={`fixed bottom-32 right-5 z-10 w-5 h-5 bg-white flex justify-center items-center p-4 rounded-lg bg-opacity-5 backdrop-blur-sm ${
             visible ? 'visible' : 'hidden'
-          } hover:pb-1`}
+          } active:scale-90`}
         >
           {/* eslint-disable-next-line react/button-has-type */}
           <button
