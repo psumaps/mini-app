@@ -68,12 +68,11 @@ const IcalTokenInput = ({
   }, [icalTokenPresent, icalValidationQuery.data]);
 
   useEffect(() => {
-    if (icalTokenPresent) {
-      if (icalValidationQuery.data) {
-        if (stageIcalTokenCorrect) void storage.set('ical_token', stageToken!);
-      } else if (icalTokenQuery.data) {
-        void storage.set('ical_token', '');
-      }
+    if (!icalTokenPresent) return;
+    if (icalValidationQuery.data) {
+      if (stageIcalTokenCorrect) void storage.set('ical_token', stageToken!);
+    } else if (icalTokenQuery.data) {
+      void storage.set('ical_token', '');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [icalValidationQuery.data]);
