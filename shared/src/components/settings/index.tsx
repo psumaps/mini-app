@@ -1,11 +1,12 @@
-import React from 'react';
-import IStorage from '../../models/storage';
+import React, { useContext } from 'react';
+import { StorageContext } from '../../models/storage';
 import Button from '../common/button';
 import AnimSwitch from './animSwitch';
 import ThemeSwitch from './themeSwitch';
 import IcalTokenInput from './IcalTokenInput';
 
-const Settings = ({ storage }: { storage: IStorage }) => {
+const Settings = () => {
+  const storage = useContext(StorageContext)!;
   return (
     <>
       <div className="flex flex-row px-4 justify-between items-center mt-3 c1">
