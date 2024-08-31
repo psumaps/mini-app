@@ -16,14 +16,14 @@ const Settings = ({ storage }: { storage: IStorage }) => {
         Включить анимации
         <AnimSwitch storage={storage} />
       </div>
+      <IcalTokenInput storage={storage} className="mt-4" />
       <Button
-        className="rounded-3xl bg-c_secondary dark:bg-cd_telegram dark:text-cd_main py-4 min-h-12 w-full mt-3 c3"
+        className="rounded-3xl bg-cd_telegram dark:bg-cd_telegram dark:text-cd_main py-4 min-h-12 w-full mt-4 c3"
         variant="contrast"
         onClick={() => window.open(import.meta.env.VITE_URL_TG_GROUP, '_blank')}
       >
         Группа в Telegram
       </Button>
-      <IcalTokenInput storage={storage} className="mt-3" />
       <div className="mt-auto w-full h-fit">
         <Button
           className="rounded-3xl h-12 w-full mt-3 c2"
