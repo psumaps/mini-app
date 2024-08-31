@@ -15,6 +15,7 @@ import {
   SearchPopUpRef,
 } from './popUpUtils';
 import { PopUpState } from './search/searchUtils';
+import useIcalToken from '../../../hooks/useIcalToken';
 
 const SearchPopUp = forwardRef(function SearchPopUp(
   {
@@ -49,6 +50,7 @@ const SearchPopUp = forwardRef(function SearchPopUp(
       if (searchInputRef.current) searchInputRef.current.search(query);
     },
   }));
+  const icalTokenQuery = useIcalToken();
 
   return (
     <Block
@@ -57,20 +59,26 @@ const SearchPopUp = forwardRef(function SearchPopUp(
         ${animEnabled && 'transition-all duration-500 ease-in-out'}
         ${state === 'opened' ? '' : 'rounded-t-3xl'}`}
     >
-      <PopUpHeader
-        state={state}
-        setState={setState}
-        inputRef={searchInputRef}
-        selectedPoi={selectedPoi}
-        setSelectedPoi={setSelectedPoi}
-      />
-      <PopUpBody
-        ref={searchInputRef}
-        state={state}
-        setState={setState}
-        selectedPoi={selectedPoi}
-        onSelect={onSelect}
-      />
+      {!icalTokenQuery.data ? (
+        <div className="text-center c1 text-xl">Авторизация не пройдена</div>
+      ) : (
+        <div>
+          <PopUpHeader
+            state={state}
+            setState={setState}
+            inputRef={searchInputRef}
+            selectedPoi={selectedPoi}
+            setSelectedPoi={setSelectedPoi}
+          />
+          <PopUpBody
+            ref={searchInputRef}
+            state={state}
+            setState={setState}
+            selectedPoi={selectedPoi}
+            onSelect={onSelect}
+          />
+        </div>
+      )}
     </Block>
   );
 });
