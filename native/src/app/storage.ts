@@ -3,7 +3,7 @@ import IStorage from '~/src/models/storage';
 import { default as ExpoStorage } from 'expo-storage';
 
 class Storage implements IStorage {
-  async isDarkPreffered(): Promise<boolean> {
+  async isDarkPreferred(): Promise<boolean> {
     return Appearance.getColorScheme() === 'dark';
   }
   async get(key: string): Promise<string | null> {

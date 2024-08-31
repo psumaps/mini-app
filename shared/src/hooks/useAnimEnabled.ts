@@ -11,6 +11,9 @@ const useAnimEnabled = () => {
     {
       queryKey: ['animation_enabled'],
       queryFn: async () => getStoredAnimEnabled(storage!),
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
     },
     queryClient,
   );
