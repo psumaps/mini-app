@@ -52,7 +52,7 @@ const showOnboarding = async () => {
       setValue(`${leftLaunches - 1}`);
     } else alreadyShow = false;
   }
-  alreadyShow = false;
+
   if (!alreadyShow) {
     void bridge
       .send('VKWebAppShowSlidesSheet', {
