@@ -51,6 +51,10 @@ const IcalTokenInput = ({
     queryClient,
   );
 
+  useEffect(() => {
+    if (location.hash.slice(1) === 'auth') setState('opened');
+  }, []);
+
   const icalTokenPresent = useMemo<boolean>(
     () =>
       icalValidationQuery.data !== undefined &&
