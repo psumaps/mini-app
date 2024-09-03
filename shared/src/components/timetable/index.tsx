@@ -105,6 +105,7 @@ const Timetable = () => {
       enabled: currentFeed === 'classes' && !!icalTokenQuery.data,
       retry: false,
       refetchOnWindowFocus: false,
+      staleTime: 10 * 60 * 1000,
     },
     queryClient,
   );
