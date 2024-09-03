@@ -26,7 +26,7 @@ import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
 import useIcalToken from '../../hooks/useIcalToken';
 import { StorageContext } from '../../models/storage';
-import ScrollToTop from './ScrollToTop';
+import ScrollToTop from './scrollToTop';
 import { node } from '../../utils/selector';
 import SettingsIcon from '../../assets/settings.svg?react';
 
