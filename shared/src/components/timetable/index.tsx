@@ -267,7 +267,10 @@ const Timetable = () => {
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {!icalTokenQuery.data ? (
-            <p>Авторизация не пройдена</p>
+            <>
+              <p>Авторизация не пройдена.</p>
+              <p>Введите токен в настройках ⚙️</p>
+            </>
           ) : // eslint-disable-next-line no-nested-ternary
           classesQuery.isPending ? (
             <p>Загрузка...</p>

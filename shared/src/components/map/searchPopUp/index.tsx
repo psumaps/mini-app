@@ -15,7 +15,6 @@ import {
   SearchPopUpRef,
 } from './popUpUtils';
 import { PopUpState } from './search/searchUtils';
-import useIcalToken from '../../../hooks/useIcalToken';
 
 const SearchPopUp = forwardRef(function SearchPopUp(
   {
@@ -50,7 +49,6 @@ const SearchPopUp = forwardRef(function SearchPopUp(
       if (searchInputRef.current) searchInputRef.current.search(query);
     },
   }));
-  const icalTokenQuery = useIcalToken();
 
   return (
     <Block
@@ -59,8 +57,10 @@ const SearchPopUp = forwardRef(function SearchPopUp(
         ${animEnabled && 'transition-all duration-500 ease-in-out'}
         ${state === 'opened' ? '' : 'rounded-t-3xl'}`}
     >
-      {!icalTokenQuery.data ? (
-        <div className="text-center c1 text-xl">Авторизация не пройдена</div>
+      {state === 'unauthorized' ? (
+        <div className="text-center c1 text-xl">
+          Авторизация не пройдена.&#10;&#13;Введите токен в настройках ⚙️
+        </div>
       ) : (
         <div>
           <PopUpHeader
