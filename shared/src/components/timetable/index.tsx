@@ -28,6 +28,7 @@ import useIcalToken from '../../hooks/useIcalToken';
 import { StorageContext } from '../../models/storage';
 import ScrollToTop from './ScrollToTop';
 import { node } from '../../utils/selector';
+import SettingsIcon from '../../assets/settings.svg?react';
 
 const EVENTS_LIMIT = 10;
 const CURRENT_FEED_KEY = 'current-feed';
@@ -269,7 +270,16 @@ const Timetable = () => {
           {!icalTokenQuery.data ? (
             <>
               <p>Авторизация не пройдена.</p>
-              <p>Введите токен в настройках ⚙️</p>
+              <p>
+                Введите токен в настройках&nbsp;
+                <button
+                  type="button"
+                  onClick={() => navigator?.navigate('/settings#auth')}
+                  aria-label="Настройки"
+                >
+                  <SettingsIcon className="fill-c_main dark:fill-cd_main size-6 pt-1" />
+                </button>
+              </p>
             </>
           ) : // eslint-disable-next-line no-nested-ternary
           classesQuery.isPending ? (
