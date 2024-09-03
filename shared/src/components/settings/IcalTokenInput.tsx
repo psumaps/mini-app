@@ -154,7 +154,7 @@ const IcalTokenInput = ({
               ? 'text-red-700'
               : authResult === 'valid'
                 ? 'text-green-700'
-                : ''
+                : 'text-c_main'
           }`}
         >
           Авторизация
