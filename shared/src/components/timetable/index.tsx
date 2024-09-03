@@ -26,10 +26,14 @@ import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
 import useIcalToken from '../../hooks/useIcalToken';
 import { StorageContext } from '../../models/storage';
+import { node } from '../../utils/selector';
 
 const EVENTS_LIMIT = 10;
 const CURRENT_FEED_KEY = 'current-feed';
 const DEFAULT_FEED = 'events';
+
+const CLASSES_FEED_ID = 'feed-classes';
+const EVENTS_FEED_ID = 'feed-events';
 
 const Timetable = () => {
   const navigator = useContext(NavigatorContext);
@@ -101,6 +105,7 @@ const Timetable = () => {
       enabled: currentFeed === 'classes' && !!icalTokenQuery.data,
       retry: false,
       refetchOnWindowFocus: false,
+      staleTime: 10 * 60 * 1000,
     },
     queryClient,
   );
@@ -142,6 +147,18 @@ const Timetable = () => {
     void queryClient.invalidateQueries({
       predicate: (query) => query.queryKey.includes(CURRENT_FEED_KEY),
     });
+    const feedDiv = node(
+      `#${feed === 'classes' ? CLASSES_FEED_ID : EVENTS_FEED_ID}`,
+    );
+    if (feedDiv) feedDiv.classList.remove('hidden');
+    if (feed === 'classes')
+      node('#layout')?.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      const oldFeedDiv = node(
+        `#${feed === 'classes' ? EVENTS_FEED_ID : CLASSES_FEED_ID}`,
+      );
+      if (oldFeedDiv) oldFeedDiv.classList.add('hidden');
+    }, 500);
   };
 
   return (
@@ -175,9 +192,10 @@ const Timetable = () => {
       />
       <div className="relative mt-3">
         <div
-          className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top
+          id={EVENTS_FEED_ID}
+          className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top will-change-auto
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
-            ${currentFeed === 'events' ? 'left-0 right-0 scale-y-100 opacity-100' : ' opacity-0 scale-y-0 mr-10 right-full -left-full'}`}
+            ${currentFeed === 'events' ? 'left-0 right-0' : 'mr-10 right-full -left-full'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {eventsQuery.isPending ? (
@@ -240,9 +258,10 @@ const Timetable = () => {
           )}
         </div>
         <div
-          className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top
+          id={CLASSES_FEED_ID}
+          className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top will-change-auto
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
-            ${currentFeed === 'classes' ? 'left-0 right-0 scale-y-100 opacity-100' : 'opacity-0 scale-y-0 ml-10 left-full -right-full'}`}
+            ${currentFeed === 'classes' ? 'left-0 right-0' : 'ml-10 left-full -right-full'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {!icalTokenQuery.data ? (
