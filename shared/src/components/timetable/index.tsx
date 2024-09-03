@@ -102,7 +102,7 @@ const Timetable = () => {
     {
       queryKey: ['classes'],
       queryFn: () => httpClient.ical.getTimetable(icalTokenQuery.data!),
-      enabled: currentFeed === 'classes' && !!icalTokenQuery.data,
+      enabled: !!icalTokenQuery.data,
       retry: false,
       refetchOnWindowFocus: false,
       staleTime: 10 * 60 * 1000,

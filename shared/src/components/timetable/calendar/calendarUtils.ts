@@ -1,4 +1,5 @@
-import { node } from '../../../utils/selector';
+import { Timetable } from '../../../network/models/psu-tools/timetable';
+import { node, nodes } from '../../../utils/selector';
 
 export const classWeekday = 'react-calendar__month-view__weekdays__weekday';
 export const classTile = 'react-calendar__tile';
@@ -169,7 +170,7 @@ export const calculateDiv = (id: string, tileClass: string) => {
     height: tileRect.height,
   };
 
-  const side = 1.1 * calculateSide(rect);
+  const side = 1 * calculateSide(rect);
   const center = calculateRectCenter(rect);
   div!.setAttribute(
     'style',
@@ -196,4 +197,70 @@ export const calculateMinifiedDiv = (id: string, weekdayClass: string) => {
     'style',
     `top: ${center.y}px; left: ${center.x}px; width: ${side * 0.9}px; height: 4.3rem;`,
   );
+};
+
+export const CLASS_DIV_ID = 'class-div';
+export const CLASS_DIV_CONTAINER_ID = 'class-div-container';
+
+const getClassTypeColorStyle = (cl: string) => {
+  switch (cl) {
+    case 'лек':
+      return 'lec-color';
+    case 'практ':
+      return 'pract-color';
+    default:
+      return 'unknown-class-type-color';
+  }
+};
+
+export const placeCalendarClassDivs = (
+  activeStartDate: Date,
+  classesData: Timetable.Day[],
+) => {
+  const curMonth = activeStartDate.getMonth();
+  const curYear = activeStartDate.getFullYear();
+  const curMonthString = `${(curMonth + 1).toString().padStart(2, '0')}.${curYear}`;
+
+  const classDiv = node(`#${CLASS_DIV_ID}`);
+  const classDivContainer = node(`#${CLASS_DIV_CONTAINER_ID}`);
+  let firstDayOfCurMonthIndex: number;
+
+  const tiles = nodes(`.react-calendar__month-view__days__day`);
+
+  for (let i = 0; i < tiles.length; i++) {
+    if (
+      tiles[i].classList.contains(
+        'react-calendar__month-view__days__day--neighboringMonth',
+      )
+    )
+      // eslint-disable-next-line no-continue
+      continue;
+
+    firstDayOfCurMonthIndex = i - 1;
+    break;
+  }
+
+  classesData.forEach((day) => {
+    if (!day.date.endsWith(curMonthString)) return;
+
+    const tile =
+      tiles[firstDayOfCurMonthIndex + parseInt(day.date.substring(0, 2))];
+
+    tile.classList.add('relative');
+    const containerCloned = classDivContainer?.cloneNode() as Element;
+    containerCloned.classList.add('flex');
+    containerCloned.classList.remove('hidden');
+
+    day.classes.forEach((cl) => {
+      const cloned = classDiv?.cloneNode() as Element;
+      cloned.classList.remove('hidden');
+      cloned.classList.add(getClassTypeColorStyle(cl.type));
+
+      containerCloned.appendChild(cloned);
+    });
+    tile.childNodes.forEach((child) => {
+      if (child.nodeName !== 'ABBR') tile.removeChild(child);
+    });
+    tile.appendChild(containerCloned);
+  });
 };
