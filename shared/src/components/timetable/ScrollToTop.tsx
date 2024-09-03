@@ -1,30 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import UpArrowIcon from '../../assets/up-arrow.svg?react';
+import { node } from '../../utils/selector';
 
 const ScrollToTop = () => {
   // State to manage the visibility of the "scroll to top" button
-  const [visible, setVisible] = useState(true); // todo: fix
+  const [visible, setVisible] = useState(false); // todo: fix
+  const layout = useCallback(() => node('#layout'), []);
 
   const scrollToTop = () => {
-    document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' });
+    layout()?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Add a scroll event listener to track when to show or hide the button
   useEffect(() => {
     const listener = () => {
-      // ?: scrollY always is 0
-      if (window.scrollY >= 200) {
-        setVisible(true);
-      } /* else {
-        setVisible(false);
-      } */
+      if ((layout()?.scrollTop ?? 0) >= 200) setVisible(true);
+      else setVisible(false);
     };
     window.addEventListener('scroll', listener, true);
 
     return () => {
       window.removeEventListener('scroll', listener, true);
     };
-  }, []);
+  }, [layout]);
 
   return (
     <div>
