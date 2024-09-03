@@ -264,7 +264,7 @@ const Timetable = () => {
           id={CLASSES_FEED_ID}
           className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top will-change-auto
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
-            ${currentFeed === 'classes' ? 'left-0 right-0' : 'ml-10 left-full -right-full'}`}
+            ${currentFeed === 'classes' ? 'left-0 right-0' : 'ml-10 left-full -right-full hidden'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {!icalTokenQuery.data ? (
