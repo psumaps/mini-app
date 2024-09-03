@@ -32,8 +32,8 @@ const ScrollToTop = () => {
             visible ? 'visible' : 'hidden'
           } active:scale-90`}
         >
-          {/* eslint-disable-next-line react/button-has-type */}
           <button
+            type="button"
             aria-label="Scroll to Top"
             onClick={scrollToTop}
             className="bg-opacity-30"
