@@ -165,7 +165,7 @@ const Timetable = () => {
 
   return (
     <>
-      <ScrollToTop />
+      {currentFeed === 'events' && <ScrollToTop />}
       <Calendar
         className="h-fit"
         onChange={(date) => date instanceof Date && handleDateChange(date)}
