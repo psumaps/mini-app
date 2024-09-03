@@ -30,8 +30,11 @@ import {
   Value,
   weekdaysEqual,
 } from './calendarUtils';
+import { Timetable } from '../../../network/models/psu-tools/timetable';
 
 const CALENDAR_MINIFIED_KEY = 'calendar-minified';
+const CLASS_DIV_ID = 'class-div';
+const CLASS_DIV_CONTAINER_ID = 'class-div-container';
 
 const calculateNowDivMinified = () =>
   calculateMinifiedDiv(divNowId, `${classWeekday}--now-minified`); // prettier-ignore
@@ -42,9 +45,11 @@ const calculateActiveDiv = () => calculateDiv(divActiveId, `${classTile}--active
 const CustomCalendar = ({
   className,
   onChange,
+  classesData,
 }: {
   className?: string;
   onChange?: (value: Value) => void;
+  classesData?: Timetable.Day[];
 }) => {
   const { data: animEnabled } = useAnimEnabled();
   const today = useMemo(() => new Date(), []);
@@ -124,6 +129,53 @@ const CustomCalendar = ({
     assignClasses();
     manageDivs();
   }, [value, isMinified, assignClasses, manageDivs]);
+
+  useEffect(() => {
+    if (!classesData) return;
+
+    const curMonth = activeStartDate.getMonth();
+    const curYear = activeStartDate.getFullYear();
+    const curMonthString = `${(curMonth + 1).toString().padStart(2, '0')}.${curYear}`;
+
+    const classDiv = node(`#${CLASS_DIV_ID}`);
+    const classDivContainer = node(`#${CLASS_DIV_CONTAINER_ID}`);
+    let firstDayOfCurMonthIndex: number;
+
+    const tiles = nodes(`.react-calendar__month-view__days__day`);
+
+    for (let i = 0; i < tiles.length; i++) {
+      if (
+        tiles[i].classList.contains(
+          'react-calendar__month-view__days__day--neighboringMonth',
+        )
+      )
+        // eslint-disable-next-line no-continue
+        continue;
+
+      firstDayOfCurMonthIndex = i - 1;
+      break;
+    }
+
+    classesData.forEach((day) => {
+      if (!day.date.endsWith(curMonthString)) return;
+
+      const tile =
+        tiles[firstDayOfCurMonthIndex + parseInt(day.date.substring(0, 2))];
+
+      tile.classList.add('relative');
+      const containerCloned = classDivContainer?.cloneNode() as Element;
+      containerCloned.classList.add('flex');
+      containerCloned.classList.remove('hidden');
+
+      day.classes.forEach(() => {
+        const cloned = classDiv?.cloneNode() as Element;
+        cloned.classList.remove('hidden');
+        containerCloned.appendChild(cloned);
+      });
+
+      tile.appendChild(containerCloned);
+    });
+  }, [classesData, value, isMinified, activeStartDate]);
 
   const tileClassName = ({ date }: { date: Date }) => {
     let tileStyle = `${animEnabled ? 'transition-all duration-300 ease-in-out ' : ' '}`;
@@ -208,6 +260,14 @@ const CustomCalendar = ({
 
   return (
     <div className={`${className}`}>
+      <div
+        id={CLASS_DIV_ID}
+        className="size-[0.25rem] rounded-sm bg-white hidden left-0"
+      />
+      <div
+        id={CLASS_DIV_CONTAINER_ID}
+        className="absolute bottom-0 size-fit flex-row gap-1 left-1/2 -translate-x-1/2 hidden"
+      />
       <Button
         type="button"
         onClick={handleMinify}

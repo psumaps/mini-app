@@ -166,6 +166,7 @@ const Timetable = () => {
       <Calendar
         className="h-fit"
         onChange={(date) => date instanceof Date && handleDateChange(date)}
+        classesData={classesQuery.data ?? undefined}
       />
       <div className="flex flex-row gap-4 mt-5">
         <Button
