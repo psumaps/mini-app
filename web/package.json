@@ -24,6 +24,7 @@
     "debounce": "^2.0.0",
     "geojson": "^0.5.0",
     "maplibre-gl": "^4.1.0",
+    "psumaps-frontend": "file:..",
     "psumaps-shared": "file:../shared",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",

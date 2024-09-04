@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import Calendar from 'react-calendar';
+import { useSwipeable } from 'react-swipeable';
 import CalendarIcon from '../../../assets/calendar.svg?react';
 import ResetIcon from '../../../assets/reset.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
@@ -27,6 +28,7 @@ import {
   divNowId,
   getWeek,
   minificationFrameTime,
+  sliceMonths,
   Value,
   weekdaysEqual,
 } from './calendarUtils';
@@ -206,8 +208,59 @@ const CustomCalendar = ({
     });
   };
 
+  const [stopScroll, setStopScroll] = useState(false);
+
+  const handlers = useSwipeable({
+    onSwipeStart: () => setStopScroll(true),
+    onSwiped: (eventData) => {
+      setStopScroll(false);
+      const months = value && sliceMonths(value as Date);
+      switch (eventData.dir) {
+        case 'Left':
+          if (value instanceof Date) {
+            const newMonth = value.getMonth() + 1;
+            if (
+              months?.some(
+                (v) =>
+                  v.year === value.getFullYear() + Math.floor(newMonth / 12) &&
+                  v.index === newMonth % 12,
+              )
+            )
+              handleSelect(newMonth % 12, value.getFullYear() + newMonth / 12);
+          }
+          break;
+        case 'Right':
+          if (value instanceof Date) {
+            const newMonth = value.getMonth() - 1;
+            if (
+              months?.some(
+                (v) =>
+                  v.year === value.getFullYear() + Math.floor(newMonth / 12) &&
+                  // +12 to handle year change
+                  v.index === (newMonth + 12) % 12,
+              )
+            )
+              handleSelect(
+                (newMonth + 12) % 12,
+                value.getFullYear() + newMonth / 12,
+              );
+          }
+          break;
+        case 'Down':
+          handleMinify();
+          break;
+        default:
+          break;
+      }
+    },
+  });
+
   return (
-    <div className={`${className}`}>
+    <div
+      {...handlers}
+      style={{ touchAction: stopScroll ? 'none' : 'auto' }}
+      className={`${className}`}
+    >
       <Button
         type="button"
         onClick={handleMinify}
