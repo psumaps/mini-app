@@ -47,6 +47,8 @@ const Timetable = () => {
   const [filtersActive, setFiltersActive] = useState<boolean>(false);
   const [dateFrom, setDateFrom] = useState<Date>(new Date());
   const [filters, setFilters] = useState<Filter[] | null>(null);
+  const [hideOldFeedTimeout, setHideOldFeedTimeout] =
+    useState<NodeJS.Timeout | null>(null);
 
   const currentFeedQuery = useQuery(
     {
@@ -59,7 +61,23 @@ const Timetable = () => {
     queryClient,
   );
 
-  const currentFeed = currentFeedQuery.data ?? DEFAULT_FEED;
+  const currentFeed = useMemo(
+    () => currentFeedQuery.data ?? DEFAULT_FEED,
+    [currentFeedQuery.data],
+  );
+
+  useEffect(() => {
+    if (hideOldFeedTimeout) clearTimeout(hideOldFeedTimeout);
+    setHideOldFeedTimeout(
+      setTimeout(() => {
+        const oldFeedDiv = node(
+          `#${currentFeed === 'classes' ? EVENTS_FEED_ID : CLASSES_FEED_ID}`,
+        );
+        if (oldFeedDiv) oldFeedDiv.classList.add('hidden');
+      }, 500),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentFeed]);
 
   const filtersQuery = useQuery(
     {
@@ -149,18 +167,13 @@ const Timetable = () => {
     void queryClient.invalidateQueries({
       predicate: (query) => query.queryKey.includes(CURRENT_FEED_KEY),
     });
+
     const feedDiv = node(
       `#${feed === 'classes' ? CLASSES_FEED_ID : EVENTS_FEED_ID}`,
     );
     if (feedDiv) feedDiv.classList.remove('hidden');
     if (feed === 'classes')
       node('#layout')?.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => {
-      const oldFeedDiv = node(
-        `#${feed === 'classes' ? EVENTS_FEED_ID : CLASSES_FEED_ID}`,
-      );
-      if (oldFeedDiv) oldFeedDiv.classList.add('hidden');
-    }, 500);
   };
 
   return (
@@ -264,7 +277,7 @@ const Timetable = () => {
           id={CLASSES_FEED_ID}
           className={`absolute top-0 flex flex-col gap-3 pb-3 origin-top will-change-auto
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
-            ${currentFeed === 'classes' ? 'left-0 right-0' : 'ml-10 left-full -right-full hidden'}`}
+            ${currentFeed === 'classes' ? 'left-0 right-0' : 'ml-10 left-full -right-full'}`}
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {!icalTokenQuery.data ? (
