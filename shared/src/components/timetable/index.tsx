@@ -47,8 +47,6 @@ const Timetable = () => {
   const [filtersActive, setFiltersActive] = useState<boolean>(false);
   const [dateFrom, setDateFrom] = useState<Date>(new Date());
   const [filters, setFilters] = useState<Filter[] | null>(null);
-  const [hideOldFeedTimeout, setHideOldFeedTimeout] =
-    useState<NodeJS.Timeout | null>(null);
 
   const currentFeedQuery = useQuery(
     {
@@ -67,16 +65,14 @@ const Timetable = () => {
   );
 
   useEffect(() => {
-    if (hideOldFeedTimeout) clearTimeout(hideOldFeedTimeout);
-    setHideOldFeedTimeout(
-      setTimeout(() => {
-        const oldFeedDiv = node(
-          `#${currentFeed === 'classes' ? EVENTS_FEED_ID : CLASSES_FEED_ID}`,
-        );
-        if (oldFeedDiv) oldFeedDiv.classList.add('hidden');
-      }, 500),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const hideOldFeedTimeout = setTimeout(() => {
+      const oldFeedDiv = node(
+        `#${currentFeed === 'classes' ? EVENTS_FEED_ID : CLASSES_FEED_ID}`,
+      );
+      if (oldFeedDiv) oldFeedDiv.classList.add('hidden');
+    }, 500);
+
+    return () => clearTimeout(hideOldFeedTimeout);
   }, [currentFeed]);
 
   const filtersQuery = useQuery(
