@@ -201,6 +201,8 @@ export const calculateMinifiedDiv = (id: string, weekdayClass: string) => {
 
 export const CLASS_DIV_ID = 'class-div';
 export const CLASS_DIV_CONTAINER_ID = 'class-div-container';
+const CURRENT_MONTH_TILES_SELECTOR =
+  '.react-calendar__month-view__days__day:not(.react-calendar__month-view__days__day--neighboringMonth)';
 
 const getClassTypeColorStyle = (cl: string) => {
   switch (cl) {
@@ -221,30 +223,18 @@ export const placeCalendarClassDivs = (
   const curYear = activeStartDate.getFullYear();
   const curMonthString = `${(curMonth + 1).toString().padStart(2, '0')}.${curYear}`;
 
+  const classDivsContainers = nodes(`#${CLASS_DIV_CONTAINER_ID}:not(.hidden)`);
+  classDivsContainers.forEach((div) => div.remove());
+
   const classDiv = node(`#${CLASS_DIV_ID}`);
   const classDivContainer = node(`#${CLASS_DIV_CONTAINER_ID}`);
-  let firstDayOfCurMonthIndex: number;
 
-  const tiles = nodes(`.react-calendar__month-view__days__day`);
-
-  for (let i = 0; i < tiles.length; i++) {
-    if (
-      tiles[i].classList.contains(
-        'react-calendar__month-view__days__day--neighboringMonth',
-      )
-    )
-      // eslint-disable-next-line no-continue
-      continue;
-
-    firstDayOfCurMonthIndex = i - 1;
-    break;
-  }
+  const tiles = nodes(CURRENT_MONTH_TILES_SELECTOR);
 
   classesData.forEach((day) => {
     if (!day.date.endsWith(curMonthString)) return;
 
-    const tile =
-      tiles[firstDayOfCurMonthIndex + parseInt(day.date.substring(0, 2))];
+    const tile = tiles[parseInt(day.date.substring(0, 2)) - 1];
 
     tile.classList.add('relative');
     const containerCloned = classDivContainer?.cloneNode() as Element;
@@ -257,9 +247,6 @@ export const placeCalendarClassDivs = (
       cloned.classList.add(getClassTypeColorStyle(cl.type));
 
       containerCloned.appendChild(cloned);
-    });
-    tile.childNodes.forEach((child) => {
-      if (child.nodeName !== 'ABBR') tile.removeChild(child);
     });
     tile.appendChild(containerCloned);
   });
