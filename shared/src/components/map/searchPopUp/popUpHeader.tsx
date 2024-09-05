@@ -8,6 +8,7 @@ import PoiInfo from './poiInfo';
 import { PopUpBodyRef } from './popUpUtils';
 import { PopUpState } from './search/searchUtils';
 import ShareButton from './sharePoiButton';
+import CrossIcon from '../../../assets/cross.svg?react';
 
 const PopUpHeader = ({
   state,
@@ -104,8 +105,7 @@ const PopUpHeader = ({
               className="absolute top-1/2 -translate-y-1/2 right-4 size-6 z-20"
               title="Очистить выбранную точку"
             >
-              <div className="w-full h-[1px] origin-center rotate-45 bg-c_secondary dark:bg-cd_secondary" />
-              <div className="w-full h-[1px] origin-center -rotate-45 bg-c_secondary dark:bg-cd_secondary" />
+              <CrossIcon className="stroke-0 h-6 w-6 fill-c_secondary" />
             </button>
           </div>
         </div>

@@ -51,6 +51,11 @@ const IcalTokenInput = ({
     queryClient,
   );
 
+  useEffect(() => {
+    if (location.hash.slice(1) === 'auth')
+      setTimeout(() => setState('opened'), 50);
+  }, []);
+
   const icalTokenPresent = useMemo<boolean>(
     () =>
       icalValidationQuery.data !== undefined &&
@@ -139,29 +144,27 @@ const IcalTokenInput = ({
 
   return (
     <div className={`flex flex-row ${className}`}>
-      <div className="relative rounded-3xl flex-[1_0_0] mr-2 h-12 bg-c_bg-block dark:bg-cd_bg-block">
-        <Button
-          className={`h-full w-full rounded-3xl c3 ${
-            animEnabled ? 'transition-all duration-200 ease-in-out' : ''
+      <Button
+        className={`rounded-3xl dark:bg-cd_textHeader h-12 w-full ${
+          animEnabled ? 'transition-all duration-200 ease-in-out' : ''
+        }`}
+        onClick={() => {
+          setState('opened');
+        }}
+      >
+        <p
+          className={`c3 ${
+            // eslint-disable-next-line no-nested-ternary
+            authResult === 'invalid'
+              ? 'text-red-700'
+              : authResult === 'valid'
+                ? 'text-green-700'
+                : 'text-c_main'
           }`}
-          onClick={() => {
-            setState('opened');
-          }}
         >
-          <p
-            className={`c3 ${
-              // eslint-disable-next-line no-nested-ternary
-              authResult === 'invalid'
-                ? 'text-red-700'
-                : authResult === 'valid'
-                  ? 'text-green-700'
-                  : ''
-            }`}
-          >
-            Авторизация
-          </p>
-        </Button>
-      </div>
+          Авторизация
+        </p>
+      </Button>
 
       {state === 'opened' && (
         <div

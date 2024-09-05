@@ -78,7 +78,8 @@ const MapPage = () => {
     lg: number;
     level: number;
   } | null>(null);
-  const [popupState, setPopupState] = React.useState<PopUpState>('closed');
+  const [popupState, setPopupState] =
+    React.useState<PopUpState>('unauthorized');
   const [selectedPoi, setSelectedPoi] = React.useState<Poi | null>(null);
   const [indoorLevel, setIndoorLevel] = React.useState(1);
   const routerLocation = useLocation();
@@ -86,9 +87,11 @@ const MapPage = () => {
   const icalTokenQuery = useIcalToken();
   const mapProps = React.useMemo<MapConfigProps>(() => {
     const config = mapConfig;
-    if (icalTokenQuery.data)
+    if (icalTokenQuery.data) {
       (config.mapStyle.sources.indoorequal as VectorSourceSpecification).tiles =
         [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}`];
+      setPopupState('closed');
+    }
     return config;
   }, [icalTokenQuery.data]);
 
