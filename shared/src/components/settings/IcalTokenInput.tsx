@@ -52,7 +52,8 @@ const IcalTokenInput = ({
   );
 
   useEffect(() => {
-    if (location.hash.slice(1) === 'auth') setState('opened');
+    if (location.hash.slice(1) === 'auth')
+      setTimeout(() => setState('opened'), 50);
   }, []);
 
   const icalTokenPresent = useMemo<boolean>(
