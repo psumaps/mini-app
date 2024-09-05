@@ -24,6 +24,9 @@ export const calculatePopUpHeight = (
   const popUp = document.getElementById(id);
   if (!popUp) return;
   switch (state) {
+    case 'unauthorized':
+      popUp.style.height = '5rem'; // h-14
+      break;
     case 'opened':
       popUp.style.height = '100%';
       break;

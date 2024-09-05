@@ -26,7 +26,9 @@ import { NavigatorContext } from '../../models/navigator';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
 import useIcalToken from '../../hooks/useIcalToken';
 import { StorageContext } from '../../models/storage';
+import ScrollToTop from './scrollToTop';
 import { node } from '../../utils/selector';
+import SettingsIcon from '../../assets/settings.svg?react';
 
 const EVENTS_LIMIT = 10;
 const CURRENT_FEED_KEY = 'current-feed';
@@ -57,7 +59,21 @@ const Timetable = () => {
     queryClient,
   );
 
-  const currentFeed = currentFeedQuery.data ?? DEFAULT_FEED;
+  const currentFeed = useMemo(
+    () => currentFeedQuery.data ?? DEFAULT_FEED,
+    [currentFeedQuery.data],
+  );
+
+  useEffect(() => {
+    const hideOldFeedTimeout = setTimeout(() => {
+      const oldFeedDiv = node(
+        `#${currentFeed === 'classes' ? EVENTS_FEED_ID : CLASSES_FEED_ID}`,
+      );
+      if (oldFeedDiv) oldFeedDiv.classList.add('hidden');
+    }, 500);
+
+    return () => clearTimeout(hideOldFeedTimeout);
+  }, [currentFeed]);
 
   const filtersQuery = useQuery(
     {
@@ -147,22 +163,18 @@ const Timetable = () => {
     void queryClient.invalidateQueries({
       predicate: (query) => query.queryKey.includes(CURRENT_FEED_KEY),
     });
+
     const feedDiv = node(
       `#${feed === 'classes' ? CLASSES_FEED_ID : EVENTS_FEED_ID}`,
     );
     if (feedDiv) feedDiv.classList.remove('hidden');
     if (feed === 'classes')
       node('#layout')?.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => {
-      const oldFeedDiv = node(
-        `#${feed === 'classes' ? EVENTS_FEED_ID : CLASSES_FEED_ID}`,
-      );
-      if (oldFeedDiv) oldFeedDiv.classList.add('hidden');
-    }, 500);
   };
 
   return (
     <>
+      {currentFeed === 'events' && <ScrollToTop />}
       <Calendar
         className="h-fit"
         onChange={(date) => date instanceof Date && handleDateChange(date)}
@@ -266,7 +278,19 @@ const Timetable = () => {
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {!icalTokenQuery.data ? (
-            <p>Авторизация не пройдена</p>
+            <>
+              <p>Авторизация не пройдена.</p>
+              <p>
+                Введите токен в настройках&nbsp;
+                <button
+                  type="button"
+                  onClick={() => navigator?.navigate('/settings#auth')}
+                  aria-label="Настройки"
+                >
+                  <SettingsIcon className="fill-c_main dark:fill-cd_main size-6 pt-1" />
+                </button>
+              </p>
+            </>
           ) : // eslint-disable-next-line no-nested-ternary
           classesQuery.isPending ? (
             <p>Загрузка...</p>
