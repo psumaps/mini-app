@@ -1,6 +1,6 @@
 import React from 'react';
-import Block from '../common/block';
-import Input from '../common/clearableInput';
+import Block from '../../common/block';
+import Input from '../../common/clearableInput';
 
 const EventSearch = ({
   className,

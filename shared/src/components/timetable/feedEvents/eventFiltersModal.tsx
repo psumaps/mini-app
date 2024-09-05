@@ -8,7 +8,7 @@ import Filter from '../../../network/models/psu-tools/eventFilter';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 import DragHandle from '../../common/dragHandle';
 
-interface ModalProps {
+interface EventFiltersModalProps {
   active: boolean;
   setActive: (active: boolean) => void;
   filters: Filter[] | null;
@@ -20,7 +20,7 @@ interface ModalProps {
   ) => void;
 }
 
-const Modal = (props: ModalProps) => {
+const EventFiltersModal = (props: EventFiltersModalProps) => {
   const { data: animEnabled } = useAnimEnabled();
   const { active, setActive, setFilters, filters, query } = props;
   const handleSwipe = (direction: 'left' | 'right' | 'up' | 'down') => {
@@ -82,4 +82,4 @@ const Modal = (props: ModalProps) => {
   );
 };
 
-export default Modal;
+export default EventFiltersModal;
