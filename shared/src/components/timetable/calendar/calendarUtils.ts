@@ -204,12 +204,14 @@ export const CLASS_DIV_CONTAINER_ID = 'class-div-container';
 const CURRENT_MONTH_TILES_SELECTOR =
   '.react-calendar__month-view__days__day:not(.react-calendar__month-view__days__day--neighboringMonth)';
 
-const getClassTypeColorStyle = (cl: string) => {
+export const getClassTypeColorStyle = (cl: string) => {
   switch (cl) {
     case 'лек':
       return 'lec-color';
     case 'практ':
       return 'pract-color';
+    case 'лаб':
+      return 'lab-color';
     default:
       return 'unknown-class-type-color';
   }

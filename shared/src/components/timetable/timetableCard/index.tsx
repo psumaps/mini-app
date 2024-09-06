@@ -50,9 +50,19 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
     .replace(textUrl ? textUrl[0] : '', '')
     .trim();
 
+  const classColor =
+    // eslint-disable-next-line no-nested-ternary
+    classData.type === 'лек'
+      ? 'outline-lec'
+      : // eslint-disable-next-line no-nested-ternary
+        classData.type === 'практ'
+        ? 'outline-prac'
+        : classData.type === 'лаб'
+          ? 'outline-lab'
+          : 'outline-unknown-class-type-color';
   return (
     <div
-      className={`${cardClassName} grid gap-2 grid-cols-[80%_20%] text-start py-7 pl-6 pr-8 justify-between items-start min-h-[120px]`}
+      className={`${cardClassName} grid gap-2 grid-cols-[80%_20%] text-start py-7 pl-6 pr-7 justify-between items-start min-h-[120px]`}
     >
       <div>
         <h3 className={`${cardClassNameText} line-clamp-2 overflow-hidden`}>
@@ -104,7 +114,9 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
       </div>
       <div>
         <h3 className={`${cardClassNameText} text-center`}>{classData.time}</h3>
-        <h3 className={`${cardClassNameText} text-center `}>
+        <h3
+          className={`${cardClassNameText} mt-1 line text-center rounded-2xl min-w-14 outline ${classColor}`}
+        >
           {classData.type}
         </h3>
       </div>

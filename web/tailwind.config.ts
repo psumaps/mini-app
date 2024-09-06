@@ -59,6 +59,10 @@ module.exports = {
         cd_border: '#383838',
         'cd_border-secondary': '#545454',
         cd_sub: '#CCCCCC',
+
+        lec: '#BDD359',
+        prac: '#B79CEE',
+        lab: '#7161F0',
       },
     },
   },
