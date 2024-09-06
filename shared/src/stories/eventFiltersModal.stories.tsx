@@ -1,9 +1,15 @@
 /// <reference types="vite-plugin-svgr/client" />
 
 import type { Meta } from '@storybook/react';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
-import Modal from '../components/timetable/eventFiltersModal';
+import Modal from '../components/timetable/feedEvents/eventFiltersModal';
 import Button from '../components/common/button';
 import FilterIcon from '../assets/filter.svg?react';
 import Filter from '../network/models/psu-tools/eventFilter';
@@ -16,7 +22,7 @@ const meta = {
   component: Modal,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: 'centered',
+    layout: 'top',
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
@@ -31,46 +37,27 @@ const mockFilters: Filter[] = [
   {
     id: 'event-type',
     name: 'Вид мероприятия',
-    values: [
-      { id: 'meeting', value: 'Собрание клуба', isChecked: false },
-      { id: 'concert', value: 'Концерт', isChecked: false },
-      { id: 'festival', value: 'Фестиваль', isChecked: false },
-      { id: 'lecture', value: 'Лекция', isChecked: false },
-      { id: 'event-type-other', value: 'Вид мероприятия', isChecked: false },
-      { id: 'exhibition', value: 'Выставка', isChecked: false },
-    ],
+    isChecked: false,
   },
   {
     id: 'audience',
     name: 'Для кого',
-    values: [
-      { id: 'students', value: 'Для студентов', isChecked: false },
-      { id: 'all', value: 'Для всех', isChecked: false },
-      { id: 'guests', value: 'Для гостей', isChecked: false },
-    ],
+    isChecked: false,
   },
   {
     id: 'time',
     name: 'Когда',
-    values: [
-      { id: 'morning', value: 'Утро', isChecked: false },
-      { id: 'day', value: 'День', isChecked: false },
-      { id: 'evening', value: 'Вечер', isChecked: false },
-    ],
+    isChecked: false,
   },
   {
     id: 'status',
     name: 'Статус',
-    values: [
-      { id: 'pending', value: 'Ожидание', isChecked: false },
-      { id: 'ongoing', value: 'В самом разгаре', isChecked: false },
-      { id: 'past', value: 'Прошедшее', isChecked: false },
-    ],
+    isChecked: false,
   },
 ];
 
 export const EventFiltersModal = () => {
-  const queryClient = new QueryClient();
+  const queryClient = useMemo(() => new QueryClient(), []);
   const [modalActive, setModalActive] = useState(false);
   const [filters, setFilters] = useState<Filter[] | null>(null);
 
@@ -87,15 +74,11 @@ export const EventFiltersModal = () => {
   }, [query.data]);
 
   const handleFilterChange = useCallback(
-    (
-      event: ChangeEvent<HTMLInputElement>,
-      filterId: string,
-      valueId: string,
-    ) => {
+    (event: ChangeEvent<HTMLInputElement>, filterId: string) => {
       setFilters((prevFilters) => {
-        const filterValue = prevFilters
-          ?.find((filter) => filter.id === filterId)
-          ?.values.find((value) => value.id === valueId);
+        const filterValue = prevFilters?.find(
+          (filter) => filter.id === filterId,
+        );
 
         if (filterValue) filterValue.isChecked = event.target.checked;
         return [...prevFilters!];
@@ -107,13 +90,9 @@ export const EventFiltersModal = () => {
   return (
     <div>
       <Button
-        className="h-10 w-10 rounded-forty"
+        className="h-10 w-10 rounded-forty mx-auto mt-20"
         variant={
-          filters?.some((filter) =>
-            filter.values.some((value) => value.isChecked),
-          )
-            ? 'accent'
-            : 'primary'
+          filters?.some((value) => value.isChecked) ? 'accent' : 'primary'
         }
         onClick={() => setModalActive(true)}
       >
@@ -133,7 +112,7 @@ export const EventFiltersModal = () => {
 EventFiltersModal.parameters = {
   mockData: [
     {
-      url: `${api.psuTools}/v2/filters`,
+      url: `${api.psuTools}/events-api/tags?pageSize=50&pageNumber=0`,
       method: 'GET',
       status: 200,
       response: mockFilters,

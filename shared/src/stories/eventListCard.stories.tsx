@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import event from '../components/timetable/eventListCard';
+import event from '../components/timetable/feedEvents/eventListCard';
 import { eventDefault, eventLongTitle, eventOrganizers } from './data/event';
 
 const meta: Meta<typeof event> = {
