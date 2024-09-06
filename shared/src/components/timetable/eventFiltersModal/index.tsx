@@ -1,8 +1,8 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
+import { useSwipeable } from 'react-swipeable';
 import Button from '../../common/button';
 import CheckableText from '../../common/checkableText';
-import SwipeGesture from '../../common/swipeGesture';
 import CrossIcon from '../../../assets/cross.svg?react';
 import Filter from '../../../network/models/psu-tools/eventFilter';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
@@ -23,14 +23,21 @@ interface ModalProps {
 const Modal = (props: ModalProps) => {
   const { data: animEnabled } = useAnimEnabled();
   const { active, setActive, setFilters, filters, query } = props;
-  const handleSwipe = (direction: 'left' | 'right' | 'up' | 'down') => {
-    switch (direction) {
-      case 'down':
-        setActive(false);
-        break;
-      default:
-    }
-  };
+
+  const [stopScroll, setStopScroll] = useState(false);
+
+  const handlers = useSwipeable({
+    onSwipeStart: () => setStopScroll(true),
+    onSwiped: (eventData) => {
+      setStopScroll(false);
+      switch (eventData.dir) {
+        case 'Down':
+          setActive(false);
+          break;
+        default:
+      }
+    },
+  });
   return (
     <div
       className={`mt-8 fixed inset-0 flex items-center justify-center z-30
@@ -45,12 +52,16 @@ const Modal = (props: ModalProps) => {
           ${animEnabled && 'transition-opacity duration-300 ease-in-out'}`}
       >
         <div className="flex pr-4 pl-4 mb-10  relative">
-          <SwipeGesture onSwipe={handleSwipe} id="popup-swipe">
+          <div
+            className="size-full"
+            {...handlers}
+            style={{ touchAction: stopScroll ? 'none' : 'auto' }}
+          >
             <DragHandle className="mb-4 w-[20%]" />
             <h2 className="mx-auto text-center c_textHeader dark:text-cd_main">
               Фильтры
             </h2>
-          </SwipeGesture>
+          </div>
           <Button
             onClick={() => setActive(false)}
             className="absolute top-1/4 -translate-y-1/2 right-2 p-2 bg-inherit"
