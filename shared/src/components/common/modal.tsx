@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSwipeable } from 'react-swipeable';
 import Block from './block';
 import DragHandle from './dragHandle';
@@ -16,17 +16,15 @@ const Modal = ({
   title: string;
 }) => {
   const { data: animEnabled } = useAnimEnabled();
-  const [stopScroll, setStopScroll] = useState(false);
 
   const handlers = useSwipeable({
-    onSwipeStart: () => setStopScroll(true),
     onSwiped: (eventData) => {
-      setStopScroll(false);
       if (eventData.dir === 'Down') onClose();
     },
+    trackMouse: true,
   });
   return (
-    <div {...handlers} style={{ touchAction: stopScroll ? 'none' : 'auto' }}>
+    <div {...handlers} style={{ touchAction: 'none' }}>
       <Block
         className={`fixed left-0 right-0 h-[92dvh] rounded-none rounded-t-3xl flex flex-col z-40 ${
           animEnabled ? 'transition-all duration-500 ease-in-out' : ''

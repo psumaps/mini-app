@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import SearchIcon from '../../../assets/search.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
@@ -46,12 +46,9 @@ const PopUpHeader = ({
     e.stopPropagation();
     setSelectedPoi(null);
   };
-  const [stopScroll, setStopScroll] = useState(false);
 
   const handlers = useSwipeable({
-    onSwipeStart: () => setStopScroll(true),
     onSwiped: (eventData) => {
-      setStopScroll(false);
       switch (eventData.dir) {
         case 'Up':
           if (!selectedPoi) setState('opened');
@@ -62,13 +59,14 @@ const PopUpHeader = ({
         default:
       }
     },
+    trackMouse: true,
     onTouchStartOrOnMouseDown: handleClosedClick,
   });
 
   return (
     <div
       {...handlers}
-      style={{ touchAction: stopScroll ? 'none' : 'auto' }}
+      style={{ touchAction: 'none' }}
       className={`absolute z-10
           ${state === 'opened' || state === 'middle' ? 'top-0 left-0 right-0 h-[15dvh]' : 'inset-0'}`}
     >
