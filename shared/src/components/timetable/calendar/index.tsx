@@ -214,37 +214,41 @@ const CustomCalendar = ({
     onSwipeStart: () => setStopScroll(true),
     onSwiped: (eventData) => {
       setStopScroll(false);
-      const months = value && sliceMonths(value as Date);
+      const months = activeStartDate && sliceMonths(activeStartDate);
+      let newMonth = 0;
       switch (eventData.dir) {
         case 'Left':
-          if (value instanceof Date) {
-            const newMonth = value.getMonth() + 1;
-            if (
-              months?.some(
-                (v) =>
-                  v.year === value.getFullYear() + Math.floor(newMonth / 12) &&
-                  v.index === newMonth % 12,
-              )
+          newMonth = activeStartDate.getMonth() + 1;
+          if (
+            months?.some(
+              (v) =>
+                v.year ===
+                  activeStartDate.getFullYear() + Math.floor(newMonth / 12) &&
+                v.index === newMonth % 12,
             )
-              handleSelect(newMonth % 12, value.getFullYear() + newMonth / 12);
-          }
+          )
+            handleSelect(
+              newMonth % 12,
+              activeStartDate.getFullYear() + newMonth / 12,
+            );
+
           break;
         case 'Right':
-          if (value instanceof Date) {
-            const newMonth = value.getMonth() - 1;
-            if (
-              months?.some(
-                (v) =>
-                  v.year === value.getFullYear() + Math.floor(newMonth / 12) &&
-                  // +12 to handle year change
-                  v.index === (newMonth + 12) % 12,
-              )
+          newMonth = activeStartDate.getMonth() - 1;
+          if (
+            months?.some(
+              (v) =>
+                v.year ===
+                  activeStartDate.getFullYear() + Math.floor(newMonth / 12) &&
+                // +12 to handle year change
+                v.index === (newMonth + 12) % 12,
             )
-              handleSelect(
-                (newMonth + 12) % 12,
-                value.getFullYear() + newMonth / 12,
-              );
-          }
+          )
+            handleSelect(
+              (newMonth + 12) % 12,
+              activeStartDate.getFullYear() + newMonth / 12,
+            );
+
           break;
         case 'Down':
           handleMinify();
