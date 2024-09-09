@@ -28,6 +28,7 @@ import {
   divNowId,
   getWeek,
   minificationFrameTime,
+  MonthInfo,
   sliceMonths,
   Value,
   weekdaysEqual,
@@ -209,46 +210,30 @@ const CustomCalendar = ({
   };
 
   const [stopScroll, setStopScroll] = useState(false);
-
+  const calcNewMonth = (newMonth: number, months: MonthInfo[]) => {
+    const monthIndex = (newMonth + 12) % 12;
+    const yearIndex = activeStartDate.getFullYear() + Math.floor(newMonth / 12);
+    if (
+      months?.some(
+        (v) =>
+          v.year === yearIndex &&
+          // +12 to handle year change
+          v.index === monthIndex,
+      )
+    )
+      handleSelect(monthIndex, yearIndex);
+  };
   const handlers = useSwipeable({
     onSwipeStart: () => setStopScroll(true),
     onSwiped: (eventData) => {
       setStopScroll(false);
       const months = activeStartDate && sliceMonths(activeStartDate);
-      let newMonth = 0;
       switch (eventData.dir) {
         case 'Left':
-          newMonth = activeStartDate.getMonth() + 1;
-          if (
-            months?.some(
-              (v) =>
-                v.year ===
-                  activeStartDate.getFullYear() + Math.floor(newMonth / 12) &&
-                v.index === newMonth % 12,
-            )
-          )
-            handleSelect(
-              newMonth % 12,
-              activeStartDate.getFullYear() + newMonth / 12,
-            );
-
+          calcNewMonth(activeStartDate.getMonth() + 1, months);
           break;
         case 'Right':
-          newMonth = activeStartDate.getMonth() - 1;
-          if (
-            months?.some(
-              (v) =>
-                v.year ===
-                  activeStartDate.getFullYear() + Math.floor(newMonth / 12) &&
-                // +12 to handle year change
-                v.index === (newMonth + 12) % 12,
-            )
-          )
-            handleSelect(
-              (newMonth + 12) % 12,
-              activeStartDate.getFullYear() + newMonth / 12,
-            );
-
+          calcNewMonth(activeStartDate.getMonth() - 1, months);
           break;
         case 'Down':
           handleMinify();
