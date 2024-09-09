@@ -191,48 +191,50 @@ const IcalTokenInput = ({
         onClose={() => setState('closed')}
         className={`origin-bottom z-50 bottom-[8dvh] h-[fit-content_!important] ${
           state === 'opened' ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
-        } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
+        } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''} `}
       >
-        {icalTokenCorrect && <p>Ваш токен: {tokenMasked}</p>}
-        <br />
-        <ClearableInput
-          placeholder="Ваш токен"
-          onSubmit={() => handleTokenSubmit()}
-          onBlur={() => handleTokenSubmit()}
-          onClear={() => {
-            inputRef.current!.value = '';
-          }}
-          ref={inputRef}
-          alwaysShowClear={false}
-        />
-        <br />
-        <p>
-          1. Перейдите на &nbsp;
-          <a
-            href="https://student.psu.ru/pls/stu_cus_et/stu.timetable"
-            target="_blank"
-            className="underline text-c_accent"
-            rel="noreferrer"
-          >
-            страницу расписания
-          </a>
-          &nbsp; в ЕТИС.
-        </p>
-        <p>
-          2. Нажмите кнопку &quot;Показать&quot; рядом с надписью
-          &quot;Синхронизация календаря с внешними сервисами&quot;, при наличии
-          нажмите кнопку &quot;Подписаться&quot;
-        </p>
-        <p>3. Скопируйте ссылку, затем вставьте её в поле выше.</p>
-        <br />
-        <h4>Статус авторизации</h4>
-        <div
-          className={`flex flex-row gap-4 items-center mt-2 ${isShaking ? 'animate-shake' : ''} no-scrollbar`}
-        >
-          <AuthResultIcon />
-          <p className="flex-[1_0_0]">
-            <AuthResultText />
+        <div className="overflow-hidden">
+          {icalTokenCorrect && <p>Ваш токен: {tokenMasked}</p>}
+          <br />
+          <ClearableInput
+            placeholder="Ваш токен"
+            onSubmit={() => handleTokenSubmit()}
+            onBlur={() => handleTokenSubmit()}
+            onClear={() => {
+              inputRef.current!.value = '';
+            }}
+            ref={inputRef}
+            alwaysShowClear={false}
+          />
+          <br />
+          <p>
+            1. Перейдите на &nbsp;
+            <a
+              href="https://student.psu.ru/pls/stu_cus_et/stu.timetable"
+              target="_blank"
+              className="underline text-c_accent"
+              rel="noreferrer"
+            >
+              страницу расписания
+            </a>
+            &nbsp; в ЕТИС.
           </p>
+          <p>
+            2. Нажмите кнопку &quot;Показать&quot; рядом с надписью
+            &quot;Синхронизация календаря с внешними сервисами&quot;, при
+            наличии нажмите кнопку &quot;Подписаться&quot;
+          </p>
+          <p>3. Скопируйте ссылку, затем вставьте её в поле выше.</p>
+          <br />
+          <h4>Статус авторизации</h4>
+          <div
+            className={`flex flex-row gap-4 items-center mt-2 ${isShaking ? 'animate-shake' : ''}`}
+          >
+            <AuthResultIcon />
+            <p className="flex-[1_0_0]">
+              <AuthResultText />
+            </p>
+          </div>
         </div>
       </Modal>
     </div>
