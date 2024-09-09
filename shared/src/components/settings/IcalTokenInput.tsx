@@ -31,22 +31,30 @@ const IcalTokenInput = ({
   const { data: animEnabled } = useAnimEnabled();
   const [state, setState] = React.useState<'opened' | 'closed'>('closed');
   const [stagedToken, setStagedToken] = useState<string | null>(null);
-  const icalTokenCorrect = useMemo<boolean>(
-    () => !!icalTokenQuery.data && icalTokenQuery.data.length !== 0,
-    [icalTokenQuery.data],
-  );
-  const stageIcalTokenCorrect = useMemo<boolean>(
-    () => !!stagedToken && stagedToken.match(/^[0-9A-Z]{16}$/)?.length === 1,
-    [stagedToken],
-  );
+  const [isShaking, setIsShaking] = useState(false);
+
+  const icalTokenCorrect = useMemo(() => {
+    const query = icalTokenQuery.data?.trim();
+    return !!query && query.match(/^[0-9A-Z]{16}$/)?.length === 1;
+  }, [icalTokenQuery.data]);
+
+  const icalStageTokenCorrect = (token: string | null) => {
+    const query = token?.trim();
+    return !!query && query.match(/^[0-9A-Z]{16}$/)?.length === 1;
+  };
+
   const icalValidationQuery = useQuery(
     {
       queryKey: ['ical_token_validation'],
       queryFn: () =>
-        httpClient.mapi.validateIcal(stagedToken || icalTokenQuery.data!),
-      enabled: icalTokenCorrect || stageIcalTokenCorrect,
+        httpClient.mapi.validateIcal(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+          stagedToken || icalTokenQuery.data?.trim()!,
+        ),
+      enabled: icalStageTokenCorrect(stagedToken) || icalTokenCorrect,
       retry: false,
       refetchOnWindowFocus: false,
+      staleTime: Infinity,
     },
     queryClient,
   );
@@ -56,31 +64,37 @@ const IcalTokenInput = ({
       setTimeout(() => setState('opened'), 50);
   }, []);
 
-  const icalTokenPresent = useMemo<boolean>(
-    () =>
-      icalValidationQuery.data !== undefined &&
-      (icalTokenCorrect || stageIcalTokenCorrect),
-    [icalTokenCorrect, icalValidationQuery.data, stageIcalTokenCorrect],
-  );
-
   const authResult = useMemo<
     'valid' | 'invalid' | 'missing' | 'server_error'
   >(() => {
-    if (!icalTokenPresent) return 'missing';
+    if (
+      !icalValidationQuery.isFetched ||
+      (stagedToken && !icalStageTokenCorrect(stagedToken))
+    )
+      return 'missing';
     if (icalValidationQuery.data === true) return 'valid';
     if (icalValidationQuery.data === false) return 'invalid';
     return 'server_error';
-  }, [icalTokenPresent, icalValidationQuery.data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stagedToken, icalValidationQuery.data, stagedToken]);
+
+  const handleShake = () => {
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 700);
+  };
 
   useEffect(() => {
-    if (!icalTokenPresent) return;
-    if (icalValidationQuery.data) {
-      if (stageIcalTokenCorrect) void storage.set('ical_token', stagedToken!);
-    } else if (icalTokenQuery.data) {
-      void storage.set('ical_token', '');
+    if (stagedToken) {
+      if (authResult === 'valid') {
+        void storage.set('ical_token', stagedToken);
+      } else if (authResult === 'invalid') {
+        void storage.set('ical_token', '');
+        handleShake();
+      }
     }
+    // зависимость от запроса, который иерархически сохраняет статус
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [icalValidationQuery.data]);
+  }, [icalValidationQuery]);
 
   const AuthResultIcon = useCallback(() => {
     switch (authResult) {
@@ -97,21 +111,18 @@ const IcalTokenInput = ({
     }
   }, [authResult]);
 
-  let authResultText: string;
-  switch (authResult) {
-    case 'valid':
-      authResultText = 'Авторизация успешна';
-      break;
-    case 'invalid':
-      authResultText = 'Токен не прошел проверку';
-      break;
-    case 'server_error':
-      authResultText = 'Сервер авторизации недоступен';
-      break;
-    default:
-      authResultText =
-        'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
-  }
+  const AuthResultText = useCallback(() => {
+    switch (authResult) {
+      case 'valid':
+        return 'Авторизация успешна';
+      case 'invalid':
+        return 'Токен не прошел проверку';
+      case 'server_error':
+        return 'Сервер авторизации недоступен';
+      default:
+        return 'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
+    }
+  }, [authResult]);
 
   const handleTokenSubmit = () => {
     let { value } = inputRef.current!;
@@ -119,20 +130,21 @@ const IcalTokenInput = ({
       const words = value.split('/');
       value = words[words.length - 1];
     }
+    if (authResult !== 'valid' && stagedToken === value?.trim()) handleShake();
 
-    setStagedToken(value);
-    setTimeout(
-      () =>
+    setStagedToken(value?.trim());
+    setTimeout(() => {
+      if (icalStageTokenCorrect(value.trim()))
         void queryClient.invalidateQueries({
           queryKey: ['ical_token_validation'],
-        }),
-      100,
-    );
+        });
+      else handleShake();
+    }, 150);
     inputRef.current!.value = value;
   };
 
   const tokenMasked = useMemo(() => {
-    if (icalTokenPresent) {
+    if (icalTokenCorrect || icalStageTokenCorrect(stagedToken)) {
       const token = stagedToken || icalTokenQuery.data!;
       return (
         token.substring(0, token.length / 2) +
@@ -140,7 +152,8 @@ const IcalTokenInput = ({
       );
     }
     return '';
-  }, [icalTokenPresent, icalTokenQuery.data, stagedToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stagedToken, icalTokenCorrect]);
 
   return (
     <div className={`flex flex-row ${className}`}>
@@ -178,44 +191,50 @@ const IcalTokenInput = ({
         onClose={() => setState('closed')}
         className={`origin-bottom z-50 bottom-[8dvh] h-[fit-content_!important] ${
           state === 'opened' ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
-        } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''}`}
+        } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''} `}
       >
-        {icalTokenPresent && <p>Ваш токен: {tokenMasked}</p>}
-        <br />
-        <ClearableInput
-          placeholder="Ваш токен"
-          onSubmit={() => handleTokenSubmit()}
-          onBlur={() => handleTokenSubmit()}
-          onClear={() => {
-            inputRef.current!.value = '';
-          }}
-          ref={inputRef}
-          alwaysShowClear={false}
-        />
-        <br />
-        <p>
-          1. Перейдите на &nbsp;
-          <a
-            href="https://student.psu.ru/pls/stu_cus_et/stu.timetable"
-            target="_blank"
-            className="underline text-c_accent"
-            rel="noreferrer"
+        <div className="overflow-hidden">
+          {icalTokenCorrect && <p>Ваш токен: {tokenMasked}</p>}
+          <br />
+          <ClearableInput
+            placeholder="Ваш токен"
+            onSubmit={() => handleTokenSubmit()}
+            onBlur={() => handleTokenSubmit()}
+            onClear={() => {
+              inputRef.current!.value = '';
+            }}
+            ref={inputRef}
+            alwaysShowClear={false}
+          />
+          <br />
+          <p>
+            1. Перейдите на &nbsp;
+            <a
+              href="https://student.psu.ru/pls/stu_cus_et/stu.timetable"
+              target="_blank"
+              className="underline text-c_accent"
+              rel="noreferrer"
+            >
+              страницу расписания
+            </a>
+            &nbsp; в ЕТИС.
+          </p>
+          <p>
+            2. Нажмите кнопку &quot;Показать&quot; рядом с надписью
+            &quot;Синхронизация календаря с внешними сервисами&quot;, при
+            наличии нажмите кнопку &quot;Подписаться&quot;
+          </p>
+          <p>3. Скопируйте ссылку, затем вставьте её в поле выше.</p>
+          <br />
+          <h4>Статус авторизации</h4>
+          <div
+            className={`flex flex-row gap-4 items-center mt-2 ${isShaking ? 'animate-shake' : ''}`}
           >
-            страницу расписания
-          </a>
-          &nbsp; в ЕТИС.
-        </p>
-        <p>
-          2. Нажмите кнопку &quot;Показать&quot; рядом с надписью
-          &quot;Синхронизация календаря с внешними сервисами&quot;, при наличии
-          нажмите кнопку &quot;Подписаться&quot;
-        </p>
-        <p>3. Скопируйте ссылку, затем вставьте её в поле выше.</p>
-        <br />
-        <h4>Статус авторизации</h4>
-        <div className="flex flex-row gap-4 items-center mt-2">
-          <AuthResultIcon />
-          <p className="flex-[1_0_0]">{authResultText}</p>
+            <AuthResultIcon />
+            <p className="flex-[1_0_0]">
+              <AuthResultText />
+            </p>
+          </div>
         </div>
       </Modal>
     </div>

@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import Calendar from 'react-calendar';
+import { useSwipeable } from 'react-swipeable';
 import CalendarIcon from '../../../assets/calendar.svg?react';
 import ResetIcon from '../../../assets/reset.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
@@ -27,6 +28,8 @@ import {
   divNowId,
   getWeek,
   minificationFrameTime,
+  MonthInfo,
+  sliceMonths,
   Value,
   weekdaysEqual,
 } from './calendarUtils';
@@ -206,8 +209,47 @@ const CustomCalendar = ({
     });
   };
 
+  const [stopScroll, setStopScroll] = useState(false);
+  const calcNewMonth = (newMonth: number, months: MonthInfo[]) => {
+    const monthIndex = (newMonth + 12) % 12;
+    const yearIndex = activeStartDate.getFullYear() + Math.floor(newMonth / 12);
+    if (
+      months?.some(
+        (v) =>
+          v.year === yearIndex &&
+          // +12 to handle year change
+          v.index === monthIndex,
+      )
+    )
+      handleSelect(monthIndex, yearIndex);
+  };
+  const handlers = useSwipeable({
+    onSwipeStart: () => setStopScroll(true),
+    onSwiped: (eventData) => {
+      setStopScroll(false);
+      const months = activeStartDate && sliceMonths(activeStartDate);
+      switch (eventData.dir) {
+        case 'Left':
+          calcNewMonth(activeStartDate.getMonth() + 1, months);
+          break;
+        case 'Right':
+          calcNewMonth(activeStartDate.getMonth() - 1, months);
+          break;
+        case 'Down':
+          handleMinify();
+          break;
+        default:
+          break;
+      }
+    },
+  });
+
   return (
-    <div className={`${className}`}>
+    <div
+      {...handlers}
+      style={{ touchAction: stopScroll ? 'none' : 'auto' }}
+      className={`${className}`}
+    >
       <Button
         type="button"
         onClick={handleMinify}
