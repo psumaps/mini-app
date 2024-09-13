@@ -1,17 +1,17 @@
 import { useContext, useEffect, useState } from 'react';
 import { StorageContext, StorageType } from '../models/storage';
 
-const useVKBridge = () => {
+const useIsVkBridge = () => {
   const storage = useContext(StorageContext);
-  const [isVKBridge, setIsVKBridge] = useState(false);
+  const [isVkBridge, setIsVkBridge] = useState(false);
 
   useEffect(() => {
     void storage
       ?.getStorageType()
-      .then((s) => setIsVKBridge(s === StorageType.vkbridge));
+      .then((s) => setIsVkBridge(s === StorageType.vkbridge));
   }, [storage]);
 
-  return isVKBridge;
+  return isVkBridge;
 };
 
-export default useVKBridge;
+export default useIsVkBridge;
