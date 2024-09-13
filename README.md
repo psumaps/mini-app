@@ -1,21 +1,21 @@
 <p align="center">
-  <a href="https://psumaps.tilda.ws/">
+  <a href="https://psu-maps.tilda.ws/">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="shared/assets/icon.svg">
-      <img src="shared/assets/icon.svg" alt="PSUMaps" width="120" />
+      <source media="(prefers-color-scheme: dark)" srcset="shared/src/assets/icon.svg">
+      <img src="shared/src/assets/icon.svg" alt="PSUMaps" width="120" />
     </picture>
   </a>
 </p>
 <p align="center">Репозиторий содержит код интерфейса приложения «PSUMaps – интерактивный университет в кармане»</p>
 <br/>
 <p align="center">
-  <a href="https://github.com/psumaps/mini-app/blob/main/LICENSE">
+  <a href="https://github.com/psumaps/mini-app/blob/main/LICENSE.txt">
     <img src="https://img.shields.io/github/license/psumaps/mini-app.svg" alt="License" />
   </a>
   <a href="https://t.me/psumaps">
     <img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white&longCache=true&style=flat" />
   </a>
-  <a href="https://github.com/PSUMaps/mini-app/graphs/contributors">
+  <a href="https://github.com/psumaps/mini-app/graphs/contributors">
     <img src="https://img.shields.io/github/all-contributors/psumaps/mini-app" alt="Contributors"/>
   </a>
 </p>
@@ -26,8 +26,8 @@
 <p align="center">
     <a href="https://vk.com/molcentre_psu">
         <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="shared/assets/ypc-icon.svg">
-          <img src="shared/assets/ypc-icon.svg" alt="Центр молодёжной политики ПГНИУ" width="120" />
+          <source media="(prefers-color-scheme: dark)" srcset="shared/src/assets/ypc-icon.svg">
+          <img src="shared/src/assets/ypc-icon.svg" alt="Центр молодёжной политики ПГНИУ" width="120" />
         </picture>
     </a>
 </p>
@@ -82,7 +82,7 @@
 - `npm run preview`
 - `npm run build`: сборка
 
-## Native
+## Native (n/a)
 
 Запускать из native/
 - `npm start`
