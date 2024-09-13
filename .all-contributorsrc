@@ -1,4 +1,22 @@
 {
   "projectName": "mini-app",
-  "projectOwner": "psumaps"
+  "projectOwner": "psumaps",
+  "files": [
+    "README.md"
+  ],
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "Toderry",
+      "name": "Toderry",
+      "avatar_url": "https://avatars.githubusercontent.com/u/106995468?v=4",
+      "profile": "https://github.com/Toderry",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    }
+  ]
 }
