@@ -190,6 +190,9 @@ Pull Request (запрос на слияние) должен быть назва
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Toderry"><img src="https://avatars.githubusercontent.com/u/106995468?v=4?s=100" width="100px;" alt="Toderry"/><br /><sub><b>Toderry</b></sub></a><br /><a href="#code-Toderry" title="Code">💻</a> <a href="#ideas-Toderry" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/li3pm"><img src="https://avatars.githubusercontent.com/u/118972242?v=4?s=100" width="100px;" alt="li3pm"/><br /><sub><b>li3pm</b></sub></a><br /><a href="#code-li3pm" title="Code">💻</a> <a href="#ideas-li3pm" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
   </tbody>
 </table>
 
