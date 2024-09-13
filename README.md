@@ -179,6 +179,13 @@ Pull Request (запрос на слияние) должен быть назва
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/esperor"><img src="https://avatars.githubusercontent.com/u/49198951?v=4?s=100" width="100px;" alt="esperor"/><br /><sub><b>esperor</b></sub></a><br /><a href="#projectManagement-esperor" title="Project Management">📆</a> <a href="#code-esperor" title="Code">💻</a> <a href="#platform-esperor" title="Packaging/porting to new platform">📦</a> <a href="#ideas-esperor" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
