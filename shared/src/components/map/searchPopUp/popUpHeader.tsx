@@ -9,7 +9,7 @@ import { PopUpBodyRef } from './popUpUtils';
 import { PopUpState } from './search/searchUtils';
 import ShareButton from './sharePoiButton';
 import CrossIcon from '../../../assets/cross.svg?react';
-import useVKBridge from '../../../hooks/useIsVKBridge';
+import useIsVkBridge from '../../../hooks/useIsVKBridge';
 
 const PopUpHeader = ({
   state,
@@ -28,7 +28,7 @@ const PopUpHeader = ({
   const [selectedPoiInner, setSelectedPoiInner] = React.useState<Poi | null>(
     null,
   );
-  const isVKBridge = useVKBridge();
+  const isVKBridge = useIsVkBridge();
 
   useEffect(() => {
     if (selectedPoi !== null) setSelectedPoiInner(selectedPoi);

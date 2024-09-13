@@ -10,7 +10,7 @@ import ViewMapCard from './viewMapCard';
 import RightArrowIcon from '../../../assets/right-arrow.svg?react';
 import Button from '../../common/button';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
-import useVKBridge from '../../../hooks/useIsVKBridge';
+import useIsVkBridge from '../../../hooks/useIsVKBridge';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const options: Intl.DateTimeFormatOptions = {
@@ -27,7 +27,7 @@ const EventCard = ({ event }: { event: Event }) => {
     return { eventDay: day, eventDate: date };
   }, [event.startDatetime]);
   const [isOpen, setIsOpen] = useState(false);
-  const isVKBridge = useVKBridge();
+  const isVKBridge = useIsVkBridge();
 
   const endDate = event.endDatetime ? new Date(event.endDatetime) : null;
 
