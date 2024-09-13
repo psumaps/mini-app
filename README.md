@@ -179,6 +179,13 @@ Pull Request (запрос на слияние) должен быть назва
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/li3pm"><img src="https://avatars.githubusercontent.com/u/118972242?v=4?s=100" width="100px;" alt="li3pm"/><br /><sub><b>li3pm</b></sub></a><br /><a href="#code-li3pm" title="Code">💻</a> <a href="#ideas-li3pm" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
