@@ -1,6 +1,6 @@
 {
   "name": "psumaps-shared",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Shared components for psumaps-frontend",
   "scripts": {
     "storybook": "storybook dev -p 6006",
@@ -21,6 +21,7 @@
     "axios": "^1.7.2",
     "color-thief-react": "^2.1.0",
     "node-ical": "^0.18.0",
+    "psumaps-frontend": "file:..",
     "react-calendar": "^5.0.0",
     "react-swipeable": "^7.0.1",
     "setimmediatenew": "^1.1.0",
