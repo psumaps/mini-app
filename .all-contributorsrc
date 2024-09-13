@@ -1,9 +1,7 @@
 {
   "projectName": "mini-app",
   "projectOwner": "psumaps",
-  "files": [
-    "README.md"
-  ],
+  "files": ["README.md"],
   "commitType": "docs",
   "commitConvention": "angular",
   "contributorsPerLine": 7,
@@ -13,12 +11,7 @@
       "name": "esperor",
       "avatar_url": "https://avatars.githubusercontent.com/u/49198951?v=4",
       "profile": "https://github.com/esperor",
-      "contributions": [
-        "projectManagement",
-        "code",
-        "platform",
-        "ideas"
-      ]
+      "contributions": ["projectManagement", "code", "platform", "ideas"]
     }
   ]
 }
