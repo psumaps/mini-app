@@ -9,7 +9,6 @@ import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
 import {
   calculateControlsMargin,
   handleLocationHash,
-  handleRedirect,
   SearchPopUpRef,
 } from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
 import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
@@ -26,12 +25,9 @@ import Map, {
   useControl,
 } from 'react-map-gl/maplibre';
 import { useLocation } from 'react-router-dom';
-import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
-import QrScanner from '~/mapEngine/qrScanner';
-import NavigationBar from '~/widgets/navigationBar';
 
 const popUpId = 'search-pop-up';
 
@@ -47,29 +43,8 @@ const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
   return null;
 });
 
-const QrControl = ({
-  handleSelect,
-  handleSearch,
-  icalToken,
-}: {
-  handleSelect: (poi: Poi) => void;
-  handleSearch: (query: string) => void;
-  icalToken: string | null | undefined;
-}) => {
-  useControl(
-    () =>
-      new QrScanner(
-        (code) =>
-          void handleRedirect(code, handleSelect, handleSearch, icalToken),
-      ),
-    { position: 'bottom-right' },
-  );
-  return null;
-};
-
 const MapPage = () => {
   const { data: animEnabled } = useAnimEnabled();
-  const isKeyboardOpen = useDetectKeyboardOpen();
   const mapRef = React.useRef<MapRef | null>(null);
   const indoorControlRef = React.useRef<IndoorEqual | null>(null);
   const [viewState, setViewState] = React.useState(initialView);
@@ -177,14 +152,12 @@ const MapPage = () => {
   };
 
   return (
-    <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
+    <>
       {/* eslint-disable-next-line no-nested-ternary */}
       {icalTokenQuery.isLoading ? (
-        <div className="relative flex-[0_0_92%]">Загрузка...</div>
+        <div className="relative">Загрузка...</div>
       ) : (
-        <div
-          className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
-        >
+        <>
           <Map
             key={icalTokenQuery.data ? 'public' : 'private'}
             ref={mapRef}
@@ -209,11 +182,6 @@ const MapPage = () => {
               position="top-right"
               compact
               customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
-            />
-            <QrControl
-              handleSelect={handleSelect}
-              handleSearch={searchByName}
-              icalToken={icalTokenQuery.data}
             />
             <NavigationControl position="bottom-right" />
             <IndoorControl ref={indoorControlRef} />
@@ -243,13 +211,9 @@ const MapPage = () => {
             selectedPoi={selectedPoi}
             setSelectedPoi={setSelectedPoi}
           />
-        </div>
+        </>
       )}
-      <NavigationBar
-        className={`${animEnabled && 'transition-all duration-200 ease-in-out'} origin-bottom flex-[0_0_8%] 
-            ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}
-      />
-    </div>
+    </>
   );
 };
 
