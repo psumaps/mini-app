@@ -58,7 +58,7 @@ const Timetable = () => {
     {
       queryKey: ['classes'],
       queryFn: () => httpClient.ical.getTimetable(icalTokenQuery.data!),
-      enabled: currentFeed === 'classes' && !!icalTokenQuery.data,
+      enabled: !!icalTokenQuery.data,
       retry: false,
       refetchOnWindowFocus: false,
       staleTime: 10 * 60 * 1000,
@@ -90,6 +90,7 @@ const Timetable = () => {
       <Calendar
         className="h-fit"
         onChange={(date) => date instanceof Date && handleDateChange(date)}
+        classesData={classesQuery.data ?? undefined}
       />
       <div className="flex flex-row gap-4 mt-5">
         <Button
