@@ -10,6 +10,7 @@ import ViewMapCard from './viewMapCard';
 import RightArrowIcon from '../../../assets/right-arrow.svg?react';
 import Button from '../../common/button';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
+import useVKBridge from '../../../hooks/useIsVKBridge';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const options: Intl.DateTimeFormatOptions = {
@@ -26,6 +27,7 @@ const EventCard = ({ event }: { event: Event }) => {
     return { eventDay: day, eventDate: date };
   }, [event.startDatetime]);
   const [isOpen, setIsOpen] = useState(false);
+  const isVKBridge = useVKBridge();
 
   const endDate = event.endDatetime ? new Date(event.endDatetime) : null;
 
@@ -42,7 +44,7 @@ const EventCard = ({ event }: { event: Event }) => {
 
           <div className="absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2">
             <HeartButton active={false} />
-            <ShareButton id={event.id} />
+            {isVKBridge && <ShareButton id={event.id} />}
           </div>
         </div>
 
