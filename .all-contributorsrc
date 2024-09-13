@@ -1,4 +1,57 @@
 {
   "projectName": "mini-app",
-  "projectOwner": "psumaps"
+  "projectOwner": "psumaps",
+  "files": [
+    "README.md"
+  ],
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "esperor",
+      "name": "esperor",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49198951?v=4",
+      "profile": "https://github.com/esperor",
+      "contributions": [
+        "projectManagement",
+        "code",
+        "platform",
+        "ideas"
+      ]
+    },
+    {
+      "login": "ijo42",
+      "name": "Aleksandr",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53531892?v=4",
+      "profile": "https://ijo42.ru",
+      "contributions": [
+        "projectManagement",
+        "code",
+        "ideas",
+        "infra",
+        "data"
+      ]
+    },
+    {
+      "login": "Toderry",
+      "name": "Toderry",
+      "avatar_url": "https://avatars.githubusercontent.com/u/106995468?v=4",
+      "profile": "https://github.com/Toderry",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "li3pm",
+      "name": "li3pm",
+      "avatar_url": "https://avatars.githubusercontent.com/u/118972242?v=4",
+      "profile": "https://github.com/li3pm",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    }
+  ]
 }
