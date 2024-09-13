@@ -1,4 +1,25 @@
 {
   "projectName": "mini-app",
-  "projectOwner": "psumaps"
+  "projectOwner": "psumaps",
+  "files": [
+    "README.md"
+  ],
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "ijo42",
+      "name": "Aleksandr",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53531892?v=4",
+      "profile": "https://ijo42.ru",
+      "contributions": [
+        "projectManagement",
+        "code",
+        "ideas",
+        "infra",
+        "data"
+      ]
+    }
+  ]
 }
