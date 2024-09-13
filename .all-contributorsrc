@@ -21,17 +21,27 @@
       ]
     },
     {
-          "login": "ijo42",
-          "name": "Aleksandr",
-          "avatar_url": "https://avatars.githubusercontent.com/u/53531892?v=4",
-          "profile": "https://ijo42.ru",
-          "contributions": [
-            "projectManagement",
-            "code",
-            "ideas",
-            "infra",
-            "data"
-          ]
-        }
+      "login": "ijo42",
+      "name": "Aleksandr",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53531892?v=4",
+      "profile": "https://ijo42.ru",
+      "contributions": [
+        "projectManagement",
+        "code",
+        "ideas",
+        "infra",
+        "data"
+      ]
+    },
+    {
+      "login": "Toderry",
+      "name": "Toderry",
+      "avatar_url": "https://avatars.githubusercontent.com/u/106995468?v=4",
+      "profile": "https://github.com/Toderry",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    }
   ]
 }
