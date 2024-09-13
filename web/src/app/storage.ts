@@ -1,4 +1,4 @@
-import IStorage from 'psumaps-shared/src/models/storage';
+import IStorage, { StorageType } from 'psumaps-shared/src/models/storage';
 import bridge from '@vkontakte/vk-bridge';
 
 /* eslint-disable @typescript-eslint/require-await */
@@ -11,6 +11,11 @@ class Storage implements IStorage {
       window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches
     );
+  }
+
+  async getStorageType() {
+    const vkBridgeStatus = localStorage.getItem(VK_BRIDGE_STATUS_KEY);
+    return vkBridgeStatus === 'true' ? StorageType.vkbridge : StorageType.local;
   }
 
   async get(key: string): Promise<string | null> {
