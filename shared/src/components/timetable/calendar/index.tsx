@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import Calendar from 'react-calendar';
+import { useSwipeable } from 'react-swipeable';
 import CalendarIcon from '../../../assets/calendar.svg?react';
 import ResetIcon from '../../../assets/reset.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
@@ -21,15 +22,21 @@ import {
   calculateDiv,
   calculateMinifiedDiv,
   calendarId,
+  CLASS_DIV_CONTAINER_ID,
+  CLASS_DIV_ID,
   classTile,
   classWeekday,
   divActiveId,
   divNowId,
   getWeek,
   minificationFrameTime,
+  placeCalendarClassDivs,
+  MonthInfo,
+  sliceMonths,
   Value,
   weekdaysEqual,
 } from './calendarUtils';
+import { Timetable } from '../../../network/models/psu-tools/timetable';
 
 const CALENDAR_MINIFIED_KEY = 'calendar-minified';
 
@@ -42,9 +49,11 @@ const calculateActiveDiv = () => calculateDiv(divActiveId, `${classTile}--active
 const CustomCalendar = ({
   className,
   onChange,
+  classesData,
 }: {
   className?: string;
   onChange?: (value: Value) => void;
+  classesData?: Timetable.Day[];
 }) => {
   const { data: animEnabled } = useAnimEnabled();
   const today = useMemo(() => new Date(), []);
@@ -124,6 +133,12 @@ const CustomCalendar = ({
     assignClasses();
     manageDivs();
   }, [value, isMinified, assignClasses, manageDivs]);
+
+  useEffect(() => {
+    if (!classesData) return;
+
+    placeCalendarClassDivs(activeStartDate, classesData);
+  }, [classesData, value, isMinified, activeStartDate]);
 
   const tileClassName = ({ date }: { date: Date }) => {
     let tileStyle = `${animEnabled ? 'transition-all duration-300 ease-in-out ' : ' '}`;
@@ -206,8 +221,55 @@ const CustomCalendar = ({
     });
   };
 
+  const [stopScroll, setStopScroll] = useState(false);
+  const calcNewMonth = (newMonth: number, months: MonthInfo[]) => {
+    const monthIndex = (newMonth + 12) % 12;
+    const yearIndex = activeStartDate.getFullYear() + Math.floor(newMonth / 12);
+    if (
+      months?.some(
+        (v) =>
+          v.year === yearIndex &&
+          // +12 to handle year change
+          v.index === monthIndex,
+      )
+    )
+      handleSelect(monthIndex, yearIndex);
+  };
+  const handlers = useSwipeable({
+    onSwipeStart: () => setStopScroll(true),
+    onSwiped: (eventData) => {
+      setStopScroll(false);
+      const months = activeStartDate && sliceMonths(activeStartDate);
+      switch (eventData.dir) {
+        case 'Left':
+          calcNewMonth(activeStartDate.getMonth() + 1, months);
+          break;
+        case 'Right':
+          calcNewMonth(activeStartDate.getMonth() - 1, months);
+          break;
+        case 'Down':
+          handleMinify();
+          break;
+        default:
+          break;
+      }
+    },
+  });
+
   return (
-    <div className={`${className}`}>
+    <div
+      {...handlers}
+      style={{ touchAction: stopScroll ? 'none' : 'auto' }}
+      className={`${className}`}
+    >
+      <div
+        id={CLASS_DIV_ID}
+        className="size-[0.25rem] rounded-sm hidden left-0 border-0"
+      />
+      <div
+        id={CLASS_DIV_CONTAINER_ID}
+        className="absolute bottom-1 size-fit flex-row gap-[0.15rem] left-1/2 -translate-x-1/2 hidden"
+      />
       <Button
         type="button"
         onClick={handleMinify}

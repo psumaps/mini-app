@@ -68,8 +68,24 @@
   @apply justify-evenly;
 }
 
+.lec-color {
+  @apply bg-lec dark:bg-lec;
+}
+
+.pract-color {
+  @apply bg-prac dark:bg-prac;
+}
+
+.lab-color {
+  @apply bg-lab dark:bg-lab;
+}
+
+.unknown-class-type-color {
+  @apply bg-c_main dark:bg-cd_main;
+}
+
 .react-calendar__tile {
-  @apply h-6 z-0 will-change-auto;
+  @apply h-8 z-0 will-change-auto pt-[-0.5rem] pb-6;
   flex: 0 0 var(--tile-flex-basis) !important;
   abbr {
     @apply transition-colors duration-200 ease-in-out;

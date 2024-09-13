@@ -2,9 +2,9 @@
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { usePalette } from 'color-thief-react';
-import Block from '../common/block';
-import Event from '../../network/models/psu-tools/event';
-import RightArrowIcon from '../../assets/right-arrow.svg?react';
+import Block from '../../common/block';
+import Event from '../../../network/models/psu-tools/event';
+import RightArrowIcon from '../../../assets/right-arrow.svg?react';
 
 const EventListCard = ({
   event,
