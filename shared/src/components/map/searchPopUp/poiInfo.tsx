@@ -1,6 +1,6 @@
 import React from 'react';
 import { detectItemAmenityName } from '../../../network/utils/detectAmenity';
-import Poi from '../../../network/models/mapi/poi';
+import Poi, { calcPoiName } from '../../../network/models/mapi/poi';
 
 const PoiInfo = ({
   item,
@@ -23,7 +23,7 @@ const PoiInfo = ({
       onClick={() => item && onClick?.(item)}
     >
       <p className={`text-c_accent font-semibold ${classNameInner}`}>
-        {item?.properties.name ?? item?.properties.ref ?? 'Без названия'}
+        {calcPoiName(item)}
       </p>
       <h4 className={`${classNameInner}`}>
         {detectItemAmenityName(item) ?? 'Без категории'}

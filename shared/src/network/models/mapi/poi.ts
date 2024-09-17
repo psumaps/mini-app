@@ -20,18 +20,21 @@ export default interface Poi {
       level?: string;
       name?: string;
       door?: string;
+      shop: 'stationery' | 'clothes';
+      information?: 'terminal';
+      vending?: 'coffee';
       opening_hours?: string;
       wheelchair?: 'yes';
     };
     type: string;
   };
 }
+export const calcPoiName = (poi: Poi | null) => {
+  if (poi?.properties.tags.information === 'terminal') return 'Терминал';
+  if (poi?.properties.tags.vending === 'coffee') return 'Кофе';
 
-export const detectPoiName = (poi: Poi | null) => {
-  if (!poi) return '';
-  return poi.properties.name ?? poi.properties.ref ?? 'Без названия';
+  return poi?.properties.name ?? poi?.properties.ref ?? 'Без названия';
 };
-
 const translations: { [key: string]: string } = {
   Mo: 'Пн',
   Tu: 'Вт',

@@ -5,6 +5,8 @@ import api from '../api';
 const tokenHeader = (token: string) => ({
   headers: { Authorization: `${token}` },
 });
+
+const badAmenities = ['community_centre', 'yes', 'main'];
 const client = {
   validateIcal: async (token: string) => {
     try {
@@ -36,7 +38,7 @@ const client = {
       tokenHeader(token),
     );
     return response.data.collection.filter(
-      (item) => item && item !== 'yes' && item !== 'community_centre',
+      (item) => !!item && !badAmenities.includes(item),
     );
   },
   getPoiByAmenity: async (amenity: string, token: string) => {

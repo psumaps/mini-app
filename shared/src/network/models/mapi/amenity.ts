@@ -14,6 +14,7 @@ export const amenityNameList: Record<string, string> = {
   atm: 'Банкоматы',
   library: 'Библиотека',
   toilets: 'Уборные',
+  pharmacy: 'Аптека',
 };
 
 export const amenityImageList: Record<
