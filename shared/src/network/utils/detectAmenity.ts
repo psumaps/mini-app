@@ -16,5 +16,5 @@ export const detectAmenityName = (amenity: string) => {
 };
 
 export const detectAmenityImage = (amenity: string) => {
-  return amenityImageList[amenity];
+  return amenityImageList[amenity] ?? amenityImageList.other;
 };

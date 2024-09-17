@@ -4,7 +4,7 @@ import information from '../../../assets/amenities/information.svg?react';
 import library from '../../../assets/amenities/library.svg?react';
 import toilets from '../../../assets/amenities/toilets.svg?react';
 import classroom from '../../../assets/amenities/class.svg?react';
-// import other from '../../../assets/amenities/other.svg?react';
+import other from '../../../assets/amenities/other.svg?react';
 import vending_machine from '../../../assets/amenities/vending_machine.svg?react';
 
 export const amenityNameList: Record<string, string> = {
@@ -24,6 +24,7 @@ export const amenityImageList: Record<
     }
   >
 > = {
+  other,
   cafe,
   atm,
   library,
