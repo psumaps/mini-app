@@ -6,6 +6,8 @@ export const detectItemAmenityName = (item: Poi | null) => {
   if (item.properties.tags?.amenity)
     return detectAmenityName(item.properties.tags?.amenity);
 
+  if (item.properties.tags.shop === 'clothes') return 'Гардероб';
+  if (item.properties.tags.shop) return 'Магазин';
   if (item.properties.ref) return 'Аудитория';
 
   return null;
@@ -16,5 +18,5 @@ export const detectAmenityName = (amenity: string) => {
 };
 
 export const detectAmenityImage = (amenity: string) => {
-  return amenityImageList[amenity];
+  return amenityImageList[amenity] ?? amenityImageList.other;
 };
