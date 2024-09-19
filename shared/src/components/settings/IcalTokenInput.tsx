@@ -72,8 +72,8 @@ const IcalTokenInput = ({
       (stagedToken && !icalStageTokenCorrect(stagedToken))
     )
       return 'missing';
-    if (icalValidationQuery.data === true) return 'valid';
-    if (icalValidationQuery.data === false) return 'invalid';
+    if (icalValidationQuery.data?.result === true) return 'valid';
+    if (icalValidationQuery.data?.result === false) return 'invalid';
     return 'server_error';
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stagedToken, icalValidationQuery.data, stagedToken]);
