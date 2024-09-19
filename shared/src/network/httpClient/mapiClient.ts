@@ -12,12 +12,19 @@ const client = {
     try {
       await axios.get(`${api.mapi}/ping`, tokenHeader(token));
     } catch (e) {
-      if (e instanceof AxiosError) {
-        if (e.response?.status === 401) return false;
+      if (e instanceof AxiosError && e.response?.status === 401) {
+        return {
+          result: false,
+          id: (e.response.headers.traceparent as string)?.slice(3, 32 + 3),
+        };
       }
-      return null;
+      return {
+        result: false,
+      };
     }
-    return true;
+    return {
+      result: true,
+    };
   },
   getIndoorById: async (id: string, token: string) => {
     const response = await axios.get<Poi>(
