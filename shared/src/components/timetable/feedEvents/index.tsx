@@ -133,27 +133,28 @@ const FeedEvents = (
                 <FilterIcon />
               </Button>
             </div>
-            {eventsQuery.data.pages.map(
-              (page) =>
-                page[0] && (
-                  <React.Fragment key={page[0].id}>
-                    {page
-                      .sort((a, b) =>
-                        new Date(a.startDatetime) < new Date(b.startDatetime)
-                          ? -1
-                          : 1,
-                      )
-                      .map((event) => (
-                        <EventListCard
-                          key={event.id}
-                          event={event}
-                          onOpenDesc={() =>
-                            navigator?.navigate(`/event/${event.id}`)
-                          }
-                        />
-                      ))}
-                  </React.Fragment>
-                ),
+            {eventsQuery.data.pages.map((page) =>
+              page[0] ? (
+                <React.Fragment key={page[0].id}>
+                  {page
+                    .sort((a, b) =>
+                      new Date(a.startDatetime) < new Date(b.startDatetime)
+                        ? -1
+                        : 1,
+                    )
+                    .map((event) => (
+                      <EventListCard
+                        key={event.id}
+                        event={event}
+                        onOpenDesc={() =>
+                          navigator?.navigate(`/event/${event.id}`)
+                        }
+                      />
+                    ))}
+                </React.Fragment>
+              ) : (
+                <p key="">Мероприятий на выбранную дату не найдено</p>
+              ),
             )}
             {eventsQuery.hasNextPage && (
               <Button
