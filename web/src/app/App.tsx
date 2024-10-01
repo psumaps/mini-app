@@ -8,6 +8,7 @@ import '@fontsource/montserrat/700.css';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
 import { NavigatorContext } from 'psumaps-shared/src/models/navigator';
 import bridge from '@vkontakte/vk-bridge';
+import showOnboarding from 'psumaps-shared/src/utils/onboarding';
 import Storage, { VK_BRIDGE_STATUS_KEY } from './storage';
 import Navigator from './navigator';
 
@@ -20,8 +21,10 @@ const App = () => {
   useEffect(() => {
     bridge.send('VKWebAppInit', {}).then(
       ({ result }) => {
-        if (result) localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'true');
-        else if (!localStorage.getItem(VK_BRIDGE_STATUS_KEY))
+        if (result) {
+          localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'true');
+          void showOnboarding();
+        } else if (!localStorage.getItem(VK_BRIDGE_STATUS_KEY))
           localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
 
         void queryClient.invalidateQueries({
