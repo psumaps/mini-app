@@ -125,8 +125,8 @@ const EventCard = ({ event }: { event: Event }) => {
           </h3>
 
           {event.registrationUrl && <SignUpCard link={event.registrationUrl} />}
-          {event.registrationUrl && (
-            <ViewMapCard link={event.registrationUrl} />
+          {event.place.mapsId && (
+            <ViewMapCard placeId={String(event.place.mapsId)} />
           )}
           {event.registrationUrl && (
             <a

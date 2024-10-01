@@ -27,6 +27,7 @@ export interface Cover {
 
 export interface Place {
   id: number;
+  mapsId: number;
   name: string;
   description: string;
   cover: Cover;
