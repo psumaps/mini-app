@@ -59,7 +59,7 @@ export type MapConfigProps = {
 };
 
 export const mapConfig: MapConfigProps = {
-  style: { width: '100%', height: '100%' },
+  style: { width: '100%', height: '100vh' },
   minZoom: 15.5,
   maxBounds: [56.172495, 58.003141, 56.202192, 58.01219],
   mapStyle,
