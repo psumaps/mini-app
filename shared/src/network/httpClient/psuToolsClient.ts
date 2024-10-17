@@ -33,11 +33,13 @@ const client = {
       pageNumber = 0,
       pageSize,
       filters,
+      timeout = 3000,
     }: {
       dateFrom: Date;
       pageNumber: number;
       pageSize: number;
       filters?: number[] | null;
+      timeout?: number;
     }) => {
       const response = await axios.get<Event[]>(
         `${api.psuTools}/events-api/events?pageNumber=${pageNumber}&pageSize=${pageSize}&showPastEvents=false&datetimeFrom=${
@@ -45,6 +47,7 @@ const client = {
             .toISOString()
             .split('.')[0]
         }${filters && filters.length ? `&tagId=${JSON.stringify(filters).slice(1, -1).trim()}` : ''}`,
+        timeout ? { signal: AbortSignal.timeout(timeout) } : undefined,
       );
       return response.data;
     },

@@ -50,6 +50,7 @@ const FeedEvents = (
       gcTime: 10 * 60 * 1000,
       staleTime: 5 * 60 * 1000,
       initialPageParam: 0,
+      retry: false,
       getNextPageParam: (lastPage, _, lastPageParam) => {
         if (lastPage.length < EVENTS_LIMIT) {
           return undefined;
