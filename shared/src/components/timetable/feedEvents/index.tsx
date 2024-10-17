@@ -113,7 +113,7 @@ const FeedEvents = (
         {eventsQuery.isPending ? (
           <p>Загрузка...</p>
         ) : eventsQuery.isError ? (
-          <p>Ошибка!</p>
+          <p>Мероприятия временно недоступны, но обязательно вернутся :(</p>
         ) : (
           <>
             <div className="flex flex-row gap-4">
