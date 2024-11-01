@@ -16,7 +16,7 @@ import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search
 import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
-import React, { forwardRef, MutableRefObject } from 'react';
+import React, { forwardRef, MutableRefObject, useContext } from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   AttributionControl,
@@ -28,6 +28,7 @@ import Map, {
 import { useLocation } from 'react-router-dom';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
+import { StorageContext } from 'psumaps-shared/src/models/storage';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
@@ -60,7 +61,13 @@ const QrControl = ({
     () =>
       new QrScanner(
         (code) =>
-          void handleRedirect(code, handleSelect, handleSearch, icalToken),
+          void handleRedirect(
+            code,
+            handleSelect,
+            handleSearch,
+            icalToken,
+            undefined,
+          ),
       ),
     { position: 'bottom-right' },
   );
@@ -85,6 +92,8 @@ const MapPage = () => {
   const routerLocation = useLocation();
   const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
   const icalTokenQuery = useIcalToken();
+  const storage = useContext(StorageContext);
+
   const mapProps = React.useMemo<MapConfigProps>(() => {
     const config = mapConfig;
     if (icalTokenQuery.data) {
@@ -121,6 +130,14 @@ const MapPage = () => {
     setPopupState('middle');
   };
 
+  const resetToken = (new_token: string) => {
+    if (storage) {
+      void storage.set('ical_token', new_token);
+      window.location.hash = window.location.hash.replace(/&?ical=\w+&?/, '');
+      window.location.reload();
+    }
+  };
+
   React.useEffect(() => {
     if (mapRef.current?.areTilesLoaded)
       void handleLocationHash(
@@ -128,7 +145,9 @@ const MapPage = () => {
         handleSelect,
         searchByName,
         icalTokenQuery.data,
+        resetToken,
       );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [icalTokenQuery.data, routerLocation]);
 
   const handlePoiClick = async (
@@ -161,6 +180,7 @@ const MapPage = () => {
         handleSelect,
         searchByName,
         icalTokenQuery.data,
+        resetToken,
       );
       if (icalTokenQuery.data) {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises

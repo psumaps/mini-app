@@ -70,44 +70,61 @@ export const handleRedirect = async (
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
   token: string | null | undefined,
+  resetToken: ((s: string) => void) | undefined,
 ) => {
-  const hashParams = redirectHash.split('=');
-  if (hashParams.length === 2 && hashParams[0].length === 1) {
-    let data: Poi[];
-    const query = hashParams[1];
-    // eslint-disable-next-line default-case
-    switch (redirectHash[0]) {
-      case 'q': // indoor by name
-        if (!token) {
-          console.log('unauthorized'); // todo: make toast
-        } else {
-          data = await httpClient.mapi.search(query, token);
-          if (data.length === 0) {
-            console.error('POI not found');
-          } else if (data.length === 1) {
-            handleSelect(data[0]);
-          } else {
-            handleSearch(query);
-          }
-        }
-        break;
-      case 'i': // indoor by id
-        data = [
-          await (token
-            ? httpClient.mapi.getIndoorById(query, token)
-            : httpClient.mapi.getPublicIndoorById(query)),
-        ];
-        if (data?.[0]) {
-          handleSelect(data[0]);
-        } else {
-          console.error('POI not found'); // todo: make toast on nil token
-        }
-        break;
-      case 'e': // event by id
-        history.pushState({}, '', `/event/${query}`);
-        history.go();
-        break;
+  const hashParams = redirectHash
+    .split('&')
+    .reduce((accumulator, singleQueryParam) => {
+      const [key, value] = singleQueryParam.split('=');
+      accumulator.set(key, decodeURIComponent(value));
+      return accumulator;
+    }, new Map<string, string>());
+
+  if (hashParams.has('ical')) {
+    if (resetToken) {
+      resetToken(hashParams.get('ical')!);
+    } else {
+      console.log('ICal param not applicable');
     }
+  }
+
+  let data: Poi[];
+  let query: string;
+
+  // indoor by name
+  if (hashParams.has('q')) {
+    query = hashParams.get('q')!;
+    if (!token) {
+      console.log('unauthorized'); // todo: make toast
+    } else {
+      data = await httpClient.mapi.search(query, token);
+      if (data.length === 0) {
+        console.error('POI not found');
+      } else if (data.length === 1) {
+        handleSelect(data[0]);
+      } else {
+        handleSearch(query);
+      }
+    }
+
+    // indoor by id
+  } else if (hashParams.has('i')) {
+    query = hashParams.get('i')!;
+    data = [
+      await (token
+        ? httpClient.mapi.getIndoorById(query, token)
+        : httpClient.mapi.getPublicIndoorById(query)),
+    ];
+    if (data?.[0]) {
+      handleSelect(data[0]);
+    } else {
+      console.error('POI not found'); // todo: make toast on nil token
+    }
+
+    // event by id
+  } else if (hashParams.has('e')) {
+    history.pushState({}, '', `/event/${hashParams.has('e')}`);
+    history.go();
   }
 };
 export const handleLocationHash = (
@@ -115,9 +132,16 @@ export const handleLocationHash = (
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
   token: string | null | undefined,
+  resetToken: (s: string) => void,
 ) => {
   const redirectHash = hash.slice(1); // hash includes #
   if (redirectHash) {
-    void handleRedirect(redirectHash, handleSelect, handleSearch, token);
+    void handleRedirect(
+      redirectHash,
+      handleSelect,
+      handleSearch,
+      token,
+      resetToken,
+    );
   }
 };
