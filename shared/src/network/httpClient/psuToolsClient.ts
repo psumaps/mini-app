@@ -42,7 +42,7 @@ const client = {
       timeout?: number;
     }) => {
       const response = await axios.get<Event[]>(
-        `${api.psuTools}/events-api/events?pageNumber=${pageNumber}&pageSize=${pageSize}&showPastEvents=false&datetimeFrom=${
+        `${api.psuTools}/events-api/public/events?pageNumber=${pageNumber}&pageSize=${pageSize}&showPastEvents=false&datetimeFrom=${
           new Date(dateFrom.getTime() - dateFrom.getTimezoneOffset() * 60000)
             .toISOString()
             .split('.')[0]
@@ -53,13 +53,13 @@ const client = {
     },
     getEvent: async (eventId: number) => {
       const response = await axios.get<Event>(
-        `${api.psuTools}/events-api/events/${eventId}`,
+        `${api.psuTools}/events-api/public/events/${eventId}`,
       );
       return response.data;
     },
     getFilters: async () => {
       const response = await axios.get<Filter[]>(
-        `${api.psuTools}/events-api/tags?pageSize=50&pageNumber=0`,
+        `${api.psuTools}/events-api/public/tags?pageSize=50&pageNumber=0`,
       );
       return response.data;
     },
