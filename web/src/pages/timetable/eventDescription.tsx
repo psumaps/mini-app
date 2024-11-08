@@ -28,7 +28,9 @@ const EventDescription = () => {
         <div className="justify-center relative">
           <Button
             variant="primary"
-            onClick={() => navigator?.back()}
+            onClick={() => {
+              return navigator?.back();
+            }}
             className="size-10 absolute left-0 top-1/2 -translate-y-1/2 p-2 rounded-full"
           >
             <UTurnLeftIcon className="stroke-c_main dark:stroke-cd_main" />

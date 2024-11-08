@@ -55,7 +55,7 @@ const EventCard = ({ event }: { event: Event }) => {
           {/* </div> */}
 
           <div className="flex py-2 flex-wrap">
-            {[event.category.name, ...event.tags].map((tag, i) => (
+            {event.tags.map((tag, i) => (
               <div
                 key={tag}
                 style={{
@@ -77,7 +77,7 @@ const EventCard = ({ event }: { event: Event }) => {
                 <p className="c3">{tag}</p>
               </div>
             ))}
-            {event.tags.length > 0 && (
+            {event.tags.length > 1 && (
               <Button
                 className="px-3"
                 type="button"
@@ -128,9 +128,9 @@ const EventCard = ({ event }: { event: Event }) => {
           {event.place.mapsId && (
             <ViewMapCard placeId={String(event.place.mapsId)} />
           )}
-          {event.registrationUrl && (
+          {event.aboutUrl && (
             <a
-              href={event.registrationUrl}
+              href={event.aboutUrl}
               className="underline c3 text-c_secondary dark:text-cd_secondary mt-3 text-center"
               target="_blank"
               rel="noopener noreferrer"
