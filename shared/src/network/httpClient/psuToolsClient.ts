@@ -42,7 +42,7 @@ const client = {
       timeout?: number;
     }) => {
       const response = await axios.get<Event[]>(
-        `${api.psuTools}/events-api/public/events?pageNumber=${pageNumber}&pageSize=${pageSize}&showPastEvents=false&datetimeFrom=${
+        `${api.psuTools}/events-api/public/events?pageNumber=${pageNumber}&pageSize=${pageSize}&showPastEvents=true&datetimeFrom=${
           new Date(dateFrom.getTime() - dateFrom.getTimezoneOffset() * 60000)
             .toISOString()
             .split('.')[0]
