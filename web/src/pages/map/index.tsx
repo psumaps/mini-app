@@ -110,14 +110,17 @@ const MapPage = () => {
 
   const handleSelect = (poi: Poi) => {
     const [lg, lt] = poi.properties.point.coordinates;
-
-    setMarkerCoords({ lt, lg, level: parseInt(poi.properties.level ?? '1') });
+    setMarkerCoords({
+      lt,
+      lg,
+      level: parseInt(poi.properties.tags.level ?? '1'),
+    });
     setSelectedPoi(poi);
-    setIndoorLevel(parseInt(poi.properties.level ?? '1'));
+    setIndoorLevel(parseInt(poi.properties.tags.level ?? '1'));
 
     if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
-    if (poi.properties.level)
-      indoorControlRef?.current?.setLevel(poi.properties.level);
+    if (poi.properties.tags.level)
+      indoorControlRef?.current?.setLevel(poi.properties.tags.level);
     setPopupState('middle');
   };
 
@@ -171,7 +174,7 @@ const MapPage = () => {
     }
     if (indoorControlRef.current) {
       indoorControlRef.current.on('levelchange', () =>
-        setIndoorLevel(parseInt(indoorControlRef?.current?.level ?? '')),
+        setIndoorLevel(parseInt(indoorControlRef?.current?.level ?? '1')),
       );
     }
   };
