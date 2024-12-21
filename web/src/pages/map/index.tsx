@@ -55,7 +55,7 @@ const QrControl = ({
 }: {
   handleSelect: (poi: Poi) => void;
   handleSearch: (query: string) => void;
-  icalToken: string | null | undefined;
+  icalToken: string | undefined;
 }) => {
   useControl(
     () =>
