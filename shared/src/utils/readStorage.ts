@@ -17,6 +17,6 @@ export async function getStoredAnimEnabled<T extends IStorage>(
 
 export async function getStoredIcalToken<T extends IStorage>(
   storage: T,
-): Promise<string | null> {
+): Promise<string | undefined> {
   return storage.get('ical_token');
 }

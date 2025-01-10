@@ -18,7 +18,7 @@ class Storage implements IStorage {
     return vkBridgeStatus === 'true' ? StorageType.vkbridge : StorageType.local;
   }
 
-  async get(key: string): Promise<string | null> {
+  async get(key: string): Promise<string | undefined> {
     const vkBridgeStatus = localStorage.getItem(VK_BRIDGE_STATUS_KEY);
     const localValue = localStorage.getItem(key)?.trim();
     const queryBridge = () =>
@@ -35,12 +35,13 @@ class Storage implements IStorage {
           return null;
         });
 
-    if (vkBridgeStatus !== 'true') return localValue as string | null;
+    if (vkBridgeStatus !== 'true') return localValue;
     if (!!localValue && localValue.length !== 0) {
       return localValue;
     }
     return queryBridge().then((value) => {
       if (value) localStorage.setItem(key, value);
+      else return undefined;
       return value;
     });
   }

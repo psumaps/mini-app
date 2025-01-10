@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface IStorage {
-  get(key: string): Promise<string | null>;
+  get(key: string): Promise<string | undefined>;
   set(key: string, value: string): Promise<void>;
 
   getStorageType(): Promise<StorageType>;
