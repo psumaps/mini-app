@@ -1,13 +1,19 @@
 import INavigator from 'psumaps-shared/src/models/navigator';
+import { NavigateFunction } from 'react-router-dom';
 
 class Navigator implements INavigator {
+  private readonly navigateFunction: NavigateFunction;
+
+  constructor(navigateFunction: NavigateFunction) {
+    this.navigateFunction = navigateFunction;
+  }
+
   navigate(path: string): void {
-    history.pushState({}, '', path);
-    history.go();
+    this.navigateFunction(path);
   }
 
   back(): void {
-    history.back();
+    this.navigateFunction(-1);
   }
 }
 
