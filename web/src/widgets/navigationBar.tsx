@@ -1,7 +1,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 
 import React, { useContext, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import getStoredTheme from 'psumaps-shared/src/utils/readTheme';
 import MapIcon from 'psumaps-shared/src/assets/map.svg?react';
 import TimetableIcon from 'psumaps-shared/src/assets/timetable.svg?react';
@@ -9,12 +9,11 @@ import SettingsIcon from 'psumaps-shared/src/assets/settings.svg?react';
 import useTryQueryClient from 'psumaps-shared/src/hooks/useTryQueryClient';
 import { useQuery } from '@tanstack/react-query';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
-import Navigator from '~/app/navigator';
+import { NavigatorContext } from 'psumaps-shared/src/models/navigator';
 
 const NavigationBar = ({ className }: { className?: string }) => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const navigator = new Navigator(navigate);
+  const navigator = useContext(NavigatorContext);
   const queryClient = useTryQueryClient();
   const storage = useContext(StorageContext);
 
@@ -48,21 +47,21 @@ const NavigationBar = ({ className }: { className?: string }) => {
     >
       <button
         type="button"
-        onClick={() => navigator.navigate('/')}
+        onClick={() => navigator?.navigate('/')}
         aria-label="Карта"
       >
         <MapIcon className={fill('/')} />
       </button>
       <button
         type="button"
-        onClick={() => navigator.navigate('/settings')}
+        onClick={() => navigator?.navigate('/settings')}
         aria-label="Настройки"
       >
         <SettingsIcon className={fill('/settings')} />
       </button>
       <button
         type="button"
-        onClick={() => navigator.navigate('/timetable')}
+        onClick={() => navigator?.navigate('/timetable')}
         aria-label="Расписание"
       >
         <TimetableIcon className={fill('/timetable')} />
