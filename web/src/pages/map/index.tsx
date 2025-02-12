@@ -1,8 +1,4 @@
-import {
-  MapGeoJSONFeature,
-  MapMouseEvent,
-  VectorSourceSpecification,
-} from 'maplibre-gl';
+import { MapGeoJSONFeature, MapMouseEvent, removeProtocol } from 'maplibre-gl';
 import 'psumaps-shared/src/assets/maplibre-gl.css';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
@@ -16,7 +12,13 @@ import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search
 import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
-import React, { forwardRef, MutableRefObject, useContext } from 'react';
+import React, {
+  forwardRef,
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react';
 import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
 import Map, {
   AttributionControl,
@@ -29,10 +31,12 @@ import { useLocation } from 'react-router-dom';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
+import { useQueryClient } from '@tanstack/react-query';
 import IndoorEqual from '~/mapEngine/indoorEqual';
-import { initialView, mapConfig, MapConfigProps } from '~/mapEngine/mapConfig';
+import { initialView, mapConfig } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
 import NavigationBar from '~/widgets/navigationBar';
+import registerProtocol from './mapUtils';
 
 const popUpId = 'search-pop-up';
 
@@ -93,15 +97,16 @@ const MapPage = () => {
   const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
   const icalTokenQuery = useIcalToken();
   const storage = useContext(StorageContext);
+  const queryClient = useQueryClient();
+  const mapProps = useMemo(() => mapConfig, []);
 
-  const mapProps = React.useMemo<MapConfigProps>(() => {
-    const config = mapConfig;
+  useEffect(() => {
     if (icalTokenQuery.data) {
-      (config.mapStyle.sources.indoorequal as VectorSourceSpecification).tiles =
-        [`${import.meta.env.VITE_URL_IJO42_TILES}tiles/{z}/{x}/{y}`];
       setPopupState('closed');
     }
-    return config;
+    registerProtocol(queryClient, icalTokenQuery.data);
+    return () => removeProtocol('martin');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [icalTokenQuery.data]);
 
   React.useEffect(() => {
@@ -215,18 +220,6 @@ const MapPage = () => {
             {...viewState}
             {...mapProps}
             onMove={(e) => setViewState(e.viewState)}
-            transformRequest={(url) => {
-              return {
-                url,
-                headers: url.startsWith(
-                  `${import.meta.env.VITE_URL_IJO42_TILES}tiles`,
-                )
-                  ? {
-                      Authorization: `Bearer ${icalTokenQuery.data}`,
-                    }
-                  : {},
-              };
-            }}
           >
             <AttributionControl
               position="top-right"
