@@ -57,7 +57,8 @@ const Timetable = () => {
   const classesQuery = useQuery(
     {
       queryKey: ['classes'],
-      queryFn: () => httpClient.ical.getTimetable(icalTokenQuery.data!),
+      queryFn: async () =>
+        httpClient.ical.getTimetable({ token: icalTokenQuery.data! }),
       enabled: !!icalTokenQuery.data,
       retry: false,
       refetchOnWindowFocus: false,
