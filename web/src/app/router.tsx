@@ -3,25 +3,42 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import SettingsPage from '../pages/settings';
 import MapPage from '~/pages/map';
+import PageBase from '~/pages/pageBase';
 import TimetablePage from '~/pages/timetable';
 import EventDescription from '~/pages/timetable/eventDescription';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MapPage />,
+    element: (
+      <PageBase>
+        <MapPage />
+      </PageBase>
+    ),
   },
   {
     path: '/settings',
-    element: <SettingsPage />,
+    element: (
+      <PageBase>
+        <SettingsPage />
+      </PageBase>
+    ),
   },
   {
     path: '/timetable',
-    element: <TimetablePage />,
+    element: (
+      <PageBase>
+        <TimetablePage />
+      </PageBase>
+    ),
   },
   {
     path: '/event/:eventId',
-    element: <EventDescription />,
+    element: (
+      <PageBase>
+        <EventDescription />
+      </PageBase>
+    ),
   },
 ]);
 

@@ -6,11 +6,9 @@ import '@fontsource/montserrat/500.css';
 import '@fontsource/montserrat/700.css';
 
 import { StorageContext } from 'psumaps-shared/src/models/storage';
-import { NavigatorContext } from 'psumaps-shared/src/models/navigator';
 import bridge from '@vkontakte/vk-bridge';
 import showOnboarding from 'psumaps-shared/src/utils/onboarding';
 import Storage, { VK_BRIDGE_STATUS_KEY } from './storage';
-import Navigator from './navigator';
 
 import router from './router';
 import '~/tw.css';
@@ -40,9 +38,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <StorageContext.Provider value={useMemo(() => new Storage(), [])}>
-        <NavigatorContext.Provider value={useMemo(() => new Navigator(), [])}>
-          <RouterProvider router={router} />
-        </NavigatorContext.Provider>
+        <RouterProvider router={router} />
       </StorageContext.Provider>
     </QueryClientProvider>
   );
