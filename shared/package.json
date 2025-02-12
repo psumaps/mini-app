@@ -10,6 +10,7 @@
   "license": "MPL-2.0",
   "peerDependencies": {
     "@tanstack/react-query": "^5.40.1",
+    "@tanstack/react-query-devtools": "^5.40.1",
     "react": "^18.3.1"
   },
   "dependencies": {

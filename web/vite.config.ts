@@ -23,6 +23,9 @@ export default defineConfig({
       '@tanstack/react-query': path.resolve(
         './node_modules/@tanstack/react-query',
       ),
+      '@tanstack/react-query-devtools': path.resolve(
+        './node_modules/@tanstack/react-query-devtools',
+      ),
     },
   },
   envDir: '../',

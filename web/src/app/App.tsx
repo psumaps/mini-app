@@ -8,6 +8,7 @@ import '@fontsource/montserrat/700.css';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
 import bridge from '@vkontakte/vk-bridge';
 import showOnboarding from 'psumaps-shared/src/utils/onboarding';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Storage, { VK_BRIDGE_STATUS_KEY } from './storage';
 
 import router from './router';
@@ -40,6 +41,7 @@ const App = () => {
       <StorageContext.Provider value={useMemo(() => new Storage(), [])}>
         <RouterProvider router={router} />
       </StorageContext.Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
