@@ -32,6 +32,7 @@ import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
 import { useQueryClient } from '@tanstack/react-query';
+import useIsVkBridge from 'psumaps-shared/src/hooks/useIsVKBridge';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
@@ -99,6 +100,7 @@ const MapPage = () => {
   const storage = useContext(StorageContext);
   const queryClient = useQueryClient();
   const mapProps = useMemo(() => mapConfig, []);
+  const isVKBridge = useIsVkBridge();
 
   useEffect(() => {
     if (icalTokenQuery.data) {
@@ -226,11 +228,13 @@ const MapPage = () => {
               compact
               customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
             />
-            <QrControl
-              handleSelect={handleSelect}
-              handleSearch={searchByName}
-              icalToken={icalTokenQuery.data}
-            />
+            {isVKBridge && (
+              <QrControl
+                handleSelect={handleSelect}
+                handleSearch={searchByName}
+                icalToken={icalTokenQuery.data}
+              />
+            )}
             <NavigationControl position="bottom-right" />
             <IndoorControl ref={indoorControlRef} />
             {markerCoords && (
