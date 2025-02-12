@@ -35,6 +35,8 @@ const FeedEvents = (
   const [filters, setFilters] = useState<Filter[] | null>(null);
   const { searchValue, setSearchValue, dateFrom, currentFeed, ...rest } = props;
 
+  dateFrom.setHours(5, 0, 0, 0); // to proper caching
+
   const eventsQuery = useInfiniteQuery(
     {
       queryKey: ['event-search', searchValue, dateFrom],
