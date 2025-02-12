@@ -65,8 +65,9 @@ const IcalTokenInput = ({
   }, []);
 
   const authResult = useMemo<
-    'valid' | 'invalid' | 'missing' | 'server_error'
+    'valid' | 'invalid' | 'missing' | 'server_error' | 'loading'
   >(() => {
+    if (icalValidationQuery.isLoading) return 'loading';
     if (
       !icalValidationQuery.isFetched ||
       (stagedToken && !icalStageTokenCorrect(stagedToken))
@@ -113,6 +114,8 @@ const IcalTokenInput = ({
 
   const AuthResultText = useCallback(() => {
     switch (authResult) {
+      case 'loading':
+        return 'Проверяем...';
       case 'valid':
         return 'Авторизация успешна';
       case 'invalid':
