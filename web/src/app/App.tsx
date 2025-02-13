@@ -9,7 +9,8 @@ import { StorageContext } from 'psumaps-shared/src/models/storage';
 import bridge from '@vkontakte/vk-bridge';
 import showOnboarding from 'psumaps-shared/src/utils/onboarding';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import Storage, { VK_BRIDGE_STATUS_KEY } from './storage';
+import { init, isTMA } from '@telegram-apps/sdk-react';
+import Storage, { BRIDGE_STATUS_KEY } from './storage';
 
 import router from './router';
 import '~/tw.css';
@@ -18,22 +19,22 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
-    bridge.send('VKWebAppInit', {}).then(
-      ({ result }) => {
-        if (result) {
-          localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'true');
-          void showOnboarding();
-        } else if (!localStorage.getItem(VK_BRIDGE_STATUS_KEY))
-          localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
+    localStorage.setItem(BRIDGE_STATUS_KEY, 'local');
 
+    if (isTMA()) {
+      init();
+      localStorage.setItem(BRIDGE_STATUS_KEY, 'tg');
+    } else {
+      void bridge.send('VKWebAppInit', {}).then(({ result }) => {
+        if (result) {
+          localStorage.setItem(BRIDGE_STATUS_KEY, 'vk');
+          void showOnboarding();
+        }
         void queryClient.invalidateQueries({
           predicate: (query) => query.queryKey.includes('storage'),
         });
-      },
-      () => {
-        localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
-      },
-    );
+      });
+    }
   }, []);
 
   return (

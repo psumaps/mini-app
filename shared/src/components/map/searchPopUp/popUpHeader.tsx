@@ -9,7 +9,8 @@ import { PopUpBodyRef } from './popUpUtils';
 import { PopUpState } from './search/searchUtils';
 import ShareButton from './sharePoiButton';
 import CrossIcon from '../../../assets/cross.svg?react';
-import useIsVkBridge from '../../../hooks/useIsVKBridge';
+import useDeterminateBridge from '../../../hooks/useDeterminateBridge';
+import { BridgeType } from '../../../models/storage';
 
 const PopUpHeader = ({
   state,
@@ -28,7 +29,7 @@ const PopUpHeader = ({
   const [selectedPoiInner, setSelectedPoiInner] = React.useState<Poi | null>(
     null,
   );
-  const isVKBridge = useIsVkBridge();
+  const bridgeType = useDeterminateBridge();
 
   useEffect(() => {
     if (selectedPoi !== null) setSelectedPoiInner(selectedPoi);
@@ -96,11 +97,12 @@ const PopUpHeader = ({
             classNameInner=""
             className="px-4"
           />
-          {selectedPoi?.properties.tags.id && isVKBridge && (
-            <div className="absolute right-12">
-              <ShareButton id={selectedPoi.properties.tags.id} />
-            </div>
-          )}
+          {selectedPoi?.properties.tags.id &&
+            bridgeType === BridgeType.vkbridge && (
+              <div className="absolute right-12">
+                <ShareButton id={selectedPoi.properties.tags.id} />
+              </div>
+            )}
           <button
             type="button"
             onClick={handleClearPoi}

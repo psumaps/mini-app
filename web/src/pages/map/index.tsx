@@ -30,9 +30,9 @@ import Map, {
 import { useLocation } from 'react-router-dom';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
-import { StorageContext } from 'psumaps-shared/src/models/storage';
+import { BridgeType, StorageContext } from 'psumaps-shared/src/models/storage';
 import { useQueryClient } from '@tanstack/react-query';
-import useIsVkBridge from 'psumaps-shared/src/hooks/useIsVKBridge';
+import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
@@ -57,10 +57,12 @@ const QrControl = ({
   handleSelect,
   handleSearch,
   icalToken,
+  bridgeType,
 }: {
   handleSelect: (poi: Poi) => void;
   handleSearch: (query: string) => void;
   icalToken: string | undefined;
+  bridgeType: BridgeType;
 }) => {
   useControl(
     () =>
@@ -73,6 +75,7 @@ const QrControl = ({
             icalToken,
             undefined,
           ),
+        bridgeType,
       ),
     { position: 'bottom-right' },
   );
@@ -100,7 +103,7 @@ const MapPage = () => {
   const storage = useContext(StorageContext);
   const queryClient = useQueryClient();
   const mapProps = useMemo(() => mapConfig, []);
-  const isVKBridge = useIsVkBridge();
+  const bridgeType = useDeterminateBridge();
 
   useEffect(() => {
     if (icalTokenQuery.data) {
@@ -228,13 +231,14 @@ const MapPage = () => {
               compact
               customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
             />
-            {isVKBridge && (
+            {bridgeType === BridgeType.vkbridge && (
               <QrControl
                 handleSelect={handleSelect}
                 handleSearch={searchByName}
                 icalToken={icalTokenQuery.data}
+                bridgeType={bridgeType}
               />
-            )}
+            )}{' '}
             <NavigationControl position="bottom-right" />
             <IndoorControl ref={indoorControlRef} />
             {markerCoords && (
