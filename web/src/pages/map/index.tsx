@@ -219,7 +219,6 @@ const MapPage = () => {
           className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
         >
           <Map
-            key={icalTokenQuery.data ? 'public' : 'private'}
             ref={mapRef}
             onLoad={handleLoad}
             {...viewState}

@@ -9,24 +9,31 @@ const registerProtocol = (
   addProtocol('martin', async (_params: RequestParameters) => {
     const params = _params;
     params.url = params.url.replace(/^martin:\/\//, 'https://');
+    let tilesResponse;
     if (icalData) {
-      params.headers = { Authorization: `Bearer ${icalData}` };
-      params.url = params.url.replace(/pub/, '');
+      const url = params.url.replace(/pub/, '');
+      try {
+        tilesResponse = await queryClient.fetchQuery({
+          queryFn: async () =>
+            httpClient.tile.getTile(url, {
+              Authorization: `Bearer ${icalData}`,
+            }),
+          queryKey: ['tiles', params.url.split('tiles')[2]],
+          staleTime: 12 * 60 * 60 * 1000,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    if (!icalData || !tilesResponse || tilesResponse.status >= 400) {
+      tilesResponse = await queryClient.fetchQuery({
+        queryFn: async () => httpClient.tile.getTile(params.url),
+        queryKey: ['tiles', 'pub', params.url.split('tiles')[2]],
+        staleTime: 12 * 60 * 60 * 1000,
+      });
     }
 
-    const tiles = await queryClient.fetchQuery({
-      queryFn: async () =>
-        httpClient.tile.getTile(
-          params.url,
-          params.headers as {
-            Authorization: string | undefined;
-          },
-        ),
-      queryKey: ['tiles', params.url.split('tiles')[2]],
-      staleTime: 12 * 60 * 60 * 1000,
-    });
-
-    return { data: copyBuffer(tiles) };
+    return { data: copyBuffer(tilesResponse.data) };
   });
 };
 
