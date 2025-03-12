@@ -5,7 +5,6 @@ import debounce from 'debounce';
 import arrayEqual from 'array-equal';
 import findAllLevels from './levels';
 import layers from './layers';
-import './controls.css';
 import { FilterSpecification } from '@maplibre/maplibre-gl-style-spec';
 
 interface IndoorControlProps {

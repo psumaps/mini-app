@@ -5,8 +5,6 @@ import { qrScanner } from '@telegram-apps/sdk-react';
 import { BridgeType } from 'psumaps-shared/src/models/storage';
 import QrIconUrl from 'psumaps-shared/src/assets/qr.svg';
 
-import './controls.css';
-
 interface QrScannerProps {
   onScan: (code: string) => void;
   bridgeType: BridgeType;
@@ -69,6 +67,7 @@ const QrScannerControl = ({
 
   useControl(
     () => {
+
       return {
         onAdd() {
           const container = document.createElement('div');
