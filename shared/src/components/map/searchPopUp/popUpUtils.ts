@@ -12,6 +12,11 @@ export interface SearchPopUpRef {
   search: (query: string) => void;
 }
 
+export interface RedirectResult {
+  success: boolean;
+  message?: string;
+}
+
 export const popUpBodyPoiContainerId = 'pop-up-body-poi-container';
 export const popUpSearchInputId = 'pop-up-search-input';
 export const controlsSelector = '.maplibregl-ctrl-bottom-right';
@@ -89,20 +94,31 @@ const handleIndoorByName = async (
   token: string | undefined,
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
-) => {
+): Promise<RedirectResult> => {
   // лишь поиск по имени не возможен без авторизации
   if (!token) {
-    console.log('unauthorized'); // todo: make toast
-    return;
+    return {
+      success: false,
+      message: 'Поиск по имени недоступен без авторизации',
+    };
   }
 
-  const data = await httpClient.mapi.search(query, token);
-  if (data.length === 0) {
-    console.error('POI not found');
-  } else if (data.length === 1) {
-    handleSelect(data[0]);
-  } else {
+  try {
+    const data = await httpClient.mapi.search(query, token);
+    if (data.length === 0) {
+      return {
+        success: false,
+        message: `Точка интереса "${query}" не найдена`,
+      };
+    }
+    if (data.length === 1) {
+      handleSelect(data[0]);
+      return { success: true };
+    }
     handleSearch(query);
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: 'Ошибка при поиске точки интереса' };
   }
 };
 
@@ -111,21 +127,33 @@ const handleIndoorById = async (
   id: string,
   token: string | null | undefined,
   handleSelect: (poi: Poi) => void,
-) => {
-  const poi = await (token
-    ? httpClient.mapi.getIndoorById(id, token)
-    : httpClient.mapi.getPublicIndoorById(id));
-  if (poi) {
-    handleSelect(poi);
-  } else {
-    console.error('POI not found'); // todo: make toast on nil token
+): Promise<RedirectResult> => {
+  try {
+    const poi = await (token
+      ? httpClient.mapi.getIndoorById(id, token)
+      : httpClient.mapi.getPublicIndoorById(id));
+    if (poi) {
+      handleSelect(poi);
+      return { success: true };
+    }
+    return { success: false, message: `Точка интереса с ID ${id} не найдена` };
+  } catch (error) {
+    return { success: false, message: 'Ошибка при получении точки интереса' };
   }
 };
 
 // переход к вкладке с событием `eventId`
-const handleEventById = (eventId: string) => {
-  history.pushState({}, '', `/event/${eventId}`);
-  history.go();
+const handleEventById = (eventId: string): RedirectResult => {
+  try {
+    history.pushState({}, '', `/event/${eventId}`);
+    history.go();
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Ошибка при переходе к событию ${eventId}`,
+    };
+  }
 };
 
 /*
@@ -143,41 +171,71 @@ export const handleRedirect = async (
   handleSearch: (query: string) => void,
   token: string | undefined,
   resetToken: ((s: string) => void) | undefined,
-) => {
+): Promise<RedirectResult> => {
   const hashParams = parseHashParams(redirectHash);
+  let result: RedirectResult = { success: true };
 
+  // Обработка ical параметра
   if (hashParams.has('ical')) {
     handleICalParam(hashParams.get('ical')!, resetToken);
   }
 
+  // Обработка параметров поиска
   if (hashParams.has('q')) {
-    await handleIndoorByName(
+    result = await handleIndoorByName(
       hashParams.get('q')!,
       token,
       handleSelect,
       handleSearch,
     );
   } else if (hashParams.has('i')) {
-    await handleIndoorById(hashParams.get('i')!, token, handleSelect);
+    result = await handleIndoorById(hashParams.get('i')!, token, handleSelect);
   } else if (hashParams.has('e')) {
-    handleEventById(hashParams.get('e')!);
+    result = handleEventById(hashParams.get('e')!);
+  } else if (!hashParams.has('ical')) {
+    // Если нет ни одного из известных параметров
+    result = {
+      success: false,
+      message: 'Неверный формат ссылки.',
+    };
   }
+
+  return result;
 };
-export const handleLocationHash = (
+
+export const handleLocationHash = async (
   hash: string,
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
   token: string | undefined,
   resetToken: (s: string) => void,
-) => {
+  showNotification?: (
+    message: string,
+    type: 'success' | 'error' | 'info' | 'warning',
+  ) => void,
+): Promise<void> => {
   const redirectHash = hash.slice(1); // hash includes #
-  if (redirectHash) {
-    void handleRedirect(
+  if (!redirectHash) return; // Если хэш пустой, ничего не делаем
+
+  try {
+    const result = await handleRedirect(
       redirectHash,
       handleSelect,
       handleSearch,
       token,
       resetToken,
     );
+
+    // Если есть функция показа уведомлений и результат неуспешный, показываем ошибку
+    if (!result.success && result.message && showNotification) {
+      showNotification(result.message, 'error');
+    } else if (result.success && result.message && showNotification) {
+      // Если операция успешна и есть сообщение, показываем успешное уведомление
+      showNotification(result.message, 'success');
+    }
+  } catch (error) {
+    if (showNotification) {
+      showNotification('Произошла ошибка при обработке QR-кода', 'error');
+    }
   }
 };

@@ -33,6 +33,10 @@ import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import { BridgeType, StorageContext } from 'psumaps-shared/src/models/storage';
 import { useQueryClient } from '@tanstack/react-query';
 import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
+import {
+  NotificationProvider,
+  useNotification,
+} from 'psumaps-shared/src/components/common/notification';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
@@ -64,6 +68,8 @@ const QrControl = ({
   icalToken: string | undefined;
   bridgeType: BridgeType;
 }) => {
+  const { showNotification } = useNotification();
+
   useControl(
     () =>
       new QrScanner(
@@ -74,7 +80,11 @@ const QrControl = ({
             handleSearch,
             icalToken,
             undefined,
-          ),
+          ).then((result) => {
+            if (!result.success && result.message) {
+              showNotification(result.message, 'error');
+            }
+          }),
         bridgeType,
       ),
     { position: 'bottom-right' },
@@ -82,7 +92,7 @@ const QrControl = ({
   return null;
 };
 
-const MapPage = () => {
+const MapPageContent = () => {
   const { data: animEnabled } = useAnimEnabled();
   const isKeyboardOpen = useDetectKeyboardOpen();
   const mapRef = React.useRef<MapRef | null>(null);
@@ -104,6 +114,7 @@ const MapPage = () => {
   const queryClient = useQueryClient();
   const mapProps = useMemo(() => mapConfig, []);
   const bridgeType = useDeterminateBridge();
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     if (icalTokenQuery.data) {
@@ -159,6 +170,7 @@ const MapPage = () => {
         searchByName,
         icalTokenQuery.data,
         resetToken,
+        showNotification,
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [icalTokenQuery.data, routerLocation]);
@@ -169,20 +181,28 @@ const MapPage = () => {
     },
   ) => {
     if (!(e.features![0].properties.class === 'entrance')) {
-      const data = await httpClient.mapi.getIndoorById(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
-        icalTokenQuery.data!,
-      );
+      try {
+        const data = await httpClient.mapi.getIndoorById(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
+          icalTokenQuery.data!,
+        );
 
-      setSelectedPoi(data);
-      setPopupState('middle');
-      const [lg, lt] = data.properties.point.coordinates;
-      setMarkerCoords({
-        lt,
-        lg,
-        level: parseInt(data.properties.tags.level ?? '1'),
-      });
+        if (data) {
+          setSelectedPoi(data);
+          setPopupState('middle');
+          const [lg, lt] = data.properties.point.coordinates;
+          setMarkerCoords({
+            lt,
+            lg,
+            level: parseInt(data.properties.tags.level ?? '1'),
+          });
+        } else {
+          showNotification('Точка интереса не найдена', 'error');
+        }
+      } catch (error) {
+        showNotification('Ошибка при получении точки интереса', 'error');
+      }
     }
   };
 
@@ -194,6 +214,7 @@ const MapPage = () => {
         searchByName,
         icalTokenQuery.data,
         resetToken,
+        showNotification,
       );
       if (icalTokenQuery.data) {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -274,6 +295,10 @@ const MapPage = () => {
       />
     </div>
   );
+};
+
+const MapPage = () => {
+  return <MapPageContent />;
 };
 
 export default MapPage;

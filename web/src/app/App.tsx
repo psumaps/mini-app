@@ -10,6 +10,7 @@ import bridge from '@vkontakte/vk-bridge';
 import showOnboarding from 'psumaps-shared/src/utils/onboarding';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { init, isTMA } from '@telegram-apps/sdk-react';
+import { NotificationProvider } from 'psumaps-shared/src/components/common/notification';
 import Storage, { BRIDGE_STATUS_KEY } from './storage';
 
 import router from './router';
@@ -40,7 +41,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <StorageContext.Provider value={useMemo(() => new Storage(), [])}>
-        <RouterProvider router={router} />
+        <NotificationProvider>
+          <RouterProvider router={router} />
+        </NotificationProvider>
       </StorageContext.Provider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

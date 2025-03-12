@@ -73,15 +73,33 @@ export default class QrScanner implements IControl<Map> {
    * @returns Processed QR code data
    */
   private processQrCode(code_data: string): string {
-    // Extract the hash or query part from the URL
-    const hashIndex = code_data.lastIndexOf('#');
-    const queryIndex = code_data.lastIndexOf('?');
-    const startIndex = Math.max(hashIndex, queryIndex);
+    if (!code_data) return '';
 
-    if (startIndex !== -1) {
-      return code_data.slice(startIndex + 1);
+    try {
+      // Проверяем, является ли код URL
+      let url: URL;
+      try {
+        url = new URL(code_data);
+      } catch {
+        // Если это не URL, возвращаем как есть
+        return code_data;
+      }
+
+      // Если есть хэш, возвращаем его без #
+      if (url.hash && url.hash.length > 1) {
+        return url.hash.substring(1);
+      }
+
+      // Если есть параметры запроса, возвращаем их без ?
+      if (url.search && url.search.length > 1) {
+        return url.search.substring(1);
+      }
+
+      // Если нет ни хэша, ни параметров, возвращаем весь код
+      return code_data;
+    } catch (error) {
+      return code_data;
     }
-    return code_data;
   }
 
   onRemove() {
