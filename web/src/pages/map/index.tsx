@@ -163,7 +163,9 @@ const MapPageContent = () => {
   return (
     <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
       {icalTokenQuery.isLoading ? (
-        <div className="relative flex-[0_0_92%]">Загрузка...</div>
+        <div className="relative flex-[0_0_92%] flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
       ) : (
         <div
           className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
