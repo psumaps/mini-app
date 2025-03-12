@@ -14,9 +14,9 @@ interface IndoorControlProps {
 }
 
 const IndoorControl = ({
-                         position = 'bottom-right',
-                         onLevelChange,
-                       }: IndoorControlProps) => {
+  position = 'bottom-right',
+  onLevelChange,
+}: IndoorControlProps) => {
   const [levels, setLevels] = useState<string[]>([]);
   const [currentLevel, setCurrentLevel] = useState('1');
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);

@@ -39,10 +39,10 @@ function processQrCode(code_data: string): string {
 }
 
 const QrScannerControl = ({
-                            onScan,
-                            bridgeType,
-                            position = 'bottom-right',
-                          }: QrScannerProps) => {
+  onScan,
+  bridgeType,
+  position = 'bottom-right',
+}: QrScannerProps) => {
   const handleClick = useCallback(() => {
     if (bridgeType === BridgeType.tgconnect) {
       void qrScanner.open({

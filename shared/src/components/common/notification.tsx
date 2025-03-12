@@ -52,8 +52,8 @@ interface NotificationProviderProps {
 }
 
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
-                                                                            children,
-                                                                          }) => {
+  children,
+}) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const showNotification = useCallback(
@@ -106,9 +106,9 @@ interface NotificationContainerProps {
 }
 
 const NotificationContainer: React.FC<NotificationContainerProps> = ({
-                                                                       notifications,
-                                                                       hideNotification,
-                                                                     }) => {
+  notifications,
+  hideNotification,
+}) => {
   if (notifications.length === 0) return null;
 
   return (
@@ -130,9 +130,9 @@ interface NotificationItemProps {
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({
-                                                             notification,
-                                                             onClose,
-                                                           }) => {
+  notification,
+  onClose,
+}) => {
   const { type, message } = notification;
   const bgColor = NOTIFICATION_COLORS[type];
 
