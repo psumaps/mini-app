@@ -23,8 +23,9 @@ const TestingBanner: React.FC<TestingBannerProps> = ({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    window.open(FORM_URL, '_blank');
     showNotification('Спасибо за участие в тестировании!', 'success');
+    localStorage.setItem(BANNER_STORAGE_KEY, 'true');
+    window.open(FORM_URL, '_blank');
   };
 
   const handleClose = (e: React.MouseEvent) => {
