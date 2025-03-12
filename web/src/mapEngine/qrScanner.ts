@@ -3,6 +3,7 @@ import { IControl } from 'react-map-gl/src/types/lib';
 import bridge from '@vkontakte/vk-bridge';
 import svg from 'psumaps-shared/src/assets/qr.svg';
 import { BridgeType } from 'psumaps-shared/src/models/storage';
+import { qrScanner } from '@telegram-apps/sdk-react';
 
 export default class QrScanner implements IControl<Map> {
   private _container?: HTMLElement;
@@ -41,33 +42,46 @@ export default class QrScanner implements IControl<Map> {
     this._geolocateButton.setAttribute('aria-label', 'QR Scanner');
     this._geolocateButton.addEventListener('click', () => {
       if (this.bridgeType === BridgeType.tgconnect) {
-        /* return void qrScanner.open({
-          text: 'Scan the QR',
-          capture(code_data: string) {
+        void qrScanner.open({
+          text: 'Scan the QR code',
+          capture: (code_data: string) => {
             if (code_data) {
-              this.callback(
-                code_data.slice(
-                  Math.max(
-                    code_data.lastIndexOf('#'),
-                    code_data.lastIndexOf('?'),
-                  ) + 1,
-                ), // https://vk.com/apps...#q=512/2
-              );
+              const processedCode = this.processQrCode(code_data);
+              this.callback(processedCode);
+              qrScanner.close();
               return true;
             }
+            return false;
           },
-        }); */
+        });
+      } else if (this.bridgeType === BridgeType.vkbridge) {
+        void bridge.send('VKWebAppOpenCodeReader').then((data) => {
+          if (data?.code_data) {
+            const processedCode = this.processQrCode(data.code_data); // https://vk.com/apps...#q=512/2
+            this.callback(processedCode);
+          }
+        });
       }
-
-      return void bridge.send('VKWebAppOpenCodeReader').then((data) => {
-        if (data?.code_data) {
-          this.callback(
-            data.code_data.slice(data.code_data.lastIndexOf('#') + 1), // https://vk.com/apps...#q=512/2
-          );
-        }
-      });
     });
+
     return this._container;
+  }
+
+  /**
+   * Process QR code data to extract the relevant part
+   * @param code_data Raw QR code data
+   * @returns Processed QR code data
+   */
+  private processQrCode(code_data: string): string {
+    // Extract the hash or query part from the URL
+    const hashIndex = code_data.lastIndexOf('#');
+    const queryIndex = code_data.lastIndexOf('?');
+    const startIndex = Math.max(hashIndex, queryIndex);
+
+    if (startIndex !== -1) {
+      return code_data.slice(startIndex + 1);
+    }
+    return code_data;
   }
 
   onRemove() {

@@ -230,7 +230,7 @@ const MapPage = () => {
               compact
               customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
             />
-            {bridgeType === BridgeType.vkbridge && (
+            {bridgeType !== BridgeType.local && (
               <QrControl
                 handleSelect={handleSelect}
                 handleSearch={searchByName}
