@@ -3,9 +3,9 @@ import { useControl } from 'react-map-gl/maplibre';
 import type { Map } from 'maplibre-gl';
 import debounce from 'debounce';
 import arrayEqual from 'array-equal';
+import { FilterSpecification } from '@maplibre/maplibre-gl-style-spec';
 import findAllLevels from './levels';
 import layers from './layers';
-import { FilterSpecification } from '@maplibre/maplibre-gl-style-spec';
 
 interface IndoorControlProps {
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';

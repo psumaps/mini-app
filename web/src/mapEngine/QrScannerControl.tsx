@@ -67,7 +67,6 @@ const QrScannerControl = ({
 
   useControl(
     () => {
-
       return {
         onAdd() {
           const container = document.createElement('div');
