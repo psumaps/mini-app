@@ -12,20 +12,12 @@ import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search
 import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
-import React, {
-  forwardRef,
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useMemo,
-} from 'react';
-import type { MapContextValue } from 'react-map-gl/dist/esm/components/map';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import Map, {
   AttributionControl,
   MapRef,
   Marker,
   NavigationControl,
-  useControl,
 } from 'react-map-gl/maplibre';
 import { useLocation } from 'react-router-dom';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
@@ -34,80 +26,31 @@ import { BridgeType, StorageContext } from 'psumaps-shared/src/models/storage';
 import { useQueryClient } from '@tanstack/react-query';
 import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
 import { useNotification } from 'psumaps-shared/src/components/common/notification';
-import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig } from '~/mapEngine/mapConfig';
-import QrScanner from '~/mapEngine/qrScanner';
 import NavigationBar from '~/widgets/navigationBar';
 import TestingBanner from '~/components/TestingBanner';
+import QrScannerControl from '~/mapEngine/QrScannerControl';
+import IndoorControl from '~/mapEngine/IndoorControl';
 import registerProtocol from './mapUtils';
 
 const popUpId = 'search-pop-up';
 
-const IndoorControl = forwardRef<IndoorEqual>(function IndoorControl(_, ref) {
-  // eslint-disable-next-line no-param-reassign
-  (ref! as MutableRefObject<IndoorEqual | null>).current = useControl(
-    (context: MapContextValue) => {
-      // @ts-expect-error no types for this
-      return new IndoorEqual(context.map.getMap(), {});
-    },
-    { position: 'bottom-right' },
-  );
-  return null;
-});
-
-const QrControl = ({
-  handleSelect,
-  handleSearch,
-  icalToken,
-  bridgeType,
-}: {
-  handleSelect: (poi: Poi) => void;
-  handleSearch: (query: string) => void;
-  icalToken: string | undefined;
-  bridgeType: BridgeType;
-}) => {
-  const { showNotification } = useNotification();
-
-  useControl(
-    () =>
-      new QrScanner(
-        (code) =>
-          void handleRedirect(
-            code,
-            handleSelect,
-            handleSearch,
-            icalToken,
-            undefined,
-          ).then((result) => {
-            if (!result.success && result.message) {
-              showNotification(result.message, 'error');
-            }
-          }),
-        bridgeType,
-      ),
-    { position: 'bottom-right' },
-  );
-  return null;
-};
-
 const MapPageContent = () => {
   const { data: animEnabled } = useAnimEnabled();
   const isKeyboardOpen = useDetectKeyboardOpen();
-  const mapRef = React.useRef<MapRef | null>(null);
-  const indoorControlRef = React.useRef<IndoorEqual | null>(null);
-  const [viewState, setViewState] = React.useState(initialView);
-  const [markerCoords, setMarkerCoords] = React.useState<{
+  const mapRef = useRef<MapRef | null>(null);
+  const [viewState, setViewState] = useState(initialView);
+  const [markerCoords, setMarkerCoords] = useState<{
     lt: number;
     lg: number;
     level: number;
   } | null>(null);
-  const [popupState, setPopupState] =
-    React.useState<PopUpState>('unauthorized');
-  const [selectedPoi, setSelectedPoi] = React.useState<Poi | null>(null);
-  const [indoorLevel, setIndoorLevel] = React.useState(1);
-  const [isBannerVisible, setIsBannerVisible] = React.useState(true);
+  const [popupState, setPopupState] = useState<PopUpState>('unauthorized');
+  const [selectedPoi, setSelectedPoi] = useState<Poi | null>(null);
+  const [indoorLevel, setIndoorLevel] = useState('1');
+  const [isBannerVisible, setIsBannerVisible] = useState(true);
   const routerLocation = useLocation();
-  const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
+  const searchPopUpRef = useRef<SearchPopUpRef>(null);
   const icalTokenQuery = useIcalToken();
   const storage = useContext(StorageContext);
   const queryClient = useQueryClient();
@@ -121,14 +64,13 @@ const MapPageContent = () => {
     }
     registerProtocol(queryClient, icalTokenQuery.data);
     return () => removeProtocol('martin');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [icalTokenQuery.data]);
+  }, [icalTokenQuery.data, queryClient]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
   }, [selectedPoi]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       calculateControlsMargin(popUpId);
     }, 33);
@@ -145,11 +87,9 @@ const MapPageContent = () => {
       level: parseInt(poi.properties.tags.level ?? '1'),
     });
     setSelectedPoi(poi);
-    setIndoorLevel(parseInt(poi.properties.tags.level ?? '1'));
+    setIndoorLevel(poi.properties.tags.level ?? '1');
 
     if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
-    if (poi.properties.tags.level)
-      indoorControlRef?.current?.setLevel(poi.properties.tags.level);
     setPopupState('middle');
   };
 
@@ -161,7 +101,7 @@ const MapPageContent = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (mapRef.current?.areTilesLoaded)
       void handleLocationHash(
         routerLocation.hash,
@@ -171,8 +111,7 @@ const MapPageContent = () => {
         resetToken,
         showNotification,
       );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [icalTokenQuery.data, routerLocation]);
+  }, [icalTokenQuery.data, routerLocation.hash, showNotification]);
 
   const handlePoiClick = async (
     e: MapMouseEvent & {
@@ -182,8 +121,7 @@ const MapPageContent = () => {
     if (!(e.features![0].properties.class === 'entrance')) {
       try {
         const data = await httpClient.mapi.getIndoorById(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          String(e.features![0].id!).slice(0, -1), // в поле id приходит значение c лишней "1" справа (ノ^_^)ノ┻━┻ ┬─┬
+          String(e.features![0].id!).slice(0, -1),
           icalTokenQuery.data!,
         );
 
@@ -216,22 +154,14 @@ const MapPageContent = () => {
         showNotification,
       );
       if (icalTokenQuery.data) {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
       }
-    }
-    if (indoorControlRef.current) {
-      indoorControlRef.current.on('levelchange', () =>
-        setIndoorLevel(parseInt(indoorControlRef?.current?.level ?? '1')),
-      );
     }
   };
 
   return (
     <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
-      {/* eslint-disable-next-line no-nested-ternary */}
       {icalTokenQuery.isLoading ? (
         <div className="relative flex-[0_0_92%]">Загрузка...</div>
       ) : (
@@ -253,15 +183,25 @@ const MapPageContent = () => {
               />
             )}
             {bridgeType !== BridgeType.local && (
-              <QrControl
-                handleSelect={handleSelect}
-                handleSearch={searchByName}
-                icalToken={icalTokenQuery.data}
+              <QrScannerControl
+                onScan={(code) =>
+                  void handleRedirect(
+                    code,
+                    handleSelect,
+                    searchByName,
+                    icalTokenQuery.data,
+                    undefined,
+                  ).then((result) => {
+                    if (!result.success && result.message) {
+                      showNotification(result.message, 'error');
+                    }
+                  })
+                }
                 bridgeType={bridgeType}
               />
-            )}{' '}
+            )}
             <NavigationControl position="bottom-right" />
-            <IndoorControl ref={indoorControlRef} />
+            <IndoorControl onLevelChange={setIndoorLevel} />
             {markerCoords && (
               <Marker
                 latitude={markerCoords.lt}
@@ -274,7 +214,7 @@ const MapPageContent = () => {
               >
                 <MarkerIcon
                   className={`${animEnabled && 'transition-all duration-200 ease-in-out'} 
-                    ${markerCoords.level === indoorLevel ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
+                    ${markerCoords.level === parseInt(indoorLevel) ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
                 />
               </Marker>
             )}
