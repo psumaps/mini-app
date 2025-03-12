@@ -33,14 +33,12 @@ import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import { BridgeType, StorageContext } from 'psumaps-shared/src/models/storage';
 import { useQueryClient } from '@tanstack/react-query';
 import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
-import {
-  NotificationProvider,
-  useNotification,
-} from 'psumaps-shared/src/components/common/notification';
+import { useNotification } from 'psumaps-shared/src/components/common/notification';
 import IndoorEqual from '~/mapEngine/indoorEqual';
 import { initialView, mapConfig } from '~/mapEngine/mapConfig';
 import QrScanner from '~/mapEngine/qrScanner';
 import NavigationBar from '~/widgets/navigationBar';
+import TestingBanner from '~/components/TestingBanner';
 import registerProtocol from './mapUtils';
 
 const popUpId = 'search-pop-up';
@@ -107,6 +105,7 @@ const MapPageContent = () => {
     React.useState<PopUpState>('unauthorized');
   const [selectedPoi, setSelectedPoi] = React.useState<Poi | null>(null);
   const [indoorLevel, setIndoorLevel] = React.useState(1);
+  const [isBannerVisible, setIsBannerVisible] = React.useState(true);
   const routerLocation = useLocation();
   const searchPopUpRef = React.useRef<SearchPopUpRef>(null);
   const icalTokenQuery = useIcalToken();
@@ -246,11 +245,13 @@ const MapPageContent = () => {
             {...mapProps}
             onMove={(e) => setViewState(e.viewState)}
           >
-            <AttributionControl
-              position="top-right"
-              compact
-              customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
-            />
+            {!isBannerVisible && (
+              <AttributionControl
+                position="top-right"
+                compact
+                customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
+              />
+            )}
             {bridgeType !== BridgeType.local && (
               <QrControl
                 handleSelect={handleSelect}
@@ -278,6 +279,7 @@ const MapPageContent = () => {
               </Marker>
             )}
           </Map>
+          <TestingBanner onVisibilityChange={setIsBannerVisible} />
           <SearchPopUp
             ref={searchPopUpRef}
             id={popUpId}
