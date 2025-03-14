@@ -25,19 +25,43 @@ const useMapLogic = () => {
   const [indoorLevel, setIndoorLevel] = useState('1');
   const [isBannerVisible, setIsBannerVisible] = useState(true);
   const routerLocation = useLocation();
-  const icalTokenContext = useIcalToken();
-  const { isValid } = icalTokenContext;
+  const { token, isValid } = useIcalToken();
   const queryClient = useQueryClient();
   const { showNotification } = useNotification();
   const { safeHandleLocationHash } = useLocationHash();
+
+  // Обработчик ошибки авторизации
+  const handleAuthError = useCallback(() => {
+    showNotification('Проблемы с сервером авторизации...', 'warning', 5000);
+  }, [showNotification]);
+
+  // Обработчик успешной загрузки приватных тайлов после fallback
+  const handleSuccessAfterFallback = useCallback(() => {
+    showNotification('Авторизация восстановлена!', 'success', 5000);
+    // Перезагрузка карты
+    if (mapRef.current) {
+      mapRef.current.getMap().triggerRepaint();
+    }
+  }, [showNotification]);
 
   useEffect(() => {
     if (isValid) {
       setPopupState('closed');
     }
-    registerProtocol(queryClient, icalTokenContext.token ?? undefined);
+    registerProtocol({
+      queryClient,
+      token: token ?? undefined,
+      onAuthError: handleAuthError,
+      onSuccessAfterFallback: handleSuccessAfterFallback,
+    });
     return () => removeProtocol('martin');
-  }, [icalTokenContext.token, isValid, queryClient]);
+  }, [
+    token,
+    isValid,
+    queryClient,
+    handleAuthError,
+    handleSuccessAfterFallback,
+  ]);
 
   useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
