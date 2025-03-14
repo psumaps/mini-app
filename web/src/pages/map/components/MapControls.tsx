@@ -1,11 +1,9 @@
 import React from 'react';
 import { AttributionControl, NavigationControl } from 'react-map-gl/maplibre';
 import { BridgeType } from 'psumaps-shared/src/models/storage';
-import { handleRedirect } from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
-import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
-import { useNotification } from 'psumaps-shared/src/components/common/notification';
+import useLocationHash from 'psumaps-shared/src/hooks/useLocationHash';
 import IndoorControl from '~/mapEngine/IndoorControl';
 import QrScannerControl from '~/mapEngine/QrScannerControl';
 
@@ -17,14 +15,13 @@ interface MapControlsProps {
 }
 
 const MapControls: React.FC<MapControlsProps> = ({
-                                                   isBannerVisible,
-                                                   onLevelChange,
-                                                   handleSelect,
-                                                   searchByName,
-                                                 }) => {
-  const { token } = useIcalToken();
+  isBannerVisible,
+  onLevelChange,
+  handleSelect,
+  searchByName,
+}) => {
   const bridgeType = useDeterminateBridge();
-  const { showNotification } = useNotification();
+  const { safeHandleLocationHash } = useLocationHash();
 
   return (
     <>
@@ -38,17 +35,7 @@ const MapControls: React.FC<MapControlsProps> = ({
       {bridgeType !== BridgeType.local && (
         <QrScannerControl
           onScan={(code) =>
-            void handleRedirect(
-              code,
-              handleSelect,
-              searchByName,
-              token ?? undefined,
-              undefined,
-            ).then((result) => {
-              if (!result.success && result.message) {
-                showNotification(result.message, 'error');
-              }
-            })
+            safeHandleLocationHash(code, handleSelect, searchByName)
           }
           bridgeType={bridgeType}
         />
