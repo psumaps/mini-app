@@ -10,7 +10,7 @@ import { SearchPopUpContainerRef } from './components/SearchPopUpContainer';
 
 const MapPage = () => {
   const searchPopUpRef = useRef<SearchPopUpContainerRef>(null);
-  const icalTokenQuery = useIcalToken();
+  const { isLoading: isTokenLoading } = useIcalToken();
   const { data: animEnabled = false } = useAnimEnabled();
   const isKeyboardOpen = useDetectKeyboardOpen();
 
@@ -18,11 +18,7 @@ const MapPage = () => {
 
   return (
     <div className="relative h-[100dvh] w-[100dvw] flex flex-col">
-      {icalTokenQuery.isLoading ? (
-        <MapLoader />
-      ) : (
-        <MapView searchByName={searchByName} />
-      )}
+      {isTokenLoading ? <MapLoader /> : <MapView searchByName={searchByName} />}
       <NavigationBar
         className={`${animEnabled && 'transition-all duration-200 ease-in-out'} origin-bottom flex-[0_0_8%] 
             ${isKeyboardOpen ? 'scale-y-0 min-h-[0_!important] flex-[0_0_0%]' : 'scale-y-100'}`}

@@ -170,7 +170,7 @@ export const handleRedirect = async (
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
   token: string | undefined,
-  resetToken: ((s: string) => void) | undefined,
+  resetToken: ((s: string) => Promise<void>) | undefined,
 ): Promise<RedirectResult> => {
   const hashParams = parseHashParams(redirectHash);
   let result: RedirectResult = { success: true };
@@ -208,7 +208,7 @@ export const handleLocationHash = async (
   handleSelect: (poi: Poi) => void,
   handleSearch: (query: string) => void,
   token: string | undefined,
-  resetToken: (s: string) => void,
+  resetToken: (s: string) => Promise<void>,
   showNotification?: (
     message: string,
     type: 'success' | 'error' | 'info' | 'warning',

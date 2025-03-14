@@ -1,8 +1,7 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { MapRef } from 'react-map-gl/maplibre';
 import { useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { StorageContext } from 'psumaps-shared/src/models/storage';
 import {
   calculateControlsMargin,
   handleLocationHash,
@@ -10,7 +9,7 @@ import {
 import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import { removeProtocol } from 'maplibre-gl';
-import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
+import { useIcalToken } from 'psumaps-shared/src/contexts/IcalTokenContext';
 import { useNotification } from 'psumaps-shared/src/components/common/notification';
 import registerProtocol from '../mapUtils';
 import { initialView } from '~/mapEngine/mapConfig';
@@ -28,18 +27,17 @@ const useMapLogic = () => {
   const [indoorLevel, setIndoorLevel] = useState('1');
   const [isBannerVisible, setIsBannerVisible] = useState(true);
   const routerLocation = useLocation();
-  const icalTokenQuery = useIcalToken();
-  const storage = useContext(StorageContext);
+  const { token, isValid, setToken } = useIcalToken();
   const queryClient = useQueryClient();
   const { showNotification } = useNotification();
 
   useEffect(() => {
-    if (icalTokenQuery.data) {
+    if (isValid) {
       setPopupState('closed');
     }
-    registerProtocol(queryClient, icalTokenQuery.data);
+    registerProtocol(queryClient, token ?? undefined);
     return () => removeProtocol('martin');
-  }, [icalTokenQuery.data, queryClient]);
+  }, [token, isValid, queryClient]);
 
   useEffect(() => {
     if (selectedPoi === null) setMarkerCoords(null);
@@ -52,7 +50,7 @@ const useMapLogic = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSelect = (poi: Poi) => {
+  const handleSelect = useCallback((poi: Poi) => {
     const [lg, lt] = poi.properties.point.coordinates;
     setMarkerCoords({
       lt,
@@ -64,40 +62,35 @@ const useMapLogic = () => {
 
     if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
     setPopupState('middle');
-  };
+  }, []);
 
-  const resetToken = (new_token: string) => {
-    if (storage) {
-      void storage.set('ical_token', new_token);
-      window.location.hash = window.location.hash.replace(/&?ical=\w+&?/, '');
-      window.location.reload();
-    }
-  };
+  // Функция для безопасного вызова handleLocationHash
+  const safeHandleLocationHash = useCallback(
+    (hash: string, searchByNameFn: () => void) => {
+      void handleLocationHash(
+        hash,
+        handleSelect,
+        searchByNameFn,
+        token ?? undefined,
+        setToken,
+        showNotification,
+      ).catch((err) => {
+        console.error('Error handling location hash:', err);
+        showNotification('Ошибка при обработке параметров URL', 'error');
+      });
+    },
+    [token, setToken, showNotification, handleSelect],
+  );
 
   useEffect(() => {
-    if (mapRef.current?.areTilesLoaded)
-      void handleLocationHash(
-        routerLocation.hash,
-        handleSelect,
-        () => {
-        }, // Заглушка для searchByName, реальная реализация будет в компоненте
-        icalTokenQuery.data,
-        resetToken,
-        showNotification,
-      );
-  }, [icalTokenQuery.data, routerLocation.hash, showNotification]);
+    if (mapRef.current?.areTilesLoaded) {
+      safeHandleLocationHash(routerLocation.hash, () => {});
+    }
+  }, [routerLocation.hash, safeHandleLocationHash]);
 
   const handleLoad = () => {
     if (mapRef.current) {
-      void handleLocationHash(
-        routerLocation.hash,
-        handleSelect,
-        () => {
-        }, // Заглушка для searchByName, реальная реализация будет в компоненте
-        icalTokenQuery.data,
-        resetToken,
-        showNotification,
-      );
+      safeHandleLocationHash(routerLocation.hash, () => {});
     }
   };
 
@@ -118,7 +111,7 @@ const useMapLogic = () => {
     handleSelect,
     handleLoad,
     showNotification,
-    resetToken,
   };
 };
+
 export default useMapLogic;

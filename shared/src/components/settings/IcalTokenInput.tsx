@@ -1,162 +1,173 @@
-import { useQuery } from '@tanstack/react-query';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import CheckSvg from '../../assets/check-circle.svg?react';
 import MinusSvg from '../../assets/minus-circle.svg?react';
 import CrossSvg from '../../assets/x-circle.svg?react';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
-import useIcalToken from '../../hooks/useIcalToken';
-import useTryQueryClient from '../../hooks/useTryQueryClient';
-import IStorage from '../../models/storage';
-import httpClient from '../../network/httpClient';
+import { useIcalToken } from '../../contexts/IcalTokenContext';
 import Button from '../common/button';
 import ClearableInput from '../common/clearableInput';
 import Modal from '../common/modal';
 
-const IcalTokenInput = ({
-  storage,
-  className,
+// Минимальное время проверки токена (мс)
+const MIN_VALIDATION_TIME = 800;
+
+// Компоненты для отображения статуса авторизации
+const StatusIcon = ({
+  isLoading,
+  isValid,
+  hasError,
 }: {
-  storage: IStorage;
-  className?: string;
+  isLoading: boolean;
+  isValid: boolean;
+  hasError: boolean;
 }) => {
-  const queryClient = useTryQueryClient();
+  if (isLoading)
+    return <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />;
+
+  if (isValid) return <CheckSvg className="size-10 stroke-green-700" />;
+  if (hasError) return <CrossSvg className="size-10 stroke-red-700" />;
+  return <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />;
+};
+
+const StatusText = ({
+  isLoading,
+  isValid,
+  error,
+}: {
+  isLoading: boolean;
+  isValid: boolean;
+  error: string | null;
+}) => {
+  if (isLoading) return 'Проверяем...';
+  if (isValid) return 'Авторизация успешна';
+  if (error) return error;
+  return 'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
+};
+
+interface Props {
+  className?: string;
+}
+
+const IcalTokenInput = ({ className }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const icalTokenQuery = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
-  const [state, setState] = React.useState<'opened' | 'closed'>('closed');
-  const [stagedToken, setStagedToken] = useState<string | null>(null);
+  const [state, setState] = useState<'opened' | 'closed'>('closed');
   const [isShaking, setIsShaking] = useState(false);
+  const [isManuallyValidating, setIsManuallyValidating] = useState(false);
+  const [lastProcessedToken, setLastProcessedToken] = useState<string>('');
 
-  const icalTokenCorrect = useMemo(() => {
-    const query = icalTokenQuery.data?.trim();
-    return !!query && query.match(/^[0-9A-Z]{16}$/)?.length === 1;
-  }, [icalTokenQuery.data]);
+  const { token, isValid, isLoading, error, setToken, clearToken } =
+    useIcalToken();
 
-  const icalStageTokenCorrect = (token: string | null) => {
-    const query = token?.trim();
-    return !!query && query.match(/^[0-9A-Z]{16}$/)?.length === 1;
-  };
-
-  const icalValidationQuery = useQuery(
-    {
-      queryKey: ['ical_token_validation'],
-      queryFn: () =>
-        httpClient.mapi.validateIcal(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-          stagedToken || icalTokenQuery.data?.trim()!,
-        ),
-      enabled: icalStageTokenCorrect(stagedToken) || icalTokenCorrect,
-      retry: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-    },
-    queryClient,
-  );
-
+  // Эффект для отображения анимации тряски при ошибке
   useEffect(() => {
-    if (location.hash.slice(1) === 'auth')
-      setTimeout(() => setState('opened'), 50);
-  }, []);
-
-  const authResult = useMemo<
-    'valid' | 'invalid' | 'missing' | 'server_error' | 'loading'
-  >(() => {
-    if (icalValidationQuery.isLoading) return 'loading';
-    if (
-      !icalValidationQuery.isFetched ||
-      (stagedToken && !icalStageTokenCorrect(stagedToken))
-    )
-      return 'missing';
-    if (icalValidationQuery.data === true) return 'valid';
-    if (icalValidationQuery.data === false) return 'invalid';
-    return 'server_error';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stagedToken, icalValidationQuery.data, stagedToken]);
+    if (isManuallyValidating && !isLoading && error && !isValid) {
+      handleShake();
+      setIsManuallyValidating(false);
+    }
+  }, [isLoading, error, isValid, isManuallyValidating]);
 
   const handleShake = () => {
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 700);
   };
 
-  useEffect(() => {
-    if (stagedToken) {
-      if (authResult === 'valid') {
-        void storage.set('ical_token', stagedToken);
-      } else if (authResult === 'invalid') {
-        void storage.set('ical_token', '');
-        handleShake();
-      }
-    }
-    // зависимость от запроса, который иерархически сохраняет статус
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [icalValidationQuery]);
+  // Обработка и проверка токена
+  const processToken = (inputValue: string) => {
+    if (!inputValue) return '';
 
-  const AuthResultIcon = useCallback(() => {
-    switch (authResult) {
-      case 'valid':
-        return <CheckSvg className="size-10 stroke-green-700" />;
-      case 'invalid':
-        return <CrossSvg className="size-10 stroke-red-700" />;
-      case 'server_error':
-        return <MinusSvg className="size-10 stroke-red-700" />;
-      default:
-        return (
-          <MinusSvg className="size-10 stroke-c_main dark:stroke-cd_main" />
-        );
+    // Обработка URL с токеном
+    let processedToken = inputValue;
+    if (processedToken.startsWith('https://')) {
+      const words = processedToken.split('/');
+      processedToken = words[words.length - 1];
     }
-  }, [authResult]);
 
-  const AuthResultText = useCallback(() => {
-    switch (authResult) {
-      case 'loading':
-        return 'Проверяем...';
-      case 'valid':
-        return 'Авторизация успешна';
-      case 'invalid':
-        return 'Токен не прошел проверку';
-      case 'server_error':
-        return 'Сервер авторизации недоступен';
-      default:
-        return 'В ожидании токена. Токен должен состоять из 16 латинских букв и цифр.';
-    }
-  }, [authResult]);
-
-  const handleTokenSubmit = () => {
-    let { value } = inputRef.current!;
-    if (value.startsWith('https://')) {
-      const words = value.split('/');
-      value = words[words.length - 1];
-    }
-    if (authResult !== 'valid' && stagedToken === value?.trim()) handleShake();
-
-    setStagedToken(value?.trim());
-    setTimeout(() => {
-      if (icalStageTokenCorrect(value.trim()))
-        void queryClient.invalidateQueries({
-          queryKey: ['ical_token_validation'],
-        });
-      else handleShake();
-    }, 150);
-    inputRef.current!.value = value;
+    return processedToken.trim();
   };
 
-  const tokenMasked = useMemo(() => {
-    if (icalTokenCorrect || icalStageTokenCorrect(stagedToken)) {
-      const token = stagedToken || icalTokenQuery.data!;
-      return (
-        token.substring(0, token.length / 2) +
-        '*'.repeat(Math.ceil(token.length / 2.0))
-      );
+  const validateTokenWithDelay = async (tokenToValidate: string) => {
+    if (isLoading || tokenToValidate === lastProcessedToken) return;
+
+    setLastProcessedToken(tokenToValidate);
+    setIsManuallyValidating(true);
+
+    // Запускаем таймер минимального времени проверки
+    const startTime = Date.now();
+
+    try {
+      // Выполняем проверку токена
+      await setToken(tokenToValidate);
+
+      // Проверяем, прошло ли минимальное время
+      const elapsedTime = Date.now() - startTime;
+      if (elapsedTime < MIN_VALIDATION_TIME) {
+        // Если нет, ждем оставшееся время
+        await new Promise((resolve) => {
+          setTimeout(resolve, MIN_VALIDATION_TIME - elapsedTime);
+        });
+      }
+    } catch (err) {
+      // Обработка ошибок
+      console.error('Ошибка при проверке токена:', err);
+      handleShake();
+    } finally {
+      setIsManuallyValidating(false);
     }
-    return '';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stagedToken, icalTokenCorrect]);
+  };
+
+  const handleTokenSubmit = () => {
+    if (!inputRef.current) return;
+
+    const processedToken = processToken(inputRef.current.value);
+    if (!processedToken) return;
+
+    void validateTokenWithDelay(processedToken);
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    // Получаем вставленный текст
+    const pastedText = e.clipboardData.getData('text');
+    if (!pastedText) return;
+
+    // Обрабатываем токен
+    const processedToken = processToken(pastedText);
+    if (!processedToken) return;
+
+    // Устанавливаем обработанный токен в поле ввода и проверяем его
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.value = processedToken;
+      }
+
+      // Автоматически проверяем токен
+      void validateTokenWithDelay(processedToken);
+    }, 0);
+  };
+
+  const handleClearToken = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+    void clearToken();
+  };
+
+  // Маскирование токена для отображения
+  const tokenMasked = token
+    ? `${token.substring(0, token.length / 2)}${'*'.repeat(Math.ceil(token.length / 2.0))}`
+    : '';
+
+  // Определяем класс для статуса
+  const getStatusClass = () => {
+    if (error) return 'text-red-700';
+    if (isValid) return 'text-green-700';
+    return 'text-c_main';
+  };
+
+  const statusClass = getStatusClass();
+
+  // Определяем, показывать ли индикатор загрузки
+  const showLoading = isLoading || isManuallyValidating;
 
   return (
     <div className={`flex flex-row ${className}`}>
@@ -168,18 +179,7 @@ const IcalTokenInput = ({
           setState('opened');
         }}
       >
-        <p
-          className={`c3 ${
-            // eslint-disable-next-line no-nested-ternary
-            authResult === 'invalid'
-              ? 'text-red-700'
-              : authResult === 'valid'
-                ? 'text-green-700'
-                : 'text-c_main'
-          }`}
-        >
-          Авторизация
-        </p>
+        <p className={`c3 ${statusClass}`}>Авторизация</p>
       </Button>
 
       {state === 'opened' && (
@@ -197,15 +197,14 @@ const IcalTokenInput = ({
         } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''} `}
       >
         <div className="overflow-hidden">
-          {icalTokenCorrect && <p>Ваш токен: {tokenMasked}</p>}
+          {isValid && token && <p>Ваш токен: {tokenMasked}</p>}
           <br />
           <ClearableInput
             placeholder="Ваш токен"
-            onSubmit={() => handleTokenSubmit()}
-            onBlur={() => handleTokenSubmit()}
-            onClear={() => {
-              inputRef.current!.value = '';
-            }}
+            onSubmit={handleTokenSubmit}
+            onBlur={handleTokenSubmit}
+            onPaste={handlePaste}
+            onClear={handleClearToken}
             ref={inputRef}
             alwaysShowClear={false}
           />
@@ -233,9 +232,17 @@ const IcalTokenInput = ({
           <div
             className={`flex flex-row gap-4 items-center mt-2 ${isShaking ? 'animate-shake' : ''}`}
           >
-            <AuthResultIcon />
+            <StatusIcon
+              isLoading={showLoading}
+              isValid={isValid}
+              hasError={!!error}
+            />
             <p className="flex-[1_0_0]">
-              <AuthResultText />
+              <StatusText
+                isLoading={showLoading}
+                isValid={isValid}
+                error={error}
+              />
             </p>
           </div>
         </div>
