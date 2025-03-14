@@ -22,10 +22,9 @@ const MapControls: React.FC<MapControlsProps> = ({
                                                    handleSelect,
                                                    searchByName,
                                                  }) => {
-  const icalTokenQuery = useIcalToken();
+  const { token } = useIcalToken();
   const bridgeType = useDeterminateBridge();
   const { showNotification } = useNotification();
-  const icalToken = icalTokenQuery.data;
 
   return (
     <>
@@ -43,7 +42,7 @@ const MapControls: React.FC<MapControlsProps> = ({
               code,
               handleSelect,
               searchByName,
-              icalToken,
+              token ?? undefined,
               undefined,
             ).then((result) => {
               if (!result.success && result.message) {

@@ -22,9 +22,8 @@ const PoiHandler: React.FC<PoiHandlerProps> = ({
                                                  setPopupState,
                                                  setMarkerCoords,
                                                }) => {
-  const icalTokenQuery = useIcalToken();
+  const { token } = useIcalToken();
   const { showNotification } = useNotification();
-  const icalToken = icalTokenQuery.data;
 
   const handlePoiClick = (
     e: MapMouseEvent & {
@@ -33,7 +32,7 @@ const PoiHandler: React.FC<PoiHandlerProps> = ({
   ) => {
     if (!(e.features![0].properties.class === 'entrance')) {
       httpClient.mapi
-        .getIndoorById(String(e.features![0].id!).slice(0, -1), icalToken!)
+        .getIndoorById(String(e.features![0].id!).slice(0, -1), token!)
         .then((data) => {
           if (data) {
             setSelectedPoi(data);
@@ -55,7 +54,7 @@ const PoiHandler: React.FC<PoiHandlerProps> = ({
   };
 
   useEffect(() => {
-    if (mapRef.current && icalToken) {
+    if (mapRef.current && token) {
       mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
       mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
     }
@@ -67,7 +66,7 @@ const PoiHandler: React.FC<PoiHandlerProps> = ({
         current.off('click', 'indoor-poi-rank2', handlePoiClick);
       }
     };
-  }, [mapRef.current, icalToken]);
+  }, [mapRef.current, token]);
 
   return null; // Этот компонент не рендерит UI, только добавляет обработчики событий
 };
