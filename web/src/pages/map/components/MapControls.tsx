@@ -12,6 +12,7 @@ interface MapControlsProps {
   onLevelChange: (level: string) => void;
   handleSelect: (poi: Poi) => void;
   searchByName: (name: string) => void;
+  indoorLevel?: string;
 }
 
 const MapControls: React.FC<MapControlsProps> = ({
@@ -19,6 +20,7 @@ const MapControls: React.FC<MapControlsProps> = ({
   onLevelChange,
   handleSelect,
   searchByName,
+                                                   indoorLevel,
 }) => {
   const bridgeType = useDeterminateBridge();
   const { safeHandleLocationHash } = useLocationHash();
@@ -41,7 +43,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         />
       )}
       <NavigationControl position="bottom-right" />
-      <IndoorControl onLevelChange={onLevelChange} />
+      <IndoorControl onLevelChange={onLevelChange} indoorLevel={indoorLevel} />
     </>
   );
 };

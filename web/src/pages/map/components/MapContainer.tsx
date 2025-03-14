@@ -57,6 +57,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
         onLevelChange={setIndoorLevel}
         handleSelect={handleSelect}
         searchByName={searchByName}
+        indoorLevel={indoorLevel}
       />
 
       {markerCoords && (

@@ -124,7 +124,6 @@ const useLocationHash = () => {
   );
 
   return {
-    handleLocationHash,
     safeHandleLocationHash,
   };
 };

@@ -10,11 +10,13 @@ import layers from './layers';
 interface IndoorControlProps {
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
   onLevelChange?: (level: string) => void;
+  indoorLevel?: string;
 }
 
 const IndoorControl = ({
   position = 'bottom-right',
   onLevelChange,
+                         indoorLevel,
 }: IndoorControlProps) => {
   const [levels, setLevels] = useState<string[]>([]);
   const [currentLevel, setCurrentLevel] = useState('1');
@@ -43,6 +45,10 @@ const IndoorControl = ({
     },
     [onLevelChange, updateFilters],
   );
+
+  useEffect(() => {
+    if (indoorLevel && mapRef) handleLevelChange(mapRef, indoorLevel);
+  }, [handleLevelChange, indoorLevel, mapRef]);
 
   const updateButtons = useCallback(() => {
     if (!containerRef || !mapRef) return;
