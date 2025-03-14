@@ -17,11 +17,11 @@ interface PoiHandlerProps {
 }
 
 const PoiHandler: React.FC<PoiHandlerProps> = ({
-                                                 mapRef,
-                                                 setSelectedPoi,
-                                                 setPopupState,
-                                                 setMarkerCoords,
-                                               }) => {
+  mapRef,
+  setSelectedPoi,
+  setPopupState,
+  setMarkerCoords,
+}) => {
   const { token } = useIcalToken();
   const { showNotification } = useNotification();
 

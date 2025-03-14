@@ -12,13 +12,13 @@ interface MapMarkerProps {
 }
 
 const MapMarker: React.FC<MapMarkerProps> = ({
-                                               latitude,
-                                               longitude,
-                                               level,
-                                               currentLevel,
-                                               animEnabled = false,
-                                               onMarkerClick,
-                                             }) => {
+  latitude,
+  longitude,
+  level,
+  currentLevel,
+  animEnabled = false,
+  onMarkerClick,
+}) => {
   return (
     <Marker
       latitude={latitude}

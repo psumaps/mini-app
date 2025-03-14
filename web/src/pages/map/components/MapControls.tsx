@@ -20,7 +20,7 @@ const MapControls: React.FC<MapControlsProps> = ({
   onLevelChange,
   handleSelect,
   searchByName,
-                                                   indoorLevel,
+  indoorLevel,
 }) => {
   const bridgeType = useDeterminateBridge();
   const { safeHandleLocationHash } = useLocationHash();

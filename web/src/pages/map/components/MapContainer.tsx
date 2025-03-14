@@ -29,19 +29,19 @@ interface MapContainerProps {
 }
 
 const MapContainer: React.FC<MapContainerProps> = ({
-                                                     mapRef,
-                                                     viewState,
-                                                     mapProps,
-                                                     onMove,
-                                                     onLoad,
-                                                     markerCoords,
-                                                     setMarkerCoords,
-                                                     indoorLevel,
-                                                     setIndoorLevel,
-                                                     isBannerVisible,
-                                                     handleSelect,
-                                                     searchByName,
-                                                   }) => {
+  mapRef,
+  viewState,
+  mapProps,
+  onMove,
+  onLoad,
+  markerCoords,
+  setMarkerCoords,
+  indoorLevel,
+  setIndoorLevel,
+  isBannerVisible,
+  handleSelect,
+  searchByName,
+}) => {
   const { data: animEnabled = false } = useAnimEnabled();
 
   return (
