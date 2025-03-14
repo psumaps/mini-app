@@ -67,7 +67,11 @@ const MapView: React.FC<MapViewProps> = ({ searchByName }) => {
       />
 
       {/* Баннер тестирования */}
-      <TestingBanner onVisibilityChange={setIsBannerVisible} />
+
+      <TestingBanner
+        popupState={popupState}
+        onVisibilityChange={setIsBannerVisible}
+      />
 
       {/* Контейнер для поиска */}
       <SearchPopUpContainer
