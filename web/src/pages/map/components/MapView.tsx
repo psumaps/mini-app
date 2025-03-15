@@ -1,16 +1,13 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
+import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
 import TestingBanner from '~/components/TestingBanner';
 import MapContainer from './MapContainer';
 import PoiHandler from './PoiHandler';
-import SearchPopUpContainer, {
-  SearchPopUpContainerRef,
-} from './SearchPopUpContainer';
 
 const popUpId = 'search-pop-up';
 
 const MapView: React.FC = () => {
-  const searchPopUpRef = useRef<SearchPopUpContainerRef>(null);
   const isKeyboardOpen = useDetectKeyboardOpen();
 
   return (
@@ -27,7 +24,7 @@ const MapView: React.FC = () => {
       <TestingBanner />
 
       {/* Контейнер для поиска */}
-      <SearchPopUpContainer ref={searchPopUpRef} id={popUpId} />
+      <SearchPopUp id={popUpId} />
     </div>
   );
 };

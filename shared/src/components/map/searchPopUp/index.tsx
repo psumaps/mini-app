@@ -1,19 +1,9 @@
-import React, {
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 import Block from '../../common/block';
 import PopUpBody from './popUpBody';
 import PopUpHeader from './popUpHeader';
-import {
-  calculatePopUpHeight,
-  PopUpBodyRef,
-  SearchPopUpRef,
-} from './popUpUtils';
+import { calculatePopUpHeight, PopUpBodyRef } from './popUpUtils';
 import SettingsIcon from '../../../assets/settings.svg?react';
 import { NavigatorContext } from '../../../models/navigator';
 import { useSharedMapContext } from '../../../contexts/SharedMapContext';
@@ -22,13 +12,11 @@ interface SearchPopUpProps {
   id: string;
 }
 
-const SearchPopUp = forwardRef(function SearchPopUp(
-  { id }: SearchPopUpProps,
-  ref: React.ForwardedRef<SearchPopUpRef>,
-) {
+const SearchPopUp: React.FC<SearchPopUpProps> = ({ id }) => {
   const { data: animEnabled } = useAnimEnabled();
   const searchInputRef = useRef<PopUpBodyRef>(null);
   const navigator = useContext(NavigatorContext);
+  const { search } = useSharedMapContext();
 
   const { popupState: state, selectedPoi } = useSharedMapContext();
 
@@ -39,11 +27,9 @@ const SearchPopUp = forwardRef(function SearchPopUp(
     return () => clearInterval(interval);
   }, [state, id, selectedPoi]);
 
-  useImperativeHandle(ref, () => ({
-    search: (query: string) => {
-      if (searchInputRef.current) searchInputRef.current.search(query);
-    },
-  }));
+  useEffect(() => {
+    if (searchInputRef.current) searchInputRef.current.search(search);
+  }, [search]);
 
   return (
     <Block
@@ -71,6 +57,6 @@ const SearchPopUp = forwardRef(function SearchPopUp(
       )}
     </Block>
   );
-});
+};
 
 export default SearchPopUp;

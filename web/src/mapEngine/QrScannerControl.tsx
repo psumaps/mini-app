@@ -4,9 +4,9 @@ import bridge from '@vkontakte/vk-bridge';
 import { qrScanner } from '@telegram-apps/sdk-react';
 import { BridgeType } from 'psumaps-shared/src/models/storage';
 import QrIconUrl from 'psumaps-shared/src/assets/qr.svg';
-import useDeterminateBridge from '~/src/hooks/useDeterminateBridge';
-import useLocationHash from '~/src/hooks/useLocationHash';
-import { useSharedMapContext } from '~/src/contexts/SharedMapContext';
+import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
+import useLocationHash from 'psumaps-shared/src/hooks/useLocationHash';
+import { useSharedMapContext } from 'psumaps-shared/src/contexts/SharedMapContext';
 
 interface QrScannerProps {
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
