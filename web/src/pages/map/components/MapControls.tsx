@@ -1,29 +1,14 @@
 import React from 'react';
 import { AttributionControl, NavigationControl } from 'react-map-gl/maplibre';
 import { BridgeType } from 'psumaps-shared/src/models/storage';
-import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
-import useLocationHash from 'psumaps-shared/src/hooks/useLocationHash';
 import IndoorControl from '~/mapEngine/IndoorControl';
 import QrScannerControl from '~/mapEngine/QrScannerControl';
+import { useMapContext } from '~/pages/map/contexts/MapContext';
 
-interface MapControlsProps {
-  isBannerVisible: boolean;
-  onLevelChange: (level: string) => void;
-  handleSelect: (poi: Poi) => void;
-  searchByName: (name: string) => void;
-  indoorLevel?: string;
-}
-
-const MapControls: React.FC<MapControlsProps> = ({
-  isBannerVisible,
-  onLevelChange,
-  handleSelect,
-  searchByName,
-  indoorLevel,
-}) => {
+const MapControls: React.FC = () => {
   const bridgeType = useDeterminateBridge();
-  const { safeHandleLocationHash } = useLocationHash();
+  const { isBannerVisible } = useMapContext();
 
   return (
     <>
@@ -34,16 +19,9 @@ const MapControls: React.FC<MapControlsProps> = ({
           customAttribution='<a href="http://gis.psu.ru/" target="_blank">&copy; Кафедра ГИС ПГНИУ</a> | <a href="https://indoorequal.org/" target="_blank">&copy; indoor=</a>'
         />
       )}
-      {bridgeType !== BridgeType.local && (
-        <QrScannerControl
-          onScan={(code) =>
-            safeHandleLocationHash(code, handleSelect, searchByName)
-          }
-          bridgeType={bridgeType}
-        />
-      )}
+      {bridgeType !== BridgeType.local && <QrScannerControl />}
       <NavigationControl position="bottom-right" />
-      <IndoorControl onLevelChange={onLevelChange} indoorLevel={indoorLevel} />
+      <IndoorControl />
     </>
   );
 };

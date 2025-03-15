@@ -16,6 +16,7 @@ interface Coordinates {
   lt: number;
   lg: number;
   level: number;
+  poi: Poi;
 }
 
 interface SharedMapContextType {
@@ -72,6 +73,7 @@ export const SharedMapProvider: React.FC<SharedMapProviderProps> = ({
           lt,
           lg,
           level: parseInt(poi.properties.tags.level ?? '1'),
+          poi,
         });
         setSelectedPoi(poi);
         setIndoorLevel(poi.properties.tags.level ?? '1');

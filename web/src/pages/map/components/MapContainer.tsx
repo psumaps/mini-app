@@ -1,75 +1,27 @@
-import React from 'react';
-import Map, {
-  MapRef,
-  ViewState,
-  ViewStateChangeEvent,
-} from 'react-map-gl/maplibre';
-import Poi from 'psumaps-shared/src/network/models/mapi/poi';
-import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
+import React, { useMemo } from 'react';
+import Map, { ViewStateChangeEvent } from 'react-map-gl/maplibre';
+import { useSharedMapContext } from 'psumaps-shared/src/contexts/SharedMapContext';
+import { useMapContext } from '../contexts/MapContext';
 
 import MapControls from './MapControls';
 import MapMarker from './MapMarker';
-import { MapConfigProps } from '~/mapEngine/mapConfig';
+import { mapConfig } from '~/mapEngine/mapConfig';
 
-interface MapContainerProps {
-  mapRef: React.RefObject<MapRef>;
-  viewState: ViewState;
-  mapProps: MapConfigProps;
-  onMove: (e: ViewStateChangeEvent) => void;
-  onLoad: () => void;
-  markerCoords: { lt: number; lg: number; level: number } | null;
-  setMarkerCoords: React.Dispatch<
-    React.SetStateAction<{ lt: number; lg: number; level: number } | null>
-  >;
-  indoorLevel: string;
-  setIndoorLevel: React.Dispatch<React.SetStateAction<string>>;
-  isBannerVisible: boolean;
-  handleSelect: (poi: Poi) => void;
-  searchByName: (name: string) => void;
-}
-
-const MapContainer: React.FC<MapContainerProps> = ({
-  mapRef,
-  viewState,
-  mapProps,
-  onMove,
-  onLoad,
-  markerCoords,
-  setMarkerCoords,
-  indoorLevel,
-  setIndoorLevel,
-  isBannerVisible,
-  handleSelect,
-  searchByName,
-}) => {
-  const { data: animEnabled = false } = useAnimEnabled();
+const MapContainer: React.FC = () => {
+  const { markerCoords } = useSharedMapContext();
+  const { mapRef, viewState, setViewState, handleLoad } = useMapContext();
+  const mapProps = useMemo(() => mapConfig, []);
 
   return (
     <Map
       ref={mapRef}
-      onLoad={onLoad}
+      onLoad={handleLoad}
       {...viewState}
       {...mapProps}
-      onMove={onMove}
+      onMove={(e: ViewStateChangeEvent) => setViewState(e.viewState)}
     >
-      <MapControls
-        isBannerVisible={isBannerVisible}
-        onLevelChange={setIndoorLevel}
-        handleSelect={handleSelect}
-        searchByName={searchByName}
-        indoorLevel={indoorLevel}
-      />
-
-      {markerCoords && (
-        <MapMarker
-          latitude={markerCoords.lt}
-          longitude={markerCoords.lg}
-          level={markerCoords.level}
-          currentLevel={indoorLevel}
-          animEnabled={animEnabled}
-          onMarkerClick={() => setMarkerCoords(null)}
-        />
-      )}
+      <MapControls />
+      {markerCoords && <MapMarker />}
     </Map>
   );
 };

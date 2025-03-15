@@ -1,37 +1,32 @@
 import React from 'react';
 import { Marker } from 'react-map-gl/maplibre';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
+import { useSharedMapContext } from 'psumaps-shared/src/contexts/SharedMapContext';
+import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
 
-interface MapMarkerProps {
-  latitude: number;
-  longitude: number;
-  level: number;
-  currentLevel: string;
-  animEnabled?: boolean;
-  onMarkerClick: () => void;
-}
+const MapMarker: React.FC = () => {
+  const { data: animEnabled } = useAnimEnabled();
+  const {
+    indoorLevel: currentLevel,
+    handlePoiSelect,
+    markerCoords,
+  } = useSharedMapContext();
 
-const MapMarker: React.FC<MapMarkerProps> = ({
-  latitude,
-  longitude,
-  level,
-  currentLevel,
-  animEnabled = false,
-  onMarkerClick,
-}) => {
+  if (!markerCoords) return null;
+
   return (
     <Marker
-      latitude={latitude}
-      longitude={longitude}
+      latitude={markerCoords.lt}
+      longitude={markerCoords.lg}
       anchor="bottom"
       onClick={(e) => {
         e.originalEvent.stopPropagation();
-        onMarkerClick();
+        handlePoiSelect(markerCoords.poi);
       }}
     >
       <MarkerIcon
         className={`${animEnabled && 'transition-all duration-200 ease-in-out'} 
-          ${level === parseInt(currentLevel) ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
+          ${markerCoords.level === parseInt(currentLevel) ? 'opacity-100 scale-100' : 'opacity-40 scale-75'}`}
       />
     </Marker>
   );

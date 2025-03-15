@@ -1,20 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNotification } from 'psumaps-shared/src/components/common/notification';
 import Button from 'psumaps-shared/src/components/common/button';
+import { useSharedMapContext } from 'psumaps-shared/src/contexts/SharedMapContext';
+import { useMapContext } from '~/pages/map/contexts/MapContext';
 
 const FORM_URL = 'https://forms.gle/KyrNQzpyyNiuwVMf6';
 const BANNER_STORAGE_KEY = 'testing_banner_closed';
 
-interface TestingBannerProps {
-  onVisibilityChange?: (isVisible: boolean) => void;
-  popupState?: 'opened' | 'closed' | 'middle' | 'unauthorized';
-}
-
-const TestingBanner: React.FC<TestingBannerProps> = ({
-  onVisibilityChange,
-  popupState,
-}) => {
+const TestingBanner: React.FC = () => {
   const { showNotification } = useNotification();
+  const { popupState } = useSharedMapContext();
+  const { setIsBannerVisible: onVisibilityChange } = useMapContext();
   const [isVisible, setIsVisible] = useState(true);
   const [isTempHidden, setIsTempHidden] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -29,7 +25,6 @@ const TestingBanner: React.FC<TestingBannerProps> = ({
       }, 300);
       return () => clearTimeout(timer);
     }
-    return undefined;
   }, [popupState]);
 
   useEffect(() => {
@@ -38,22 +33,28 @@ const TestingBanner: React.FC<TestingBannerProps> = ({
     onVisibilityChange?.(!isClosed);
   }, [onVisibilityChange]);
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    showNotification('Спасибо за участие в тестировании!', 'success');
-    localStorage.setItem(BANNER_STORAGE_KEY, 'true');
-    window.open(FORM_URL, '_blank');
-  };
-
-  const handleClose = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsClosing(true);
-    setTimeout(() => {
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      showNotification('Спасибо за участие в тестировании!', 'success');
       localStorage.setItem(BANNER_STORAGE_KEY, 'true');
-      setIsVisible(false);
-      onVisibilityChange?.(false);
-    }, 500);
-  };
+      window.open(FORM_URL, '_blank');
+    },
+    [showNotification],
+  );
+
+  const handleClose = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setIsClosing(true);
+      setTimeout(() => {
+        localStorage.setItem(BANNER_STORAGE_KEY, 'true');
+        setIsVisible(false);
+        onVisibilityChange?.(false);
+      }, 500);
+    },
+    [onVisibilityChange],
+  );
 
   if (!isVisible || isTempHidden) return null;
 
