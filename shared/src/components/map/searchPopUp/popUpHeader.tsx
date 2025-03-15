@@ -6,30 +6,28 @@ import Poi from '../../../network/models/mapi/poi';
 import DragHandle from '../../common/dragHandle';
 import PoiInfo from './poiInfo';
 import { PopUpBodyRef } from './popUpUtils';
-import { PopUpState } from './search/searchUtils';
 import ShareButton from './sharePoiButton';
 import CrossIcon from '../../../assets/cross.svg?react';
 import useDeterminateBridge from '../../../hooks/useDeterminateBridge';
 import { BridgeType } from '../../../models/storage';
+import { useSharedMapContext } from '../../../contexts/SharedMapContext';
 
 const PopUpHeader = ({
-  state,
-  setState,
   inputRef,
-  selectedPoi,
-  setSelectedPoi,
 }: {
-  state: PopUpState;
-  setState: React.Dispatch<PopUpState>;
   inputRef: React.RefObject<PopUpBodyRef>;
-  selectedPoi: Poi | null;
-  setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
 }) => {
   const { data: animEnabled } = useAnimEnabled();
   const [selectedPoiInner, setSelectedPoiInner] = React.useState<Poi | null>(
     null,
   );
   const bridgeType = useDeterminateBridge();
+  const {
+    popupState: state,
+    setPopupState: setState,
+    selectedPoi,
+    setSelectedPoi,
+  } = useSharedMapContext();
 
   useEffect(() => {
     if (selectedPoi !== null) setSelectedPoiInner(selectedPoi);
@@ -93,9 +91,9 @@ const PopUpHeader = ({
         >
           <PoiInfo
             item={selectedPoiInner}
-            onClick={() => {}}
-            classNameInner=""
+            handleClick={false}
             className="px-4"
+            classNameInner=""
           />
           {selectedPoi?.properties.tags.id &&
             bridgeType === BridgeType.vkbridge && (

@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import httpClient from '../../../../network/httpClient';
-import { PopUpState } from './searchUtils';
 import Poi from '../../../../network/models/mapi/poi';
 import { StorageContext } from '../../../../models/storage';
 import SearchHistory from '../../../../models/searchHistory';
@@ -11,6 +10,7 @@ import AmenityIcon from '../amenityIcon';
 import Button from '../../../common/button';
 import useAnimEnabled from '../../../../hooks/useAnimEnabled';
 import useIcalToken from '../../../../hooks/useIcalToken';
+import { useSharedMapContext } from '../../../../contexts/SharedMapContext';
 
 const queryOptions = {
   staleTime: 1000 * 60 * 5,
@@ -18,27 +18,20 @@ const queryOptions = {
   retry: false,
 };
 
-const Search = ({
-  entry,
-  state,
-  onSelect,
-  selectedPoi,
-}: {
-  entry: string | null;
-  state: PopUpState;
-  onSelect?: (poi: Poi) => void;
-  selectedPoi: Poi | null;
-}) => {
+const Search = () => {
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const { token } = useIcalToken();
   const storage = useContext(StorageContext);
+
+  const { search, popupState, selectedPoi } = useSharedMapContext();
   const [selectedAmenity, setSelectedAmenity] = useState<string | null>(null);
-  const search = useQuery(
+
+  const searchQuery = useQuery(
     {
-      queryKey: ['search', entry],
-      queryFn: async () => httpClient.mapi.search(entry!, token!),
-      enabled: !!entry && state === 'opened',
+      queryKey: ['search', search],
+      queryFn: async () => httpClient.mapi.search(search, token!),
+      enabled: !!search && popupState === 'opened',
       ...queryOptions,
     },
     queryClient,
@@ -47,13 +40,13 @@ const Search = ({
     queryKey: ['amenities'],
     queryFn: async () => httpClient.mapi.getAmenityList(token!),
     ...queryOptions,
-    enabled: state === 'opened',
+    enabled: popupState === 'opened',
   });
   const amenityPois = useQuery({
     queryKey: ['amenity-pois', selectedAmenity],
     queryFn: async () =>
       httpClient.mapi.getPoiByAmenity(selectedAmenity!, token!),
-    enabled: !!selectedAmenity && state === 'opened',
+    enabled: !!selectedAmenity && popupState === 'opened',
     ...queryOptions,
   });
   const history = useQuery<SearchHistory>(
@@ -74,7 +67,7 @@ const Search = ({
   );
   const [amenitiesGridStyle, setAmenitiesGridStyle] = useState('');
 
-  const entryPresent = (entry?.length ?? 0) > 0;
+  const entryPresent = (search?.length ?? 0) > 0;
   const amenityPresent = (amenityPois.data?.length ?? 0) > 0;
   const searchInProgress = entryPresent || amenityPresent;
 
@@ -103,10 +96,6 @@ const Search = ({
     [history, storage, queryClient],
   );
 
-  const handlePoiClick = (poi: Poi) => {
-    onSelect?.(poi);
-  };
-
   const handleAmenityReset = useCallback(() => {
     setSelectedAmenity(null);
     setAmenitiesGridStyle('');
@@ -116,8 +105,7 @@ const Search = ({
     if (selectedPoi !== null) {
       void updateHistory(selectedPoi);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedPoi, handleAmenityReset]);
+  }, [selectedPoi, updateHistory]);
 
   const handleAmenityClick = (amenity: string, index: number) => {
     setSelectedAmenity(amenity);
@@ -173,19 +161,12 @@ const Search = ({
       </p>
       <div className="flex flex-col gap-4">
         {searchInProgress ? (
-          <SearchResult
-            data={amenityPois.data ?? search.data ?? []}
-            handlePoiClick={(poi) => void handlePoiClick(poi)}
-          />
+          <SearchResult data={amenityPois.data ?? searchQuery.data ?? []} />
         ) : (
           historyArr.map(
             (key) =>
               history.data?.[key] && (
-                <PoiInfo
-                  key={key}
-                  item={history.data[key].poi}
-                  onClick={() => void handlePoiClick(history.data[key].poi)}
-                />
+                <PoiInfo key={key} item={history.data[key].poi} />
               ),
           )
         )}

@@ -1,26 +1,27 @@
 import React from 'react';
 import { detectItemAmenityName } from '../../../network/utils/detectAmenity';
 import Poi, { calcPoiName } from '../../../network/models/mapi/poi';
+import { useSharedMapContext } from '../../../contexts/SharedMapContext';
 
 const PoiInfo = ({
   item,
-  onClick,
   className,
   classNameInner,
+  handleClick = true,
 }: {
   item: Poi | null;
-  onClick?: (poi: Poi) => void;
   className?: string;
   classNameInner?: string;
+  handleClick?: boolean;
 }) => {
   const building = item?.properties.tags?.building;
   const level = item?.properties.tags?.level ?? '1';
-
+  const { handlePoiSelect } = useSharedMapContext();
   return (
     <button
       type="button"
       className={`w-full flex flex-col gap-1 cursor-pointer ${className}`}
-      onClick={() => item && onClick?.(item)}
+      onClick={() => item && handleClick && handlePoiSelect?.(item)}
     >
       <p className={`text-c_accent font-semibold ${classNameInner}`}>
         {calcPoiName(item)}

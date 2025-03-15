@@ -15,20 +15,14 @@ import {
   popUpSearchInputId,
 } from './popUpUtils';
 import Search from './search';
-import { PopUpState } from './search/searchUtils';
+import { useSharedMapContext } from '../../../contexts/SharedMapContext';
+
+interface PopUpBodyProps {
+  // пустой интерфейс для пропсов, так как все данные берутся из контекста
+}
 
 const PopUpBody = forwardRef(function PopUpBody(
-  {
-    state,
-    setState,
-    selectedPoi,
-    onSelect,
-  }: {
-    state: PopUpState;
-    setState: React.Dispatch<React.SetStateAction<PopUpState>>;
-    selectedPoi: Poi | null;
-    onSelect?: (poi: Poi) => void;
-  },
+  _props: PopUpBodyProps,
   ref: React.ForwardedRef<PopUpBodyRef>,
 ) {
   const { data: animEnabled } = useAnimEnabled();
@@ -36,13 +30,25 @@ const PopUpBody = forwardRef(function PopUpBody(
   const [searchValue, setSearchValue] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const {
+    popupState: state,
+    setPopupState: setState,
+    selectedPoi,
+    search,
+    setSearch,
+  } = useSharedMapContext();
+
   useEffect(() => {
     if (selectedPoi !== null) setSelectedPoiInner(selectedPoi);
   }, [selectedPoi]);
 
+  useEffect(() => {
+    setSearchValue(search);
+  }, [search]);
+
   useImperativeHandle(ref, () => ({
     search: (value: string) => {
-      setSearchValue(value);
+      setSearch(value);
       setState('opened');
     },
     get current() {
@@ -67,12 +73,18 @@ const PopUpBody = forwardRef(function PopUpBody(
         id={popUpSearchInputId}
         ref={inputRef}
         value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+        onChange={(e) => {
+          setSearchValue(e.target.value);
+          setSearch(e.target.value);
+        }}
         onSubmit={(e) => {
           e.preventDefault();
           setState('opened');
         }}
-        onClear={() => setSearchValue('')}
+        onClear={() => {
+          setSearchValue('');
+          setSearch('');
+        }}
         type="search"
         inputMode="search"
         className={`${animEnabled && 'transition-all duration-500 ease-in-out'} z-30 ${inputStyles}`}
@@ -90,12 +102,7 @@ const PopUpBody = forwardRef(function PopUpBody(
         className={`flex-[1_1_auto] overflow-y-auto overflow-x-clip 
             ${state === 'opened' ? 'scale-y-100' : 'scale-y-0'}`}
       >
-        <Search
-          entry={searchValue}
-          state={state}
-          onSelect={onSelect}
-          selectedPoi={selectedPoi}
-        />
+        <Search />
       </div>
     </div>
   );

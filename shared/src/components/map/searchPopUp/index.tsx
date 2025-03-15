@@ -6,7 +6,6 @@ import React, {
   useRef,
 } from 'react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
-import Poi from '../../../network/models/mapi/poi';
 import Block from '../../common/block';
 import PopUpBody from './popUpBody';
 import PopUpHeader from './popUpHeader';
@@ -15,31 +14,23 @@ import {
   PopUpBodyRef,
   SearchPopUpRef,
 } from './popUpUtils';
-import { PopUpState } from './search/searchUtils';
 import SettingsIcon from '../../../assets/settings.svg?react';
 import { NavigatorContext } from '../../../models/navigator';
+import { useSharedMapContext } from '../../../contexts/SharedMapContext';
+
+interface SearchPopUpProps {
+  id: string;
+}
 
 const SearchPopUp = forwardRef(function SearchPopUp(
-  {
-    state,
-    setState,
-    onSelect,
-    selectedPoi,
-    setSelectedPoi,
-    id,
-  }: {
-    state: PopUpState;
-    setState: React.Dispatch<React.SetStateAction<PopUpState>>;
-    onSelect?: (poi: Poi) => void;
-    selectedPoi: Poi | null;
-    setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
-    id: string;
-  },
+  { id }: SearchPopUpProps,
   ref: React.ForwardedRef<SearchPopUpRef>,
 ) {
   const { data: animEnabled } = useAnimEnabled();
   const searchInputRef = useRef<PopUpBodyRef>(null);
   const navigator = useContext(NavigatorContext);
+
+  const { popupState: state, selectedPoi } = useSharedMapContext();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -74,20 +65,8 @@ const SearchPopUp = forwardRef(function SearchPopUp(
         </div>
       ) : (
         <div>
-          <PopUpHeader
-            state={state}
-            setState={setState}
-            inputRef={searchInputRef}
-            selectedPoi={selectedPoi}
-            setSelectedPoi={setSelectedPoi}
-          />
-          <PopUpBody
-            ref={searchInputRef}
-            state={state}
-            setState={setState}
-            selectedPoi={selectedPoi}
-            onSelect={onSelect}
-          />
+          <PopUpHeader inputRef={searchInputRef} />
+          <PopUpBody ref={searchInputRef} />
         </div>
       )}
     </Block>
