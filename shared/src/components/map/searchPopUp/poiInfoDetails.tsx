@@ -2,20 +2,16 @@
 import React from 'react';
 import ArrowRight from '../../../assets/right-arrow.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
-import Poi, { translateOpeningHours } from '../../../network/models/mapi/poi';
+import { translateOpeningHours } from '../../../network/models/mapi/poi';
 import Line from '../../common/line';
+import { useSharedMapContext } from '../../../contexts/SharedMapContext';
 
-const PoiInfoDetails = ({
-  item,
-  className,
-}: {
-  item: Poi | null;
-  className?: string;
-}) => {
+const PoiInfoDetails = ({ className }: { className?: string }) => {
   const [opened, setOpened] = React.useState(false);
   const { data: animEnabled } = useAnimEnabled();
+  const { selectedPoi } = useSharedMapContext();
 
-  let hoursTag = item?.properties.tags.opening_hours;
+  let hoursTag = selectedPoi?.properties.tags.opening_hours;
   if (!hoursTag) return <div />;
   hoursTag = translateOpeningHours(hoursTag);
   return (

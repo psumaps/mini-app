@@ -1,32 +1,13 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
-import Poi from '../../../network/models/mapi/poi';
 import Input from '../../common/clearableInput';
 import PoiInfoDetails from './poiInfoDetails';
-import {
-  popUpBodyPoiContainerId,
-  PopUpBodyRef,
-  popUpSearchInputId,
-} from './popUpUtils';
+import { popUpBodyPoiContainerId, popUpSearchInputId } from './popUpUtils';
 import Search from './search';
 import { useSharedMapContext } from '../../../contexts/SharedMapContext';
 
-interface PopUpBodyProps {
-  // пустой интерфейс для пропсов, так как все данные берутся из контекста
-}
-
-const PopUpBody = forwardRef(function PopUpBody(
-  _props: PopUpBodyProps,
-  ref: React.ForwardedRef<PopUpBodyRef>,
-) {
+const PopUpBody = () => {
   const { data: animEnabled } = useAnimEnabled();
-  const [selectedPoiInner, setSelectedPoiInner] = useState<Poi | null>(null);
   const [searchValue, setSearchValue] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,22 +20,8 @@ const PopUpBody = forwardRef(function PopUpBody(
   } = useSharedMapContext();
 
   useEffect(() => {
-    if (selectedPoi !== null) setSelectedPoiInner(selectedPoi);
-  }, [selectedPoi]);
-
-  useEffect(() => {
-    setSearchValue(search);
+    if (search) setSearchValue(search);
   }, [search]);
-
-  useImperativeHandle(ref, () => ({
-    search: (value: string) => {
-      setSearch(value);
-      setState('opened');
-    },
-    get current() {
-      return inputRef.current;
-    },
-  }));
 
   const inputStyles =
     (state === 'opened' || state === 'middle') && selectedPoi === null
@@ -96,7 +63,7 @@ const PopUpBody = forwardRef(function PopUpBody(
             ${animEnabled && 'transition-all duration-500 ease-in-out'}
             ${selectedPoi === null || state === 'closed' ? 'scale-y-0 opacity-0 h-0' : 'scale-y-100 opacity-100 mt-10 pb-10'}`}
       >
-        <PoiInfoDetails item={selectedPoiInner} className="w-100 pt-3" />
+        <PoiInfoDetails className="w-100 pt-3" />
       </div>
       <div
         className={`flex-[1_1_auto] overflow-y-auto overflow-x-clip 
@@ -106,6 +73,6 @@ const PopUpBody = forwardRef(function PopUpBody(
       </div>
     </div>
   );
-});
+};
 
 export default PopUpBody;

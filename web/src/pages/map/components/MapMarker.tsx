@@ -3,14 +3,12 @@ import { Marker } from 'react-map-gl/maplibre';
 import MarkerIcon from 'psumaps-shared/src/assets/marker.svg?react';
 import { useSharedMapContext } from 'psumaps-shared/src/contexts/SharedMapContext';
 import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
+import { useMapContext } from '~/pages/map/contexts/MapContext';
 
 const MapMarker: React.FC = () => {
   const { data: animEnabled } = useAnimEnabled();
-  const {
-    indoorLevel: currentLevel,
-    handlePoiSelect,
-    markerCoords,
-  } = useSharedMapContext();
+  const { indoorLevel: currentLevel, markerCoords } = useSharedMapContext();
+  const { handlePoiSelect } = useMapContext();
 
   if (!markerCoords) return null;
 

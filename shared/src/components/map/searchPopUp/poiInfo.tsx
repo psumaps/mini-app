@@ -1,7 +1,7 @@
 import React from 'react';
 import { detectItemAmenityName } from '../../../network/utils/detectAmenity';
 import Poi, { calcPoiName } from '../../../network/models/mapi/poi';
-import { useSharedMapContext } from '../../../contexts/SharedMapContext';
+import { useMapContext } from '~/pages/map/contexts/MapContext';
 
 const PoiInfo = ({
   item,
@@ -14,14 +14,15 @@ const PoiInfo = ({
   classNameInner?: string;
   handleClick?: boolean;
 }) => {
+  const { handlePoiSelect } = useMapContext();
+
   const building = item?.properties.tags?.building;
   const level = item?.properties.tags?.level ?? '1';
-  const { handlePoiSelect } = useSharedMapContext();
   return (
     <button
       type="button"
       className={`w-full flex flex-col gap-1 cursor-pointer ${className}`}
-      onClick={() => item && handleClick && handlePoiSelect?.(item)}
+      onClick={() => item && handleClick && handlePoiSelect(item)}
     >
       <p className={`text-c_accent font-semibold ${classNameInner}`}>
         {calcPoiName(item)}

@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect } from 'react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
 import Block from '../../common/block';
 import PopUpBody from './popUpBody';
 import PopUpHeader from './popUpHeader';
-import { calculatePopUpHeight, PopUpBodyRef } from './popUpUtils';
+import { calculatePopUpHeight } from './popUpUtils';
 import SettingsIcon from '../../../assets/settings.svg?react';
 import { NavigatorContext } from '../../../models/navigator';
 import { useSharedMapContext } from '../../../contexts/SharedMapContext';
@@ -14,9 +14,7 @@ interface SearchPopUpProps {
 
 const SearchPopUp: React.FC<SearchPopUpProps> = ({ id }) => {
   const { data: animEnabled } = useAnimEnabled();
-  const searchInputRef = useRef<PopUpBodyRef>(null);
   const navigator = useContext(NavigatorContext);
-  const { search } = useSharedMapContext();
 
   const { popupState: state, selectedPoi } = useSharedMapContext();
 
@@ -26,10 +24,6 @@ const SearchPopUp: React.FC<SearchPopUpProps> = ({ id }) => {
     }, 33);
     return () => clearInterval(interval);
   }, [state, id, selectedPoi]);
-
-  useEffect(() => {
-    if (searchInputRef.current) searchInputRef.current.search(search);
-  }, [search]);
 
   return (
     <Block
@@ -51,8 +45,8 @@ const SearchPopUp: React.FC<SearchPopUpProps> = ({ id }) => {
         </div>
       ) : (
         <div>
-          <PopUpHeader inputRef={searchInputRef} />
-          <PopUpBody ref={searchInputRef} />
+          <PopUpHeader />
+          <PopUpBody />
         </div>
       )}
     </Block>

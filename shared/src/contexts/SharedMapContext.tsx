@@ -23,14 +23,13 @@ interface SharedMapContextType {
   popupState: PopUpState;
   setPopupState: React.Dispatch<React.SetStateAction<PopUpState>>;
   selectedPoi: Poi | null;
-  setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   markerCoords: Coordinates | null;
   setMarkerCoords: React.Dispatch<React.SetStateAction<Coordinates | null>>;
   indoorLevel: string;
   setIndoorLevel: React.Dispatch<React.SetStateAction<string>>;
-  handlePoiSelect: (poi: Poi) => void;
+  _handlePoiSelect: (poi: Poi | null) => void;
   handleAuthError: () => void;
   handleSuccessAfterFallback: () => void;
 }
@@ -49,12 +48,10 @@ export const useSharedMapContext = () => {
 
 interface SharedMapProviderProps {
   children: ReactNode;
-  onPoiSelect?: (poi: Poi) => void;
 }
 
 export const SharedMapProvider: React.FC<SharedMapProviderProps> = ({
   children,
-  onPoiSelect,
 }) => {
   const [popupState, setPopupState] = useState<PopUpState>('unauthorized');
   const [selectedPoi, setSelectedPoi] = useState<Poi | null>(null);
@@ -65,27 +62,23 @@ export const SharedMapProvider: React.FC<SharedMapProviderProps> = ({
   const { isValid } = useIcalToken();
   const { showNotification } = useNotification();
 
-  const handlePoiSelect = useCallback(
-    (poi: Poi) => {
-      if (poi) {
-        const [lg, lt] = poi.properties.point.coordinates;
-        setMarkerCoords({
-          lt,
-          lg,
-          level: parseInt(poi.properties.tags.level ?? '1'),
-          poi,
-        });
-        setSelectedPoi(poi);
-        setIndoorLevel(poi.properties.tags.level ?? '1');
-        setPopupState('middle');
-      } else {
-        setSelectedPoi(null);
-        setMarkerCoords(null);
-      }
-      onPoiSelect?.(poi);
-    },
-    [onPoiSelect],
-  );
+  const handlePoiSelect = useCallback((poi: Poi | null) => {
+    if (poi) {
+      const [lg, lt] = poi.properties.point.coordinates;
+      setMarkerCoords({
+        lt,
+        lg,
+        level: parseInt(poi.properties.tags.level ?? '1'),
+        poi,
+      });
+      setSelectedPoi(poi);
+      setIndoorLevel(poi.properties.tags.level ?? '1');
+      setPopupState('middle');
+    } else {
+      setSelectedPoi(null);
+      setMarkerCoords(null);
+    }
+  }, []);
 
   const handleAuthError = useCallback(() => {
     showNotification('Проблемы с сервером авторизации...', 'warning', 5000);
@@ -106,14 +99,13 @@ export const SharedMapProvider: React.FC<SharedMapProviderProps> = ({
       popupState,
       setPopupState,
       selectedPoi,
-      setSelectedPoi,
       search,
       setSearch,
       markerCoords,
       setMarkerCoords,
       indoorLevel,
       setIndoorLevel,
-      handlePoiSelect,
+      _handlePoiSelect: handlePoiSelect,
       handleAuthError,
       handleSuccessAfterFallback,
     }),

@@ -10,11 +10,9 @@ import React, {
 } from 'react';
 import { MapRef } from 'react-map-gl/maplibre';
 import { removeProtocol } from 'maplibre-gl';
-import { useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { calculateControlsMargin } from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
 import { useIcalToken } from 'psumaps-shared/src/contexts/IcalTokenContext';
-import useLocationHash from 'psumaps-shared/src/hooks/useLocationHash';
 import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import {
   SharedMapProvider,
@@ -29,7 +27,7 @@ interface MapContextType {
   setViewState: React.Dispatch<React.SetStateAction<typeof initialView>>;
   isBannerVisible: boolean;
   setIsBannerVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handleLoad: () => void;
+  handlePoiSelect: (poi: Poi | null) => void;
 }
 
 const MapContext = createContext<MapContextType | null>(null);
@@ -50,25 +48,27 @@ const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
   const mapRef = useRef<MapRef>(null);
   const [viewState, setViewState] = useState(initialView);
   const [isBannerVisible, setIsBannerVisible] = useState(true);
-
-  const routerLocation = useLocation();
   const { token } = useIcalToken();
   const queryClient = useQueryClient();
-  const { safeHandleLocationHash } = useLocationHash();
-  const { handlePoiSelect, handleAuthError, handleSuccessAfterFallback } =
-    useSharedMapContext();
 
-  const handleMapPoiSelect = useCallback(
+  const {
+    _handlePoiSelect: handleSharedPoiSelect,
+    handleAuthError,
+    handleSuccessAfterFallback,
+  } = useSharedMapContext();
+
+  const handlePoiSelect = useCallback(
     (poi: Poi | null) => {
-      if (poi && mapRef.current) {
-        const [lg, lt] = poi.properties.point.coordinates;
-        mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
-      }
-      if (poi) {
-        handlePoiSelect(poi);
-      }
+      setTimeout(() => {
+        if (poi && mapRef.current) {
+          const [lg, lt] = poi.properties.point.coordinates;
+          mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
+        }
+      }, 600);
+
+      handleSharedPoiSelect(poi);
     },
-    [handlePoiSelect],
+    [handleSharedPoiSelect],
   );
 
   useEffect(() => {
@@ -88,30 +88,16 @@ const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // Обработка хэша URL при изменении
-  useEffect(() => {
-    if (mapRef.current?.areTilesLoaded) {
-      safeHandleLocationHash(routerLocation.hash, handleMapPoiSelect, () => {});
-    }
-  }, [routerLocation.hash, safeHandleLocationHash, handleMapPoiSelect]);
-
-  // Обработка хэша URL при загрузке карты
-  const handleLoad = useCallback(() => {
-    if (mapRef.current) {
-      safeHandleLocationHash(routerLocation.hash, handleMapPoiSelect, () => {});
-    }
-  }, [routerLocation.hash, safeHandleLocationHash, handleMapPoiSelect]);
-
   const value = useMemo(
     () => ({
       mapRef,
       viewState,
       setViewState,
+      handlePoiSelect,
       isBannerVisible,
       setIsBannerVisible,
-      handleLoad,
     }),
-    [viewState, isBannerVisible, handleLoad],
+    [viewState, handlePoiSelect, isBannerVisible],
   );
 
   return <MapContext.Provider value={value}>{children}</MapContext.Provider>;

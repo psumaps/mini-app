@@ -3,15 +3,13 @@ import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import { useNotification } from 'psumaps-shared/src/components/common/notification';
-import { useSharedMapContext } from 'psumaps-shared/src/contexts/SharedMapContext';
 import { useMapContext } from '~/pages/map/contexts/MapContext';
 
 const PoiHandler: React.FC = () => {
   const { token } = useIcalToken();
   const { showNotification } = useNotification();
 
-  const { setSelectedPoi, setPopupState, setMarkerCoords } =
-    useSharedMapContext();
+  const { handlePoiSelect } = useMapContext();
   const { mapRef } = useMapContext();
 
   const handlePoiClick = useCallback(
@@ -25,15 +23,7 @@ const PoiHandler: React.FC = () => {
           .getIndoorById(String(e.features![0].id!).slice(0, -1), token!)
           .then((data) => {
             if (data) {
-              setSelectedPoi(data);
-              setPopupState('middle');
-              const [lg, lt] = data.properties.point.coordinates;
-              setMarkerCoords({
-                lt,
-                lg,
-                level: parseInt(data.properties.tags.level ?? '1'),
-                poi: data,
-              });
+              handlePoiSelect(data);
             } else {
               showNotification('Точка интереса не найдена', 'error');
             }
@@ -43,7 +33,7 @@ const PoiHandler: React.FC = () => {
           });
       }
     },
-    [token, setSelectedPoi, setPopupState, setMarkerCoords, showNotification],
+    [token, handlePoiSelect, showNotification],
   );
 
   useEffect(() => {

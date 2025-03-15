@@ -1,12 +1,13 @@
 import { useCallback } from 'react';
 import useIcalToken from './useIcalToken';
 import { useNotification } from '../components/common/notification';
-import Poi from '../network/models/mapi/poi';
 import {
   HashParamsModule,
   PoiHandlerModule,
   RedirectResult,
 } from '../components/map/searchPopUp/hashParamsUtils';
+import { useMapContext } from '~/pages/map/contexts/MapContext';
+import { useSharedMapContext } from '../contexts/SharedMapContext';
 
 /**
  * Хук для обработки хэш-параметров URL
@@ -19,16 +20,14 @@ import {
 const useLocationHash = () => {
   const { token, isValid, setToken } = useIcalToken();
   const { showNotification } = useNotification();
+  const { handlePoiSelect } = useMapContext();
+  const { setSearch } = useSharedMapContext();
 
   /**
    * Обрабатывает редирект по хэш-параметрам
    */
   const handleRedirect = useCallback(
-    async (
-      redirectHash: string,
-      handleSelect: (poi: Poi) => void,
-      handleSearch: (query: string) => void,
-    ): Promise<RedirectResult> => {
+    async (redirectHash: string): Promise<RedirectResult> => {
       const hashParams = HashParamsModule.parseHashParams(redirectHash);
       let result: RedirectResult = { success: true };
 
@@ -46,15 +45,15 @@ const useLocationHash = () => {
           hashParams.get('q') as string,
           token ?? undefined,
           isValid,
-          handleSelect,
-          handleSearch,
+          handlePoiSelect,
+          setSearch,
         );
       } else if (hashParams.has('i')) {
         result = await PoiHandlerModule.handleIndoorById(
           hashParams.get('i') as string,
           token ?? undefined,
           isValid,
-          handleSelect,
+          handlePoiSelect,
         );
       } else if (hashParams.has('e')) {
         result = PoiHandlerModule.handleEventById(
@@ -70,27 +69,19 @@ const useLocationHash = () => {
 
       return result;
     },
-    [token, isValid, setToken],
+    [setToken, token, isValid, handlePoiSelect, setSearch],
   );
 
   /**
    * Обрабатывает хэш локации и выполняет соответствующие действия
    */
   const handleLocationHash = useCallback(
-    async (
-      hash: string,
-      handleSelect: (poi: Poi) => void,
-      handleSearch: (query: string) => void,
-    ): Promise<void> => {
+    async (hash: string): Promise<void> => {
       const redirectHash = hash.slice(1); // hash includes #
       if (!redirectHash) return; // Если хэш пустой, ничего не делаем
 
       try {
-        const result = await handleRedirect(
-          redirectHash,
-          handleSelect,
-          handleSearch,
-        );
+        const result = await handleRedirect(redirectHash);
 
         // Показываем уведомление, если есть сообщение
         if (result.message) {
@@ -110,12 +101,8 @@ const useLocationHash = () => {
    * Безопасно обрабатывает хэш локации с обработкой ошибок
    */
   const safeHandleLocationHash = useCallback(
-    (
-      hash: string,
-      handleSelect: (poi: Poi) => void,
-      handleSearch: (query: string) => void,
-    ) => {
-      void handleLocationHash(hash, handleSelect, handleSearch).catch((err) => {
+    (hash: string) => {
+      void handleLocationHash(hash).catch((err) => {
         console.error('Error handling location hash:', err);
         showNotification('Ошибка при обработке параметров URL', 'error');
       });
