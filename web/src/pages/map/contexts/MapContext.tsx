@@ -46,7 +46,7 @@ interface MapProviderProps {
   children: ReactNode;
 }
 
-export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
+const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
   const mapRef = useRef<MapRef>(null);
   const [viewState, setViewState] = useState(initialView);
   const [isBannerVisible, setIsBannerVisible] = useState(true);
@@ -114,9 +114,13 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
     [viewState, isBannerVisible, handleLoad],
   );
 
+  return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
+};
+
+export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   return (
-    <SharedMapProvider onPoiSelect={handleMapPoiSelect}>
-      <MapContext.Provider value={value}>{children}</MapContext.Provider>
+    <SharedMapProvider>
+      <MapProviderInner>{children}</MapProviderInner>
     </SharedMapProvider>
   );
 };
