@@ -8,10 +8,11 @@ import { useMapContext } from '../contexts/MapContext';
 import MapControls from './MapControls';
 import MapMarker from './MapMarker';
 import { mapConfig } from '~/mapEngine/mapConfig';
+import PoiHandler from './PoiHandler';
 
 const MapContainer: React.FC = () => {
   const { markerCoords } = useSharedMapContext();
-  const { mapRef, viewState, setViewState } = useMapContext();
+  const { mapRef, viewState, setViewState, setIsMapLoaded } = useMapContext();
   const mapProps = useMemo(() => mapConfig, []);
 
   const routerLocation = useLocation();
@@ -19,29 +20,33 @@ const MapContainer: React.FC = () => {
 
   // Обработка хэша URL при изменении
   useEffect(() => {
-    if (mapRef.current?.areTilesLoaded) {
+    if (mapRef.current?.areTilesLoaded()) {
       safeHandleLocationHash(routerLocation.hash);
     }
   }, [mapRef, routerLocation.hash, safeHandleLocationHash]);
 
-  // Обработка хэша URL при загрузке карты
+  // Обработка хэша URL и установка состояния загрузки карты
   const handleLoad = useCallback(() => {
     if (mapRef.current) {
+      setIsMapLoaded(true);
       safeHandleLocationHash(routerLocation.hash);
     }
-  }, [mapRef, routerLocation.hash, safeHandleLocationHash]);
+  }, [mapRef, routerLocation.hash, safeHandleLocationHash, setIsMapLoaded]);
 
   return (
-    <Map
-      ref={mapRef}
-      onLoad={handleLoad}
-      {...viewState}
-      {...mapProps}
-      onMove={(e: ViewStateChangeEvent) => setViewState(e.viewState)}
-    >
-      <MapControls />
-      {markerCoords && <MapMarker />}
-    </Map>
+    <>
+      <Map
+        ref={mapRef}
+        onLoad={handleLoad}
+        {...viewState}
+        {...mapProps}
+        onMove={(e: ViewStateChangeEvent) => setViewState(e.viewState)}
+      >
+        <MapControls />
+        {markerCoords && <MapMarker />}
+      </Map>
+      <PoiHandler />
+    </>
   );
 };
 

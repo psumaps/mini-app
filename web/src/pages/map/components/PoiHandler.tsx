@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import httpClient from 'psumaps-shared/src/network/httpClient';
 import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
@@ -8,9 +8,7 @@ import { useMapContext } from '~/pages/map/contexts/MapContext';
 const PoiHandler: React.FC = () => {
   const { token } = useIcalToken();
   const { showNotification } = useNotification();
-
-  const { handlePoiSelect } = useMapContext();
-  const { mapRef } = useMapContext();
+  const { handlePoiSelect, mapRef, isMapLoaded } = useMapContext();
 
   const handlePoiClick = useCallback(
     (
@@ -36,20 +34,35 @@ const PoiHandler: React.FC = () => {
     [token, handlePoiSelect, showNotification],
   );
 
+  // Регистрируем обработчики событий после загрузки карты
   useEffect(() => {
-    if (mapRef.current && token) {
-      mapRef.current.on('click', 'indoor-poi-rank1', handlePoiClick);
-      mapRef.current.on('click', 'indoor-poi-rank2', handlePoiClick);
+    if (!isMapLoaded || !token) return undefined;
+
+    const map = mapRef.current;
+    if (!map) return undefined;
+
+    // Проверяем наличие слоев перед регистрацией обработчиков
+    const hasLayer1 = map.getLayer('indoor-poi-rank1');
+    const hasLayer2 = map.getLayer('indoor-poi-rank2');
+
+    if (hasLayer1) {
+      map.on('click', 'indoor-poi-rank1', handlePoiClick);
     }
 
+    if (hasLayer2) {
+      map.on('click', 'indoor-poi-rank2', handlePoiClick);
+    }
+
+    // Функция очистки
     return () => {
-      const { current } = mapRef;
-      if (current) {
-        current.off('click', 'indoor-poi-rank1', handlePoiClick);
-        current.off('click', 'indoor-poi-rank2', handlePoiClick);
+      if (hasLayer1) {
+        map.off('click', 'indoor-poi-rank1', handlePoiClick);
+      }
+      if (hasLayer2) {
+        map.off('click', 'indoor-poi-rank2', handlePoiClick);
       }
     };
-  }, [mapRef, token, handlePoiClick]);
+  }, [isMapLoaded, mapRef, token, handlePoiClick]);
 
   return null; // Этот компонент не рендерит UI, только добавляет обработчики событий
 };

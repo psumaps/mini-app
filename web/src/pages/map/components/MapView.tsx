@@ -3,7 +3,6 @@ import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import SearchPopUp from 'psumaps-shared/src/components/map/searchPopUp';
 import TestingBanner from '~/components/TestingBanner';
 import MapContainer from './MapContainer';
-import PoiHandler from './PoiHandler';
 
 const popUpId = 'search-pop-up';
 
@@ -14,9 +13,6 @@ const MapView: React.FC = () => {
     <div
       className={`relative ${isKeyboardOpen ? 'h-full' : 'flex-[0_0_92%]'} w-full`}
     >
-      {/* Компонент для обработки POI */}
-      <PoiHandler />
-
       {/* Основной контейнер карты */}
       <MapContainer />
 

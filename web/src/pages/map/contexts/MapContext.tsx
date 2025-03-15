@@ -28,6 +28,8 @@ interface MapContextType {
   isBannerVisible: boolean;
   setIsBannerVisible: React.Dispatch<React.SetStateAction<boolean>>;
   handlePoiSelect: (poi: Poi | null) => void;
+  isMapLoaded: boolean;
+  setIsMapLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MapContext = createContext<MapContextType | null>(null);
@@ -48,6 +50,7 @@ const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
   const mapRef = useRef<MapRef>(null);
   const [viewState, setViewState] = useState(initialView);
   const [isBannerVisible, setIsBannerVisible] = useState(true);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const { token } = useIcalToken();
   const queryClient = useQueryClient();
 
@@ -96,8 +99,10 @@ const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
       handlePoiSelect,
       isBannerVisible,
       setIsBannerVisible,
+      isMapLoaded,
+      setIsMapLoaded,
     }),
-    [viewState, handlePoiSelect, isBannerVisible],
+    [viewState, handlePoiSelect, isBannerVisible, isMapLoaded],
   );
 
   return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
