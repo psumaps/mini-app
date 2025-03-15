@@ -1,19 +1,64 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  ReactNode,
+  useMemo,
+  useRef,
+  useEffect,
+} from 'react';
 import { MapRef } from 'react-map-gl/maplibre';
+import { removeProtocol } from 'maplibre-gl';
+import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
+import Poi from 'psumaps-shared/src/network/models/mapi/poi';
 import { useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { calculateControlsMargin } from 'psumaps-shared/src/components/map/searchPopUp/popUpUtils';
-import { PopUpState } from 'psumaps-shared/src/components/map/searchPopUp/search/searchUtils';
-import Poi from 'psumaps-shared/src/network/models/mapi/poi';
-import { removeProtocol } from 'maplibre-gl';
 import { useIcalToken } from 'psumaps-shared/src/contexts/IcalTokenContext';
 import { useNotification } from 'psumaps-shared/src/components/common/notification';
 import useLocationHash from 'psumaps-shared/src/hooks/useLocationHash';
-import registerProtocol from '../mapUtils';
 import { initialView } from '~/mapEngine/mapConfig';
+import registerProtocol from '../mapUtils';
 
-const useMapLogic = () => {
-  const mapRef = useRef<MapRef | null>(null);
+interface MapContextType {
+  mapRef: React.RefObject<MapRef>;
+  viewState: typeof initialView;
+  setViewState: React.Dispatch<React.SetStateAction<typeof initialView>>;
+  markerCoords: { lt: number; lg: number; level: number } | null;
+  setMarkerCoords: React.Dispatch<
+    React.SetStateAction<{ lt: number; lg: number; level: number } | null>
+  >;
+  popupState: PopUpState;
+  setPopupState: React.Dispatch<React.SetStateAction<PopUpState>>;
+  selectedPoi: Poi | null;
+  setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
+  indoorLevel: string;
+  setIndoorLevel: React.Dispatch<React.SetStateAction<string>>;
+  handleSelect: (poi: Poi) => void;
+  isBannerVisible: boolean;
+  setIsBannerVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  handleLoad: () => void;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const MapContext = createContext<MapContextType | null>(null);
+
+export const useMapContext = () => {
+  const context = useContext(MapContext);
+  if (!context) {
+    throw new Error('useMapContext должен использоваться внутри MapProvider');
+  }
+  return context;
+};
+
+interface MapProviderProps {
+  children: ReactNode;
+}
+
+export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
+  const mapRef = useRef<MapRef>(null);
   const [viewState, setViewState] = useState(initialView);
   const [markerCoords, setMarkerCoords] = useState<{
     lt: number;
@@ -23,12 +68,32 @@ const useMapLogic = () => {
   const [popupState, setPopupState] = useState<PopUpState>('unauthorized');
   const [selectedPoi, setSelectedPoi] = useState<Poi | null>(null);
   const [indoorLevel, setIndoorLevel] = useState('1');
+  const [search, setSearch] = useState('');
   const [isBannerVisible, setIsBannerVisible] = useState(true);
+
   const routerLocation = useLocation();
   const { token, isValid } = useIcalToken();
   const queryClient = useQueryClient();
   const { showNotification } = useNotification();
   const { safeHandleLocationHash } = useLocationHash();
+
+  const handleSelect = useCallback((poi: Poi) => {
+    if (poi) {
+      const [lg, lt] = poi.properties.point.coordinates;
+      setMarkerCoords({
+        lt,
+        lg,
+        level: parseInt(poi.properties.tags.level ?? '1'),
+      });
+      setSelectedPoi(poi);
+      setIndoorLevel(poi.properties.tags.level ?? '1');
+
+      if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
+      setPopupState('middle');
+    } else {
+      setSelectedPoi(null);
+    }
+  }, []);
 
   // Обработчик ошибки авторизации
   const handleAuthError = useCallback(() => {
@@ -38,10 +103,6 @@ const useMapLogic = () => {
   // Обработчик успешной загрузки приватных тайлов после fallback
   const handleSuccessAfterFallback = useCallback(() => {
     showNotification('Авторизация восстановлена!', 'success', 5000);
-    // Перезагрузка карты
-    if (mapRef.current) {
-      mapRef.current.getMap().triggerRepaint();
-    }
   }, [showNotification]);
 
   useEffect(() => {
@@ -61,6 +122,7 @@ const useMapLogic = () => {
     queryClient,
     handleAuthError,
     handleSuccessAfterFallback,
+    setPopupState,
   ]);
 
   useEffect(() => {
@@ -72,20 +134,6 @@ const useMapLogic = () => {
       calculateControlsMargin('search-pop-up');
     }, 33);
     return () => clearInterval(interval);
-  }, []);
-
-  const handleSelect = useCallback((poi: Poi) => {
-    const [lg, lt] = poi.properties.point.coordinates;
-    setMarkerCoords({
-      lt,
-      lg,
-      level: parseInt(poi.properties.tags.level ?? '1'),
-    });
-    setSelectedPoi(poi);
-    setIndoorLevel(poi.properties.tags.level ?? '1');
-
-    if (mapRef.current) mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
-    setPopupState('middle');
   }, []);
 
   // Обработка хэша URL при изменении
@@ -102,24 +150,38 @@ const useMapLogic = () => {
     }
   }, [routerLocation.hash, safeHandleLocationHash, handleSelect]);
 
-  return {
-    mapRef,
-    viewState,
-    setViewState,
-    markerCoords,
-    setMarkerCoords,
-    popupState,
-    setPopupState,
-    selectedPoi,
-    setSelectedPoi,
-    indoorLevel,
-    setIndoorLevel,
-    isBannerVisible,
-    setIsBannerVisible,
-    handleSelect,
-    handleLoad,
-    showNotification,
-  };
-};
+  const value = useMemo(
+    () => ({
+      mapRef,
+      viewState,
+      setViewState,
+      markerCoords,
+      setMarkerCoords,
+      popupState,
+      setPopupState,
+      selectedPoi,
+      setSelectedPoi,
+      indoorLevel,
+      setIndoorLevel,
+      handleSelect,
+      isBannerVisible,
+      setIsBannerVisible,
+      handleLoad,
+      search,
+      setSearch,
+    }),
+    [
+      viewState,
+      markerCoords,
+      popupState,
+      selectedPoi,
+      indoorLevel,
+      handleSelect,
+      isBannerVisible,
+      handleLoad,
+      search,
+    ],
+  );
 
-export default useMapLogic;
+  return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
+};
