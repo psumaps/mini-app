@@ -27,7 +27,7 @@ interface MapContextType {
   setViewState: React.Dispatch<React.SetStateAction<typeof initialView>>;
   isBannerVisible: boolean;
   setIsBannerVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handlePoiSelect: (poi: Poi | null) => void;
+  handlePoiSelect: (poi: Poi | null, isDelayed?: boolean) => void;
   isMapLoaded: boolean;
   setIsMapLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -61,13 +61,16 @@ const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
   } = useSharedMapContext();
 
   const handlePoiSelect = useCallback(
-    (poi: Poi | null) => {
-      setTimeout(() => {
-        if (poi && mapRef.current) {
-          const [lg, lt] = poi.properties.point.coordinates;
-          mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
-        }
-      }, 600);
+    (poi: Poi | null, isDelayed?: boolean) => {
+      setTimeout(
+        () => {
+          if (poi && mapRef.current) {
+            const [lg, lt] = poi.properties.point.coordinates;
+            mapRef.current.flyTo({ center: [lg, lt], zoom: 18 });
+          }
+        },
+        isDelayed ? 600 : 0,
+      );
 
       handleSharedPoiSelect(poi);
     },

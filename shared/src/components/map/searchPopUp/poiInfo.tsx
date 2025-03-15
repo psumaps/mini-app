@@ -22,7 +22,7 @@ const PoiInfo = ({
     <button
       type="button"
       className={`w-full flex flex-col gap-1 cursor-pointer ${className}`}
-      onClick={() => item && handleClick && handlePoiSelect(item)}
+      onClick={() => item && handleClick && handlePoiSelect(item, true)}
     >
       <p className={`text-c_accent font-semibold ${classNameInner}`}>
         {calcPoiName(item)}
