@@ -6,6 +6,8 @@ interface IStorage {
 
   getStorageType(): Promise<BridgeType>;
   isDarkPreferred(): Promise<boolean>;
+
+  updateStorageType(newType: BridgeType): Promise<void>;
 }
 
 export enum BridgeType {

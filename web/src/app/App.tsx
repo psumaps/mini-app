@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
 import '@fontsource/montserrat/500.css';
@@ -12,7 +12,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { init, isTMA } from '@telegram-apps/sdk-react';
 import { NotificationProvider } from 'psumaps-shared/src/components/common/notification';
 import { IcalTokenProvider } from 'psumaps-shared/src/contexts/IcalTokenContext';
-import Storage, { BRIDGE_STATUS_KEY } from './storage';
+import storage, { initializeStorage } from './storage';
 
 import router from './router';
 import '~/tw.css';
@@ -21,16 +21,16 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
-    localStorage.setItem(BRIDGE_STATUS_KEY, 'local');
-
     if (isTMA()) {
       init();
-      localStorage.setItem(BRIDGE_STATUS_KEY, 'tg');
+      initializeStorage('tg');
     } else {
       void bridge.send('VKWebAppInit', {}).then(({ result }) => {
         if (result) {
-          localStorage.setItem(BRIDGE_STATUS_KEY, 'vk');
+          initializeStorage('vk');
           void showOnboarding();
+        } else {
+          initializeStorage('local');
         }
         void queryClient.invalidateQueries({
           predicate: (query) => query.queryKey.includes('storage'),
@@ -38,8 +38,6 @@ const App = () => {
       });
     }
   }, []);
-
-  const storage = useMemo(() => new Storage(), []);
 
   return (
     <QueryClientProvider client={queryClient}>
