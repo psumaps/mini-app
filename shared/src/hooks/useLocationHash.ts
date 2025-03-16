@@ -78,7 +78,7 @@ const useLocationHash = () => {
   const handleLocationHash = useCallback(
     async (hash: string): Promise<void> => {
       const redirectHash = hash.slice(1); // hash includes #
-      if (!redirectHash) return; // Если хэш пустой, ничего не делаем
+      if (!redirectHash || redirectHash.startsWith('tgWebAppData')) return; // Если хэш пустой, ничего не делаем
 
       try {
         const result = await handleRedirect(redirectHash);
