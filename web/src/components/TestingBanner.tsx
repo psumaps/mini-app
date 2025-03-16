@@ -11,7 +11,7 @@ const TestingBanner: React.FC = () => {
   const { showNotification } = useNotification();
   const { popupState } = useSharedMapContext();
   const { setIsBannerVisible: onVisibilityChange } = useMapContext();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [isTempHidden, setIsTempHidden] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const bannerRef = useRef<HTMLDivElement>(null);
