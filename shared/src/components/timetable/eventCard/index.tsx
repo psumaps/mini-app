@@ -64,7 +64,6 @@ const EventCard = ({ event }: { event: Event }) => {
                 style={{
                   transitionDelay: `${isOpen ? (i - 1) * 200 : (event.tags.length - i) * 200}ms`,
                   maxWidth:
-                    // eslint-disable-next-line no-nested-ternary
                     i > 0
                       ? isOpen
                         ? `${tag.length * 10 + 40}px`

@@ -23,7 +23,6 @@ const FeedClasses = (
 
   return (
     <div {...rest}>
-      {/* eslint-disable-next-line no-nested-ternary */}
       {!(isValid && token) ? (
         <>
           <p>Авторизация не пройдена.</p>
@@ -38,11 +37,9 @@ const FeedClasses = (
             </button>
           </p>
         </>
-      ) : // eslint-disable-next-line no-nested-ternary
-      classesQuery.isPending ? (
+      ) : classesQuery.isPending ? (
         <p>Загрузка...</p>
-      ) : // eslint-disable-next-line no-nested-ternary
-      classesQuery.isError ? (
+      ) : classesQuery.isError ? (
         <p>Ошибка!</p>
       ) : !chosenTimetable || chosenTimetable.length === 0 ? (
         <p>Выходной!</p>

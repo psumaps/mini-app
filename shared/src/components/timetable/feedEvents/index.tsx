@@ -111,7 +111,6 @@ const FeedEvents = (
         query={filtersQuery}
       />
       <div {...rest}>
-        {/* eslint-disable-next-line no-nested-ternary */}
         {eventsQuery.isPending ? (
           <p>Загрузка...</p>
         ) : eventsQuery.isError ? (

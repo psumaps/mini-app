@@ -36,7 +36,6 @@ const Button = (props: ButtonProps) => {
 
   return (
     <button
-      // eslint-disable-next-line react/button-has-type
       type={type}
       className={`flex justify-center items-center ${animEnabled && 'transition-transform duration-100 ease-in-out'}  scale-100 active:scale-90 
         ${buttonStyles!} ${className}`}

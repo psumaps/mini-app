@@ -34,7 +34,6 @@ const PoiInfoDetails = ({ className }: { className?: string }) => {
         } ${opened ? '' : 'opacity-0 h-0'}`}
       >
         {hoursTag.split(';').map((interval) => {
-          // eslint-disable-next-line prefer-const
           let [day, time] = interval.trim().split(' ');
           if (day.includes(',')) day = day.replace(',', ', ');
           return (

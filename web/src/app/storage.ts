@@ -2,8 +2,6 @@ import IStorage, { BridgeType } from 'psumaps-shared/src/models/storage';
 import bridge from '@vkontakte/vk-bridge';
 import { cloudStorage } from '@telegram-apps/sdk-react';
 
-/* eslint-disable @typescript-eslint/require-await */
-
 export const BRIDGE_STATUS_KEY = 'BRIDGE_STATUS';
 
 // Максимальное количество попыток для операций с внешними хранилищами

@@ -26,7 +26,7 @@ export interface NotificationContextType {
   hideNotification: (id: string) => void;
 }
 
-export const NOTIFICATION_COLORS = {
+const NOTIFICATION_COLORS = {
   success: 'bg-green-500',
   error: 'bg-red-500',
   info: 'bg-blue-500',
