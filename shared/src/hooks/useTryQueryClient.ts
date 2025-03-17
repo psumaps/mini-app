@@ -4,7 +4,7 @@ const useTryQueryClient = () => {
   let queryClient: QueryClient;
   try {
     queryClient = useQueryClient();
-  } catch (e) {
+  } catch (_e) {
     queryClient = new QueryClient();
   }
 

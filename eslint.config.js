@@ -17,7 +17,8 @@ const typescriptConfig = {
     parserOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      project: ['./tsconfig.json', './tsconfig.node.json'],
+      project: true,
+      tsconfigRootDir: import.meta.dirname,
     },
   },
   plugins: {
@@ -27,6 +28,18 @@ const typescriptConfig = {
     ...typescriptPlugin.configs.recommended.rules,
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        args: 'all',
+        argsIgnorePattern: '^_',
+        caughtErrors: 'all',
+        caughtErrorsIgnorePattern: '^_',
+        destructuredArrayIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+      },
+    ],
   },
 };
 

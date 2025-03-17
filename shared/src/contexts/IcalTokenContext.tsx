@@ -71,7 +71,7 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
         setError('Сервер временно недоступен');
         setIsServiceAvailable(false);
         return false;
-      } catch (err) {
+      } catch (_err) {
         // Непредвиденные ошибки
         setError('Ошибка при валидации токена');
         return false;
@@ -102,7 +102,7 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
           // Не очищаем токен из хранилища при ошибке валидации
           setIsValid(false);
         }
-      } catch (err) {
+      } catch (_err) {
         setError('Ошибка при сохранении токена');
       } finally {
         setIsLoading(false);
@@ -118,7 +118,7 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
       setTokenState(null);
       setIsValid(false);
       setError(null);
-    } catch (err) {
+    } catch (_err) {
       setError('Ошибка при очистке токена');
     }
   }, [storage]);
@@ -133,7 +133,7 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
           const valid = await validateToken(storedToken);
           setIsValid(valid);
         }
-      } catch (err) {
+      } catch (_err) {
         setError('Ошибка при инициализации токена');
       } finally {
         setIsLoading(false);

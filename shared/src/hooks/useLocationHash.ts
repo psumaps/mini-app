@@ -90,7 +90,7 @@ const useLocationHash = () => {
             result.success ? 'success' : 'error',
           );
         }
-      } catch (error) {
+      } catch (_error) {
         showNotification('Произошла ошибка при обработке QR-кода', 'error');
       }
     },

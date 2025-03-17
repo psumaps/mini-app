@@ -74,7 +74,7 @@ export const PoiHandlerModule = {
       }
       handleSearch(query);
       return { success: true };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         message: 'Ошибка при поиске точки интереса',
@@ -104,7 +104,7 @@ export const PoiHandlerModule = {
         success: false,
         message: `Точка интереса с ID ${id} не найдена`,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         message: 'Ошибка при получении точки интереса',
@@ -120,7 +120,7 @@ export const PoiHandlerModule = {
       history.pushState({}, '', `/event/${eventId}`);
       history.go();
       return { success: true };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         message: `Ошибка при переходе к событию ${eventId}`,

@@ -14,7 +14,7 @@ const classStatus = (classStartTime: string): boolean => {
     const currentDate: Date = new Date();
 
     return currentDate >= classStartDate && currentDate < classEndDate;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
