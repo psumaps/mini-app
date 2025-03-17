@@ -5,6 +5,8 @@ import httpClient from 'psumaps-shared/src/network/httpClient';
 interface RegisterProtocolOptions {
   queryClient: QueryClient;
   token: string | undefined;
+  isValid: boolean;
+  isServiceAvailable: boolean;
   onAuthError?: () => void;
   onSuccessAfterFallback?: () => void;
 }
@@ -12,6 +14,8 @@ interface RegisterProtocolOptions {
 const registerProtocol = ({
   queryClient,
   token,
+  isValid,
+  isServiceAvailable,
   onAuthError,
   onSuccessAfterFallback,
 }: RegisterProtocolOptions) => {
@@ -25,7 +29,11 @@ const registerProtocol = ({
     params.url = params.url.replace(/^martin:\/\//, 'https://');
     let tilesResponse;
 
-    if (token) {
+    // Пытаемся загрузить приватные тайлы только если:
+    // 1. Есть токен
+    // 2. Токен валиден
+    // 3. Сервис авторизации доступен
+    if (token && isValid && isServiceAvailable) {
       const url = params.url.replace(/pub/, '');
       try {
         tilesResponse = await queryClient.fetchQuery({
@@ -54,8 +62,18 @@ const registerProtocol = ({
       }
     }
 
-    // Если не удалось загрузить приватные тайлы, используем публичные
-    if (!token || !tilesResponse || tilesResponse.status >= 400) {
+    // Используем публичные тайлы если:
+    // 1. Нет токена
+    // 2. Токен невалиден
+    // 3. Сервис недоступен
+    // 4. Не удалось загрузить приватные тайлы
+    if (
+      !token ||
+      !isValid ||
+      !isServiceAvailable ||
+      !tilesResponse ||
+      tilesResponse.status >= 400
+    ) {
       isUsingPublicTiles = true;
       tilesResponse = await queryClient.fetchQuery({
         queryFn: async () => httpClient.tile.getTile(params.url),

@@ -14,6 +14,7 @@ interface IcalTokenContextType {
   isValid: boolean;
   isLoading: boolean;
   error: string | null;
+  isServiceAvailable: boolean;
   setToken: (token: string) => Promise<void>;
   validateToken: (token: string) => Promise<boolean>;
   clearToken: () => Promise<void>;
@@ -44,6 +45,7 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
   const [isValid, setIsValid] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isServiceAvailable, setIsServiceAvailable] = useState(false);
 
   // Валидация токена
   const validateToken = useCallback(
@@ -51,6 +53,7 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
       try {
         const result = await httpClient.mapi.validateIcal(tokenToValidate);
 
+        setIsServiceAvailable(true);
         // Обработка всех возможных результатов от mapiClient.validateIcal
         if (result === true) {
           // Токен валиден
@@ -66,6 +69,7 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
 
         // Другие ошибки (например, таймаут)
         setError('Сервер временно недоступен');
+        setIsServiceAvailable(false);
         return false;
       } catch (err) {
         // Непредвиденные ошибки
@@ -145,11 +149,21 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
       isValid,
       isLoading,
       error,
+      isServiceAvailable,
       setToken,
       validateToken,
       clearToken,
     }),
-    [token, isValid, isLoading, error, setToken, validateToken, clearToken],
+    [
+      token,
+      isValid,
+      isLoading,
+      error,
+      isServiceAvailable,
+      setToken,
+      validateToken,
+      clearToken,
+    ],
   );
 
   return (
