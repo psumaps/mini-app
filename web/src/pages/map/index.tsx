@@ -1,4 +1,3 @@
-import 'psumaps-shared/src/assets/maplibre-gl.css';
 import React from 'react';
 import useIcalToken from 'psumaps-shared/src/hooks/useIcalToken';
 import useAnimEnabled from 'psumaps-shared/src/hooks/useAnimEnabled';
