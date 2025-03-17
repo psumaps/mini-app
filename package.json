@@ -16,8 +16,13 @@
   "author": "psumaps team",
   "license": "MPL-2.0",
   "dependencies": {
+    "@tanstack/react-query": "^5.68.0",
+    "@tanstack/react-query-devtools": "^5.68.0",
+    "@telegram-apps/sdk-react": "^3.1.2",
+    "@types/geojson": "^7946.0.16",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "@vkontakte/vk-bridge": "^2.15.6",
+    "react": "^19.0.0",
     "vite-plugin-svgr": "^4.2.0",
     "vitest": "^3.0.9"
   },
