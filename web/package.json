@@ -19,6 +19,7 @@
     "@fontsource/montserrat": "^5.2.5",
     "array-equal": "^1.0.2",
     "debounce": "^2.2.0",
+    "@maplibre/maplibre-gl-style-spec": "^23.1.0",
     "maplibre-gl": "^5.2.0",
     "psumaps-frontend": "file:..",
     "psumaps-shared": "file:../shared",
