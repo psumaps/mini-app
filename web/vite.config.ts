@@ -1,40 +1,66 @@
-import { fileURLToPath, URL } from 'node:url';
-
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import path from 'path';
+import {visualizer} from 'rollup-plugin-visualizer';
+import {resolve} from 'path';
 import svgr from 'vite-plugin-svgr';
 
-const manualChunks = (id: string) => {
-  if (id.includes('node_modules')) {
-    if (id.includes('react-map-gl') || id.includes('maplibre-gl')) return 'map';
-
-    return 'deps';
-  }
-};
-
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [
+    react(),
+    svgr(),
+    process.env.ANALYZE === 'true' && visualizer({
+      filename: 'dist/stats.html',
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+    }),
+  ].filter(Boolean),
   resolve: {
     alias: {
-      '~': fileURLToPath(new URL('./src', import.meta.url)),
-      react: path.resolve('./node_modules/react'),
-      '@tanstack/react-query': path.resolve(
-        './node_modules/@tanstack/react-query',
-      ),
-      '@tanstack/react-query-devtools': path.resolve(
-        './node_modules/@tanstack/react-query-devtools',
-      ),
+      '~': resolve(__dirname, 'src'),
+      'react': resolve(__dirname, 'node_modules/react'),
+      '@tanstack/react-query': resolve(__dirname, 'node_modules/@tanstack/react-query'),
     },
   },
   envDir: '../',
   build: {
-    chunkSizeWarningLimit: 850,
-    rollupOptions: {
-      output: {
-        manualChunks: manualChunks,
+    sourcemap: true,
+    minify: 'terser',
+    target: 'esnext',
+    reportCompressedSize: true,
+    chunkSizeWarningLimit: 1000,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.trace'],
+      },
+      mangle: {
+        safari10: true,
       },
     },
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('ical') || id.includes('moment') || id.includes("rrule")) {
+              return 'calendar';
+            }
+            if (id.includes('maplibre')) return 'map';
+
+            return 'deps';
+          }
+          if (id.includes('assets')) return 'assets';
+        }
+      },
+    },
+    commonjsOptions: {
+      include: [/node_modules/],
+      extensions: ['.js', '.cjs'],
+    },
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', '@tanstack/react-query'],
+    exclude: ['@telegram-mini-apps/web-app'],
+  }
 });

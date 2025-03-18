@@ -1,4 +1,3 @@
-import 'maplibre-gl/dist/maplibre-gl';
 import React from 'react';
 import Settings from 'psumaps-shared/src/components/settings';
 import Layout from 'psumaps-shared/src/components/common/layout';

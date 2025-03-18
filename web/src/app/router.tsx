@@ -1,18 +1,30 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 
 import { createBrowserRouter } from 'react-router-dom';
-import SettingsPage from '../pages/settings';
-import MapPage from '~/pages/map';
 import PageBase from '~/pages/pageBase';
-import TimetablePage from '~/pages/timetable';
-import EventDescription from '~/pages/timetable/eventDescription';
+
+const SettingsPage = React.lazy(() => import('../pages/settings'));
+const MapPage = React.lazy(() => import('~/pages/map'));
+const TimetablePage = React.lazy(() => import('~/pages/timetable'));
+const EventDescription = React.lazy(
+    () => import('~/pages/timetable/eventDescription'),
+);
+
+// Suspense fallback component
+const LoadingFallback = () => (
+    <div className="flex items-center justify-center h-full w-full">
+        <div className="animate-pulse">Loading...</div>
+    </div>
+);
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
       <PageBase>
-        <MapPage />
+          <Suspense fallback={<LoadingFallback/>}>
+              <MapPage/>
+          </Suspense>
       </PageBase>
     ),
   },
@@ -20,7 +32,9 @@ const router = createBrowserRouter([
     path: '/settings',
     element: (
       <PageBase>
-        <SettingsPage />
+          <Suspense fallback={<LoadingFallback/>}>
+              <SettingsPage/>
+          </Suspense>
       </PageBase>
     ),
   },
@@ -28,7 +42,9 @@ const router = createBrowserRouter([
     path: '/timetable',
     element: (
       <PageBase>
-        <TimetablePage />
+          <Suspense fallback={<LoadingFallback/>}>
+              <TimetablePage/>
+          </Suspense>
       </PageBase>
     ),
   },
@@ -36,7 +52,9 @@ const router = createBrowserRouter([
     path: '/event/:eventId',
     element: (
       <PageBase>
-        <EventDescription />
+          <Suspense fallback={<LoadingFallback/>}>
+              <EventDescription/>
+          </Suspense>
       </PageBase>
     ),
   },
