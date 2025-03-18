@@ -1,15 +1,40 @@
 import { useContext, useEffect, useState } from 'react';
 import { BridgeType, StorageContext } from '../models/storage';
 
-const useDeterminateBridge = () => {
+const useDeterminateBridge = (): BridgeType => {
   const storage = useContext(StorageContext);
-  const [isVkBridge, setIsVkBridge] = useState(BridgeType.local);
+  const [bridgeType, setBridgeType] = useState<BridgeType>(BridgeType.local);
 
   useEffect(() => {
-    void storage?.getStorageType().then((s) => setIsVkBridge(s));
-  }, []);
+    if (!storage) {
+      console.warn('Storage context is not provided');
+      return;
+    }
 
-  return isVkBridge;
+    let isMounted = true;
+
+    const determineBridge = async () => {
+      try {
+        const type = await storage.getStorageType();
+        if (isMounted) {
+          setBridgeType(type);
+        }
+      } catch (error) {
+        console.error('Failed to determine bridge type:', error);
+        if (isMounted) {
+          setBridgeType(BridgeType.local);
+        }
+      }
+    };
+
+    void determineBridge();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [storage]);
+
+  return bridgeType;
 };
 
 export default useDeterminateBridge;
