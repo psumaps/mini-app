@@ -1,12 +1,12 @@
 import React, {
   createContext,
-  useContext,
-  useState,
-  useCallback,
   ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
   useMemo,
   useRef,
-  useEffect,
+  useState,
 } from 'react';
 import { MapRef } from 'react-map-gl/maplibre';
 import { removeProtocol } from 'maplibre-gl';
@@ -22,7 +22,7 @@ import { initialView } from '~/mapEngine/mapConfig';
 import registerProtocol from '../mapUtils';
 
 interface MapContextType {
-  mapRef: React.RefObject<MapRef>;
+  mapRef: React.RefObject<MapRef | null>;
   viewState: typeof initialView;
   setViewState: React.Dispatch<React.SetStateAction<typeof initialView>>;
   isBannerVisible: boolean;

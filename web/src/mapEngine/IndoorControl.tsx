@@ -19,8 +19,6 @@ const IndoorControl = ({ position = 'bottom-right' }: IndoorControlProps) => {
   const { indoorLevel: currentLevel, setIndoorLevel } = useSharedMapContext();
 
   const updateFilters = useCallback((map: Map, level: string) => {
-    if (!map.isStyleLoaded()) return;
-
     layers
       .filter((layer) => !layer.id.includes('indoorb'))
       .forEach((layer) => {
@@ -36,9 +34,7 @@ const IndoorControl = ({ position = 'bottom-right' }: IndoorControlProps) => {
   const handleLevelChange = useCallback(
     (map: Map, level: string) => {
       setIndoorLevel(level);
-      if (map.isStyleLoaded()) {
-        updateFilters(map, level);
-      }
+      updateFilters(map, level);
     },
     [setIndoorLevel, updateFilters],
   );
