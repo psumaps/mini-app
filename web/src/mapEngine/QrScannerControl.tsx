@@ -4,8 +4,8 @@ import bridge from '@vkontakte/vk-bridge';
 import { qrScanner } from '@telegram-apps/sdk-react';
 import { BridgeType } from 'psumaps-shared/src/models/storage';
 import QrIconUrl from 'psumaps-shared/src/assets/qr.svg';
-import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
 import useLocationHash from 'psumaps-shared/src/hooks/useLocationHash';
+import storage from '~/app/storage';
 
 interface QrScannerProps {
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
@@ -29,7 +29,6 @@ const processQrCode = (code_data: string): string => {
 };
 
 const QrScannerControl = ({ position = 'bottom-right' }: QrScannerProps) => {
-  const bridgeType = useDeterminateBridge();
   const { safeHandleLocationHash } = useLocationHash();
 
   const handleScan = useCallback(
@@ -73,10 +72,14 @@ const QrScannerControl = ({ position = 'bottom-right' }: QrScannerProps) => {
   );
 
   const handleClick = useCallback(() => {
-    const scanner =
-      bridgeType === BridgeType.tgconnect ? scannerConfig.tg : scannerConfig.vk;
-    scanner.open();
-  }, [bridgeType, scannerConfig]);
+    storage
+      .getStorageType()
+      .then((s) =>
+        s == BridgeType.tgconnect
+          ? scannerConfig.tg.open()
+          : scannerConfig.vk.open(),
+      );
+  }, [storage, scannerConfig]);
 
   useControl(
     () => ({

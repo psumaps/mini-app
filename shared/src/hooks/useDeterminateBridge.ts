@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { StorageContext, BridgeType } from '../models/storage';
+import { BridgeType, StorageContext } from '../models/storage';
 
 const useDeterminateBridge = () => {
   const storage = useContext(StorageContext);
@@ -7,7 +7,7 @@ const useDeterminateBridge = () => {
 
   useEffect(() => {
     void storage?.getStorageType().then((s) => setIsVkBridge(s));
-  }, [storage]);
+  }, []);
 
   return isVkBridge;
 };
