@@ -6,7 +6,6 @@ import { BridgeType } from 'psumaps-shared/src/models/storage';
 import QrIconUrl from 'psumaps-shared/src/assets/qr.svg';
 import useDeterminateBridge from 'psumaps-shared/src/hooks/useDeterminateBridge';
 import useLocationHash from 'psumaps-shared/src/hooks/useLocationHash';
-import { useSharedMapContext } from 'psumaps-shared/src/contexts/SharedMapContext';
 
 interface QrScannerProps {
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
@@ -33,19 +32,17 @@ const QrScannerControl = ({ position = 'bottom-right' }: QrScannerProps) => {
   const bridgeType = useDeterminateBridge();
   const { safeHandleLocationHash } = useLocationHash();
 
-  const { handlePoiSelect, setSearch } = useSharedMapContext();
-
   const handleScan = useCallback(
     (code_data: string) => {
       if (code_data) {
         const processedCode = processQrCode(code_data);
-        safeHandleLocationHash(processedCode, handlePoiSelect, setSearch);
+        safeHandleLocationHash(processedCode);
 
         return true;
       }
       return false;
     },
-    [handlePoiSelect, safeHandleLocationHash, setSearch],
+    [safeHandleLocationHash],
   );
 
   const scannerConfig = useMemo(
