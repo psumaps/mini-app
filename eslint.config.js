@@ -61,7 +61,7 @@ const reactConfig = {
     ...reactPlugin.configs.recommended.rules,
     'react-refresh/only-export-components': [
       'warn',
-      {allowConstantExport: true},
+      { allowConstantExport: true },
     ],
     'react/jsx-props-no-spreading': 'off',
     'react/function-component-definition': [
@@ -134,9 +134,9 @@ const commonRules = {
   rules: {
     'no-void': 'off',
     'class-methods-use-this': 'off',
-    'func-style': ['error', 'declaration', {allowArrowFunctions: true}],
-    'no-underscore-dangle': ['error', {allowAfterThis: true}],
-    'no-plusplus': ['error', {allowForLoopAfterthoughts: true}],
+    'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
+    'no-underscore-dangle': ['error', { allowAfterThis: true }],
+    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
     'no-use-before-define': 'off',
     radix: 'off',
     'no-restricted-globals': 'off',

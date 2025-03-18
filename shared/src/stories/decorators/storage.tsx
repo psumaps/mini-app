@@ -5,7 +5,7 @@ import { StorageContext } from '../../models/storage';
 
 const StorageProviderMock = ({ children }: { children: React.ReactNode }) => {
   return (
-      <StorageContext.Provider value={useMemo(() => storage, [])}>
+    <StorageContext.Provider value={useMemo(() => storage, [])}>
       {children}
     </StorageContext.Provider>
   );
