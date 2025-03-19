@@ -18,20 +18,35 @@ const queryOptions = {
   retry: false,
 };
 
+const SEARCH_DEBOUNCE_MS = 500;
+
 const Search = () => {
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const { token } = useIcalToken();
   const storage = useContext(StorageContext);
 
-  const { search, popupState, selectedPoi } = useSharedMapContext();
+  const { search, popupState, setPopupState, selectedPoi } =
+    useSharedMapContext();
   const [selectedAmenity, setSelectedAmenity] = useState<string | null>(null);
+  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
+
+  useEffect(() => {
+    if (!search || popupState === 'unauthorized') return;
+    if (popupState !== 'opened') setPopupState('opened');
+
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const searchQuery = useQuery(
     {
-      queryKey: ['search', search],
-      queryFn: async () => httpClient.mapi.search(search, token!),
-      enabled: !!search && popupState === 'opened',
+      queryKey: ['search', debouncedSearch],
+      queryFn: async () => httpClient.mapi.search(debouncedSearch, token!),
+      enabled: !!debouncedSearch && popupState === 'opened',
       ...queryOptions,
     },
     queryClient,
