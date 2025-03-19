@@ -19,16 +19,17 @@ const IndoorControl = ({ position = 'bottom-right' }: IndoorControlProps) => {
   const { indoorLevel: currentLevel, setIndoorLevel } = useSharedMapContext();
 
   const updateFilters = useCallback((map: Map, level: string) => {
-    layers
-      .filter((layer) => !layer.id.includes('indoorb'))
-      .forEach((layer) => {
-        if (layer.type !== 'background') {
-          map.setFilter(layer.id, [
-            ...layer.filter,
-            ['==', 'level', level],
-          ] as FilterSpecification);
-        }
-      });
+    if (map.isStyleLoaded())
+      layers
+        .filter((layer) => !layer.id.includes('indoorb'))
+        .forEach((layer) => {
+          if (layer.type !== 'background') {
+            map.setFilter(layer.id, [
+              ...layer.filter,
+              ['==', 'level', level],
+            ] as FilterSpecification);
+          }
+        });
   }, []);
 
   const handleLevelChange = useCallback(
@@ -36,7 +37,7 @@ const IndoorControl = ({ position = 'bottom-right' }: IndoorControlProps) => {
       setIndoorLevel(level);
       updateFilters(map, level);
     },
-    [setIndoorLevel, updateFilters],
+    [setIndoorLevel, updateFilters, mapRef?.isStyleLoaded()],
   );
 
   const updateLevels = useCallback(
@@ -90,6 +91,11 @@ const IndoorControl = ({ position = 'bottom-right' }: IndoorControlProps) => {
     if (mapRef) handleLevelChange(mapRef, currentLevel);
   }, [currentLevel, handleLevelChange, mapRef]);
 
+  const handleStyleLoad = (map: Map) => {
+    updateFilters(map, currentLevel);
+    updateLevels(map);
+  };
+
   useControl(
     () => ({
       onAdd(map: Map) {
@@ -99,16 +105,11 @@ const IndoorControl = ({ position = 'bottom-right' }: IndoorControlProps) => {
         setContainerRef(container);
         setMapRef(map);
 
-        const handleStyleLoad = () => {
-          updateFilters(map, currentLevel);
-          updateLevels(map);
-        };
-
         if (map.isStyleLoaded()) {
-          handleStyleLoad();
+          handleStyleLoad(map);
         }
 
-        map.on('load', handleStyleLoad);
+        map.on('load', () => handleStyleLoad(map));
         map.on('data', () => debouncedUpdateLevels(map));
         map.on('move', () => debouncedUpdateLevels(map));
 
@@ -116,10 +117,7 @@ const IndoorControl = ({ position = 'bottom-right' }: IndoorControlProps) => {
       },
       onRemove(map: Map) {
         debouncedUpdateLevels.clear();
-        map.off('load', () => {
-          updateFilters(map, currentLevel);
-          updateLevels(map);
-        });
+        map.off('load', () => handleStyleLoad(map));
         map.off('data', () => debouncedUpdateLevels(map));
         map.off('move', () => debouncedUpdateLevels(map));
         setContainerRef(null);
