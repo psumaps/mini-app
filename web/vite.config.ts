@@ -24,7 +24,7 @@ export default defineConfig({
   },
   envDir: '../',
   build: {
-    sourcemap: true,
+    sourcemap: false,
     minify: 'terser',
     target: 'esnext',
     reportCompressedSize: true,
