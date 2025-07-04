@@ -3,7 +3,6 @@ import { expect, test } from 'vitest';
 import {
   calcSwipeDirection,
   swipeMinSpeed,
-  // eslint-disable-next-line import/no-relative-packages
 } from '../shared/src/components/common/swipeGesture/swipeGestureUtils';
 
 test('calcSwipeDirection', () => {

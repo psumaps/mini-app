@@ -21,7 +21,6 @@ const Select = ({
         onClick={() => setChoosing(choosingTag)}
         className="w-full py-4 min-h-12 px-4 rounded-3xl c3"
       >
-        {/* eslint-disable-next-line no-nested-ternary */}
         {query === null
           ? 'Загрузка...'
           : dataItem

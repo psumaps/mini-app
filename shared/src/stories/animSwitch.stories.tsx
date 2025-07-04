@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-// eslint-disable-next-line import/no-relative-packages
-import Storage from '../../../web/src/app/storage';
+
+import storage from '../../../web/src/app/storage';
 import AnimSwitch from '../components/settings/animSwitch';
 import StorageDecorator from './decorators/storage';
 
@@ -20,6 +20,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    storage: new Storage(),
+    storage,
   },
 };

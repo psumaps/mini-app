@@ -43,7 +43,6 @@ const ThemeSwitch = <T extends IStorage>({
   }, [isDark]);
 
   return (
-    // eslint-disable-next-line jsx-a11y/control-has-associated-label
     <button
       className={`${className} w-fit h-fit py-4 px-2 relative`}
       onClick={toggleTheme}

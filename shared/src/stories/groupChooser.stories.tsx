@@ -1,12 +1,9 @@
 /// <reference types="vite-plugin-svgr/client" />
 import type { Meta, StoryObj } from '@storybook/react';
-// eslint-disable-next-line import/no-relative-packages
-import Storage from '../../../web/src/app/storage';
+
+import storage from '../../../web/src/app/storage';
 import GroupChooser from '../components/settings/groupChooser';
 import StorageDecorator from './decorators/storage';
-
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 const meta = {
   title: 'Settings/GroupChooser',
@@ -27,13 +24,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    storage: new Storage(),
+    storage: storage,
   },
 };
 
 export const Mobile: Story = {
   args: {
-    storage: new Storage(),
+    storage: storage,
     className: 'max-w-[19rem] mx-auto absolute top-0 left-0 right-0 mt-1',
   },
 };

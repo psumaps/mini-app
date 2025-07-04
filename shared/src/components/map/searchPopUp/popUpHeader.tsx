@@ -1,44 +1,31 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import SearchIcon from '../../../assets/search.svg?react';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
-import Poi from '../../../network/models/mapi/poi';
 import DragHandle from '../../common/dragHandle';
 import PoiInfo from './poiInfo';
-import { PopUpBodyRef } from './popUpUtils';
-import { PopUpState } from './search/searchUtils';
 import ShareButton from './sharePoiButton';
 import CrossIcon from '../../../assets/cross.svg?react';
-import useIsVkBridge from '../../../hooks/useIsVKBridge';
+import useDeterminateBridge from '../../../hooks/useDeterminateBridge';
+import { BridgeType } from '../../../models/storage';
+import { useSharedMapContext } from '../../../contexts/SharedMapContext';
+import { useMapContext } from '~/pages/map/contexts/MapContext';
 
-const PopUpHeader = ({
-  state,
-  setState,
-  inputRef,
-  selectedPoi,
-  setSelectedPoi,
-}: {
-  state: PopUpState;
-  setState: React.Dispatch<PopUpState>;
-  inputRef: React.RefObject<PopUpBodyRef>;
-  selectedPoi: Poi | null;
-  setSelectedPoi: React.Dispatch<React.SetStateAction<Poi | null>>;
-}) => {
+const PopUpHeader = () => {
   const { data: animEnabled } = useAnimEnabled();
-  const [selectedPoiInner, setSelectedPoiInner] = React.useState<Poi | null>(
-    null,
-  );
-  const isVKBridge = useIsVkBridge();
-
-  useEffect(() => {
-    if (selectedPoi !== null) setSelectedPoiInner(selectedPoi);
-  }, [selectedPoi]);
+  const bridgeType = useDeterminateBridge();
+  const {
+    popupState: state,
+    setPopupState: setState,
+    selectedPoi,
+  } = useSharedMapContext();
+  const { handlePoiSelect } = useMapContext();
 
   const handleClosedClick = useCallback(() => {
     if (state !== 'closed') return;
     setState('middle');
-    if (selectedPoi === null) inputRef.current?.current?.focus?.();
-  }, [state, setState, inputRef, selectedPoi]);
+    // if (selectedPoi === null) inputRef.current?.current?.focus?.();
+  }, [state, setState]);
 
   const handleClearPoi = (
     e:
@@ -46,7 +33,7 @@ const PopUpHeader = ({
       | React.TouchEvent<HTMLButtonElement>,
   ) => {
     e.stopPropagation();
-    setSelectedPoi(null);
+    handlePoiSelect(null);
   };
 
   const handlers = useSwipeable({
@@ -91,16 +78,17 @@ const PopUpHeader = ({
               ${state === 'opened' || state === 'middle' ? 'origin-top' : ''}`}
         >
           <PoiInfo
-            item={selectedPoiInner}
-            onClick={() => {}}
-            classNameInner=""
+            item={selectedPoi}
+            handleClick={false}
             className="px-4"
+            classNameInner=""
           />
-          {selectedPoi?.properties.tags.id && isVKBridge && (
-            <div className="absolute right-12">
-              <ShareButton id={selectedPoi.properties.tags.id} />
-            </div>
-          )}
+          {selectedPoi?.properties.tags.id &&
+            bridgeType === BridgeType.vkbridge && (
+              <div className="absolute right-12">
+                <ShareButton id={selectedPoi.properties.tags.id} />
+              </div>
+            )}
           <button
             type="button"
             onClick={handleClearPoi}

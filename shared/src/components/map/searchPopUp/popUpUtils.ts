@@ -1,8 +1,8 @@
 import Poi from '../../../network/models/mapi/poi';
 import { node } from '../../../utils/selector';
 import { PopUpState } from './search/searchUtils';
-import httpClient from '../../../network/httpClient';
 
+// Типы и интерфейсы
 export interface PopUpBodyRef {
   search: (value: string) => void;
   current: HTMLInputElement | null;
@@ -12,172 +12,69 @@ export interface SearchPopUpRef {
   search: (query: string) => void;
 }
 
+// Константы
 export const popUpBodyPoiContainerId = 'pop-up-body-poi-container';
 export const popUpSearchInputId = 'pop-up-search-input';
 export const controlsSelector = '.maplibregl-ctrl-bottom-right';
 
+/**
+ * Рассчитывает высоту всплывающего окна в зависимости от состояния
+ */
 export const calculatePopUpHeight = (
   id: string,
   state: PopUpState,
   selectedPoi: Poi | null,
-) => {
+): void => {
   const popUp = document.getElementById(id);
   if (!popUp) return;
+
+  let height: string;
+
   switch (state) {
     case 'unauthorized':
-      popUp.style.height = '5rem'; // h-14
+      height = '5rem';
       break;
     case 'opened':
-      popUp.style.height = '100%';
+      height = '100%';
       break;
     case 'closed':
-      if (!selectedPoi)
-        popUp.style.height = '3.5rem'; // h-14
-      else popUp.style.height = '5.5rem';
+      height = selectedPoi ? '5.5rem' : '3.5rem';
       break;
     case 'middle': {
       if (!selectedPoi) {
         const searchInput = document.getElementById(popUpSearchInputId);
         if (!searchInput) return;
-        const height = searchInput.clientHeight;
-        popUp.style.height = `calc(${height}px + 3.5rem)`;
-        break;
+        height = `calc(${searchInput.clientHeight}px + 3.5rem)`;
+      } else {
+        const poiContainer = document.getElementById(popUpBodyPoiContainerId);
+        const containerHeight = poiContainer?.clientHeight ?? 0;
+        height = `calc(${containerHeight}px + 3rem)`;
       }
-      const poiContainer = document.getElementById(popUpBodyPoiContainerId);
-      const height = poiContainer?.clientHeight ?? 0;
-      popUp.style.height = `calc(${height}px + 3rem)`;
       break;
     }
     default:
+      return;
+  }
+
+  // Применяем изменения только если высота изменилась
+  if (popUp.style.height !== height) {
+    popUp.style.height = height;
   }
 };
 
-export const calculateControlsMargin = (popUpId: string) => {
+/**
+ * Рассчитывает отступ для элементов управления карты
+ */
+export const calculateControlsMargin = (popUpId: string): void => {
   const popUp = document.getElementById(popUpId);
   if (!popUp) return;
   const controls = node(controlsSelector) as HTMLElement;
   if (!controls) return;
+  // Не меняем отступ, если высота попапа слишком большая
   if (popUp.clientHeight >= 300) return;
-  controls.animate(
-    {
-      marginBottom: `calc(${popUp.clientHeight}px + 1rem)`,
-    },
-    { duration: 200, fill: 'forwards' },
-  );
-};
-
-const parseHashParams = (redirectHash: string): Map<string, string> => {
-  return redirectHash.split('&').reduce((accumulator, singleQueryParam) => {
-    const [key, value] = singleQueryParam.split('=');
-    accumulator.set(key, decodeURIComponent(value));
-    return accumulator;
-  }, new Map<string, string>());
-};
-
-const handleICalParam = (
-  ical_token: string,
-  resetToken: ((s: string) => void) | undefined,
-) => {
-  if (resetToken) {
-    resetToken(ical_token);
-  } else console.log('ICal param not applicable');
-};
-
-// обработка выбора indoor-poi по имени
-const handleIndoorByName = async (
-  query: string,
-  token: string | undefined,
-  handleSelect: (poi: Poi) => void,
-  handleSearch: (query: string) => void,
-) => {
-  // лишь поиск по имени не возможен без авторизации
-  if (!token) {
-    console.log('unauthorized'); // todo: make toast
-    return;
-  }
-
-  const data = await httpClient.mapi.search(query, token);
-  if (data.length === 0) {
-    console.error('POI not found');
-  } else if (data.length === 1) {
-    handleSelect(data[0]);
-  } else {
-    handleSearch(query);
-  }
-};
-
-// обработка indoor-poi по id
-const handleIndoorById = async (
-  id: string,
-  token: string | null | undefined,
-  handleSelect: (poi: Poi) => void,
-) => {
-  const poi = await (token
-    ? httpClient.mapi.getIndoorById(id, token)
-    : httpClient.mapi.getPublicIndoorById(id));
-  if (poi) {
-    handleSelect(poi);
-  } else {
-    console.error('POI not found'); // todo: make toast on nil token
-  }
-};
-
-// переход к вкладке с событием `eventId`
-const handleEventById = (eventId: string) => {
-  history.pushState({}, '', `/event/${eventId}`);
-  history.go();
-};
-
-/*
-обрабатываются deep-link в hash-params (vk-miniapp compatibility)
-одновременно могут быть использованы лишь `ical` и любой из `q`, `i`, `e`, либо один любой
-
-- `ical=(\w+)` - устанавливает текущий токен ical в $1. Вызывает перезагрузку страницы
-- `q=([\wА-Яа-яёЁ\s]+)` - ищет indoor-poi по имени $1
-- `i=(\d+)` - ищет indoor-poi по id $1
-- `e=(\d+)` - переходит к событию с id $1
-*/
-export const handleRedirect = async (
-  redirectHash: string,
-  handleSelect: (poi: Poi) => void,
-  handleSearch: (query: string) => void,
-  token: string | undefined,
-  resetToken: ((s: string) => void) | undefined,
-) => {
-  const hashParams = parseHashParams(redirectHash);
-
-  if (hashParams.has('ical')) {
-    handleICalParam(hashParams.get('ical')!, resetToken);
-  }
-
-  if (hashParams.has('q')) {
-    await handleIndoorByName(
-      hashParams.get('q')!,
-      token,
-      handleSelect,
-      handleSearch,
-    );
-  } else if (hashParams.has('i')) {
-    await handleIndoorById(hashParams.get('i')!, token, handleSelect);
-  } else if (hashParams.has('e')) {
-    handleEventById(hashParams.get('e')!);
-  }
-};
-export const handleLocationHash = (
-  hash: string,
-  handleSelect: (poi: Poi) => void,
-  handleSearch: (query: string) => void,
-  token: string | undefined,
-  resetToken: (s: string) => void,
-) => {
-  const redirectHash = hash.slice(1); // hash includes #
-  if (redirectHash) {
-    void handleRedirect(
-      redirectHash,
-      handleSelect,
-      handleSearch,
-      token,
-      resetToken,
-    );
-  }
+  const marginBottom = `calc(${popUp.clientHeight}px + 1rem)`;
+  // Используем requestAnimationFrame для оптимизации анимации
+  requestAnimationFrame(() => {
+    controls.animate({ marginBottom }, { duration: 200, fill: 'forwards' });
+  });
 };

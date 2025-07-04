@@ -6,10 +6,12 @@ const EventSearch = ({
   className,
   searchValue,
   setSearchValue,
+  onSearch,
 }: {
   className?: string;
   searchValue: string;
   setSearchValue: (value: string) => void;
+  onSearch: () => void;
 }) => {
   const [isInputShown, setIsInputShown] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -22,6 +24,13 @@ const EventSearch = ({
       }
     }
     setIsInputShown(!isInputShown);
+  };
+
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      onSearch();
+    }
+    handleToggleInputShown();
   };
 
   return (
@@ -48,6 +57,11 @@ const EventSearch = ({
         }}
         placeholder="Поиск"
         onChange={(e) => setSearchValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleSearch();
+          }
+        }}
         alwaysShowClear
       />
     </Block>

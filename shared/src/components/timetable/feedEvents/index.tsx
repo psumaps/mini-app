@@ -20,6 +20,7 @@ import httpClient from '../../../network/httpClient';
 import EventFiltersModal from './eventFiltersModal';
 
 const EVENTS_LIMIT = 10;
+const SEARCH_DEBOUNCE_MS = 500;
 
 const FeedEvents = (
   props: {
@@ -34,10 +35,34 @@ const FeedEvents = (
   const [filtersActive, setFiltersActive] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filter[] | null>(null);
   const { searchValue, setSearchValue, dateFrom, currentFeed, ...rest } = props;
+  const [isSearchMode, setIsSearchMode] = useState<boolean>(false);
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
+
+  useEffect(() => {
+    if (!isSearchMode) return;
+
+    const timer = setTimeout(() => {
+      setDebouncedSearchValue(searchValue);
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => clearTimeout(timer);
+  }, [searchValue, isSearchMode]);
+
+  dateFrom.setHours(5, 0, 0, 0); // to proper caching
+
+  const searchQuery = useQuery({
+    queryKey: ['event-search-by-name', debouncedSearchValue],
+    queryFn: () =>
+      httpClient.psuTools.events.searchByName(debouncedSearchValue),
+    enabled:
+      isSearchMode &&
+      currentFeed === 'events' &&
+      debouncedSearchValue.length > 0,
+  });
 
   const eventsQuery = useInfiniteQuery(
     {
-      queryKey: ['event-search', searchValue, dateFrom],
+      queryKey: ['event-search', dateFrom],
       queryFn: (params) =>
         httpClient.psuTools.events.getEvents({
           dateFrom,
@@ -57,7 +82,7 @@ const FeedEvents = (
         }
         return lastPageParam + 1;
       },
-      enabled: currentFeed === 'events',
+      enabled: !isSearchMode && currentFeed === 'events',
     },
     queryClient,
   );
@@ -71,6 +96,18 @@ const FeedEvents = (
     },
     queryClient,
   );
+
+  const handleSearch = useCallback(() => {
+    if (searchValue.trim()) {
+      setIsSearchMode(true);
+    }
+  }, [searchValue]);
+
+  const handleClearSearch = useCallback(() => {
+    setIsSearchMode(false);
+    setSearchValue('');
+    setDebouncedSearchValue('');
+  }, [setSearchValue]);
 
   useEffect(() => {
     if (filtersQuery.data) setFilters(filtersQuery.data);
@@ -91,12 +128,12 @@ const FeedEvents = (
         // we wait for filters state variable to update
         () =>
           void queryClient.invalidateQueries({
-            queryKey: ['event-search', searchValue, dateFrom],
+            queryKey: ['event-search', dateFrom],
           }),
         100,
       );
     },
-    [queryClient, searchValue, dateFrom],
+    [queryClient, dateFrom],
   );
 
   return (
@@ -109,10 +146,9 @@ const FeedEvents = (
         query={filtersQuery}
       />
       <div {...rest}>
-        {/* eslint-disable-next-line no-nested-ternary */}
-        {eventsQuery.isPending ? (
+        {(isSearchMode ? searchQuery.isPending : eventsQuery.isPending) ? (
           <p>Загрузка...</p>
-        ) : eventsQuery.isError ? (
+        ) : (isSearchMode ? searchQuery.isError : eventsQuery.isError) ? (
           <p>Мероприятия временно недоступны, но обязательно вернутся :(</p>
         ) : (
           <>
@@ -120,6 +156,7 @@ const FeedEvents = (
               <EventSearch
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
+                onSearch={handleSearch}
                 className="h-10 flex-auto shadow-md"
               />
               <Button
@@ -130,42 +167,68 @@ const FeedEvents = (
                     : 'primary'
                 }
                 onClick={() => setFiltersActive(true)}
+                disabled={isSearchMode}
               >
                 <FilterIcon />
               </Button>
             </div>
-            {eventsQuery.data.pages.map((page) =>
-              page[0] ? (
-                <React.Fragment key={page[0].id}>
-                  {page
-                    .sort((a, b) =>
-                      new Date(a.startDatetime) < new Date(b.startDatetime)
-                        ? -1
-                        : 1,
-                    )
-                    .map((event) => (
-                      <EventListCard
-                        key={event.id}
-                        event={event}
-                        onOpenDesc={() =>
-                          navigator?.navigate(`/event/${event.id}`)
-                        }
-                      />
-                    ))}
-                </React.Fragment>
-              ) : (
-                <p key="">Мероприятий на выбранную дату не найдено</p>
-              ),
-            )}
-            {eventsQuery.hasNextPage && (
-              <Button
-                variant="primary"
-                className="w-full rounded-3xl py-2"
-                disabled={eventsQuery.isFetchingNextPage}
-                onClick={() => void eventsQuery.fetchNextPage()}
-              >
-                Загрузить еще
-              </Button>
+            {isSearchMode ? (
+              <>
+                {searchQuery.data && searchQuery.data.length > 0 ? (
+                  searchQuery.data.map((event) => (
+                    <EventListCard
+                      key={event.id}
+                      event={event}
+                      onOpenDesc={() =>
+                        navigator?.navigate(`/event/${event.id}`)
+                      }
+                    />
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center gap-4 mt-4">
+                    <p>Мероприятий не найдено</p>
+                    <Button variant="primary" onClick={handleClearSearch}>
+                      Сбросить поиск
+                    </Button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {eventsQuery.data?.pages.map((page) =>
+                  page[0] ? (
+                    <React.Fragment key={page[0].id}>
+                      {page
+                        .sort((a, b) =>
+                          new Date(a.startDatetime) < new Date(b.startDatetime)
+                            ? -1
+                            : 1,
+                        )
+                        .map((event) => (
+                          <EventListCard
+                            key={event.id}
+                            event={event}
+                            onOpenDesc={() =>
+                              navigator?.navigate(`/event/${event.id}`)
+                            }
+                          />
+                        ))}
+                    </React.Fragment>
+                  ) : (
+                    <p key="">Мероприятий на выбранную дату не найдено</p>
+                  ),
+                )}
+                {eventsQuery.hasNextPage && (
+                  <Button
+                    variant="primary"
+                    className="w-full rounded-3xl py-2"
+                    disabled={eventsQuery.isFetchingNextPage}
+                    onClick={() => void eventsQuery.fetchNextPage()}
+                  >
+                    Загрузить еще
+                  </Button>
+                )}
+              </>
             )}
           </>
         )}

@@ -9,11 +9,13 @@ API запросы в приложении разбиты на две групп
 import mapiClient from './mapiClient';
 import psuToolsClient from './psuToolsClient';
 import icalClient from './icalClient';
+import tileClient from './tileClient';
 
 const httpClient = {
   mapi: mapiClient,
   psuTools: psuToolsClient,
   ical: icalClient,
+  tile: tileClient,
 };
 
 export default httpClient;

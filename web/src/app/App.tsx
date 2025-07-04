@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
 import '@fontsource/montserrat/500.css';
@@ -8,7 +8,11 @@ import '@fontsource/montserrat/700.css';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
 import bridge from '@vkontakte/vk-bridge';
 import showOnboarding from 'psumaps-shared/src/utils/onboarding';
-import Storage, { VK_BRIDGE_STATUS_KEY } from './storage';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { init, isTMA } from '@telegram-apps/sdk-react';
+import { NotificationProvider } from 'psumaps-shared/src/components/common/notification';
+import { IcalTokenProvider } from 'psumaps-shared/src/contexts/IcalTokenContext';
+import storage, { initializeStorage } from './storage';
 
 import router from './router';
 import '~/tw.css';
@@ -17,29 +21,34 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
-    bridge.send('VKWebAppInit', {}).then(
-      ({ result }) => {
+    if (isTMA()) {
+      init();
+      initializeStorage('tg');
+    } else {
+      void bridge.send('VKWebAppInit', {}).then(({ result }) => {
         if (result) {
-          localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'true');
+          initializeStorage('vk');
           void showOnboarding();
-        } else if (!localStorage.getItem(VK_BRIDGE_STATUS_KEY))
-          localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
-
+        } else {
+          initializeStorage('local');
+        }
         void queryClient.invalidateQueries({
           predicate: (query) => query.queryKey.includes('storage'),
         });
-      },
-      () => {
-        localStorage.setItem(VK_BRIDGE_STATUS_KEY, 'false');
-      },
-    );
+      });
+    }
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StorageContext.Provider value={useMemo(() => new Storage(), [])}>
-        <RouterProvider router={router} />
+      <StorageContext.Provider value={storage}>
+        <IcalTokenProvider storage={storage}>
+          <NotificationProvider>
+            <RouterProvider router={router} />
+          </NotificationProvider>
+        </IcalTokenProvider>
       </StorageContext.Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };

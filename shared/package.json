@@ -9,39 +9,31 @@
   "author": "psumaps team",
   "license": "MPL-2.0",
   "peerDependencies": {
-    "@tanstack/react-query": "^5.40.1",
-    "react": "^18.3.1"
+    "@tanstack/react-query": "^5.69.0",
+    "@tanstack/react-query-devtools": "^5.69.0",
+    "react": "^18.3.0 || ^19.0.0"
   },
   "dependencies": {
-    "@storybook/addon-themes": "^8.2.6",
-    "@storybook/react": "^8.2.6",
-    "@types/geojson": "^7946.0.14",
-    "@vitejs/plugin-react-swc": "^3.6.0",
-    "@vkontakte/vk-bridge": "^2.14.1",
-    "axios": "^1.7.2",
+    "@storybook/addon-themes": "^8.6.6",
+    "@storybook/react": "^8.6.6",
+    "axios": "^1.8.3",
     "color-thief-react": "^2.1.0",
-    "node-ical": "^0.18.0",
+    "node-ical": "^0.20.1",
     "psumaps-frontend": "file:..",
-    "react-calendar": "^5.0.0",
-    "react-swipeable": "^7.0.1",
+    "react-calendar": "^5.1.0",
+    "react-swipeable": "^7.0.2",
     "setimmediatenew": "^1.1.0",
-    "storybook": "^8.2.6",
-    "storybook-addon-mock": "^5.0.0",
-    "vite-plugin-svgr": "^4.2.0"
+    "storybook": "^8.6.6",
+    "storybook-addon-mock": "^5.0.0"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^1.6.1",
-    "@storybook/addon-essentials": "^8.2.6",
-    "@storybook/addon-interactions": "^8.2.6",
-    "@storybook/addon-links": "^8.2.6",
-    "@storybook/addon-onboarding": "^8.2.6",
-    "@storybook/blocks": "^8.2.6",
-    "@storybook/react-vite": "^8.2.6",
-    "@storybook/test": "^8.2.6",
-    "@svgr/core": "^8.1.0",
-    "concurrently": "^8.2.2",
-    "prop-types": "^15.8.1",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.0.2"
+    "@chromatic-com/storybook": "^3.2.6",
+    "@storybook/addon-essentials": "^8.6.6",
+    "@storybook/addon-interactions": "^8.6.6",
+    "@storybook/addon-links": "^8.6.6",
+    "@storybook/addon-onboarding": "^8.6.6",
+    "@storybook/blocks": "^8.6.6",
+    "@storybook/react-vite": "^8.6.6",
+    "@storybook/test": "^8.6.6"
   }
 }

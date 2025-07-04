@@ -51,6 +51,12 @@ const client = {
       );
       return response.data;
     },
+    searchByName: async (searchString: string) => {
+      const response = await axios.get<Event[]>(
+        `${api.psuTools}/events-api/public/search/${encodeURIComponent(searchString)}`,
+      );
+      return response.data;
+    },
     getEvent: async (eventId: number) => {
       const response = await axios.get<Event>(
         `${api.psuTools}/events-api/public/events/${eventId}`,

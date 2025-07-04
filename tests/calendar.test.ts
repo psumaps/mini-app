@@ -6,7 +6,6 @@ import {
   monthRangeForward,
   calculateSide,
   calculateRectCenter,
-  // eslint-disable-next-line import/no-relative-packages
 } from '../shared/src/components/timetable/calendar/calendarUtils';
 
 test('sliceMonths() without lock', () => {

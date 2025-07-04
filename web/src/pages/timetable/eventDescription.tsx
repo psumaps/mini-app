@@ -11,8 +11,6 @@ import Button from 'psumaps-shared/src/components/common/button';
 import NavigationBar from '~/widgets/navigationBar';
 import HeaderBar from '~/widgets/headerBar';
 
-/* eslint-disable no-nested-ternary */
-
 const EventDescription = () => {
   const params = useParams();
   const navigator = useContext(NavigatorContext);
