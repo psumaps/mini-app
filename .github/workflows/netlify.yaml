@@ -2,7 +2,8 @@
 name: Build & Deploy Web to Netlify
 on:
   pull_request:
-
+  schedule:
+    - cron: "0 0 1,15 * *"
 jobs:
   build:
     runs-on: ubuntu-latest
