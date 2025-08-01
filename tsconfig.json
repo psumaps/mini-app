@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
@@ -23,6 +23,12 @@
       "~/*": ["./shared/*", "./tests/*", "./web/src/*", "./native/src/*"]
     }
   },
-  "include": ["shared/src", "tests", "web/src", "native/src", "tailwind.config.ts"],
+  "include": [
+    "shared/src",
+    "tests",
+    "web/src",
+    "native/src",
+    "tailwind.config.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

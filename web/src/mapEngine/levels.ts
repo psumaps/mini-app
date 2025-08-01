@@ -1,6 +1,6 @@
-import { MapGeoJSONFeature } from 'maplibre-gl';
+import { GeoJSONFeature } from 'maplibre-gl';
 
-export default function findAllLevels(features: MapGeoJSONFeature[]): string[] {
+export default function findAllLevels(features: GeoJSONFeature[]): string[] {
   return [
     ...new Set(
       features

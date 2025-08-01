@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-// eslint-disable-next-line import/no-relative-packages
+
 import { translateOpeningHours } from '../shared/src/network/models/mapi/poi';
 
 test('translateOpeningHours', () => {

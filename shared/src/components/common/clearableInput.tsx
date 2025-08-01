@@ -28,7 +28,6 @@ const Input = forwardRef(function Input(
   };
   return (
     <form className={`relative ${className}`} onSubmit={handleSubmit}>
-      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
       <input
         ref={ref}
         value={value}

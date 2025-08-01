@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
+
 import { usePalette } from 'color-thief-react';
 import Block from '../../common/block';
 import Event from '../../../network/models/psu-tools/event';
@@ -14,14 +14,9 @@ const EventListCard = ({
   onOpenDesc: (id: string) => void;
 }) => {
   const date = new Date(event.startDatetime);
-  const { data } = usePalette(
-    `${import.meta.env.VITE_URL_MAP_ASSETS}proxy/${event.cover}`,
-    2,
-    'rgbString',
-    {
-      crossOrigin: 'anonymous',
-    },
-  );
+  const { data } = usePalette(event.cover, 2, 'rgbString', {
+    crossOrigin: 'anonymous',
+  });
 
   const canDrawGradient = data?.[0] && data?.[1];
 

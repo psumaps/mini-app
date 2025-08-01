@@ -3,9 +3,8 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 const useTryQueryClient = () => {
   let queryClient: QueryClient;
   try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     queryClient = useQueryClient();
-  } catch (e) {
+  } catch (_e) {
     queryClient = new QueryClient();
   }
 

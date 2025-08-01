@@ -60,7 +60,7 @@ module.exports = {
         'cd_border-secondary': '#545454',
         cd_sub: '#CCCCCC',
 
-        lec: '#BDBDBD',
+        lec: '#F59507',
         prac: '#BDD359',
         lab: '#8EB9FF',
       },
