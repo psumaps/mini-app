@@ -4,6 +4,7 @@ import api from '../api';
 
 const tokenHeader = (token: string) => ({
   headers: { Authorization: `${token}` },
+  signal: AbortSignal.timeout(3000),
 });
 
 const badAmenities = ['community_centre', 'yes', 'main'];

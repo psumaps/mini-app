@@ -3,7 +3,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import useAnimEnabled from '../../hooks/useAnimEnabled';
-import useIcalToken from '../../hooks/useIcalToken';
+import { useIcalToken } from '../../contexts/IcalTokenContext';
 import { StorageContext } from '../../models/storage';
 import httpClient from '../../network/httpClient';
 import { node } from '../../utils/selector';
@@ -21,7 +21,7 @@ const EVENTS_FEED_ID = 'feed-events';
 
 const Timetable = () => {
   const storageContext = useContext(StorageContext);
-  const icalTokenQuery = useIcalToken();
+  const { token, isValid } = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const [searchValue, setSearchValue] = useState<string>('');
@@ -57,8 +57,13 @@ const Timetable = () => {
   const classesQuery = useQuery(
     {
       queryKey: ['classes'],
-      queryFn: () => httpClient.ical.getTimetable(icalTokenQuery.data!),
-      enabled: !!icalTokenQuery.data,
+      queryFn: async () => {
+        if (!token || !isValid) {
+          throw new Error('Токен не валиден или отсутствует');
+        }
+        return httpClient.ical.getTimetable({ token });
+      },
+      enabled: isValid && !!token,
       retry: false,
       refetchOnWindowFocus: false,
       staleTime: 10 * 60 * 1000,

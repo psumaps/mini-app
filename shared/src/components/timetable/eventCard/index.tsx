@@ -10,7 +10,8 @@ import ViewMapCard from './viewMapCard';
 import RightArrowIcon from '../../../assets/right-arrow.svg?react';
 import Button from '../../common/button';
 import useAnimEnabled from '../../../hooks/useAnimEnabled';
-import useIsVkBridge from '../../../hooks/useIsVKBridge';
+import useDeterminateBridge from '../../../hooks/useDeterminateBridge';
+import { BridgeType } from '../../../models/storage';
 
 const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const options: Intl.DateTimeFormatOptions = {
@@ -27,7 +28,7 @@ const EventCard = ({ event }: { event: Event }) => {
     return { eventDay: day, eventDate: date };
   }, [event.startDatetime]);
   const [isOpen, setIsOpen] = useState(false);
-  const isVKBridge = useIsVkBridge();
+  const bridgeType = useDeterminateBridge();
 
   const endDate = event.endDatetime ? new Date(event.endDatetime) : null;
 
@@ -44,7 +45,9 @@ const EventCard = ({ event }: { event: Event }) => {
 
           <div className="absolute bottom-0 flex gap-3 right-0 mr-3 translate-y-1/2">
             <HeartButton active={false} />
-            {isVKBridge && <ShareButton id={event.id} />}
+            {bridgeType === BridgeType.vkbridge && (
+              <ShareButton id={event.id} />
+            )}
           </div>
         </div>
 
@@ -55,13 +58,12 @@ const EventCard = ({ event }: { event: Event }) => {
           {/* </div> */}
 
           <div className="flex py-2 flex-wrap">
-            {[event.category.name, ...event.tags].map((tag, i) => (
+            {event.tags.map((tag, i) => (
               <div
                 key={tag}
                 style={{
                   transitionDelay: `${isOpen ? (i - 1) * 200 : (event.tags.length - i) * 200}ms`,
                   maxWidth:
-                    // eslint-disable-next-line no-nested-ternary
                     i > 0
                       ? isOpen
                         ? `${tag.length * 10 + 40}px`
@@ -77,7 +79,7 @@ const EventCard = ({ event }: { event: Event }) => {
                 <p className="c3">{tag}</p>
               </div>
             ))}
-            {event.tags.length > 0 && (
+            {event.tags.length > 1 && (
               <Button
                 className="px-3"
                 type="button"
@@ -125,12 +127,12 @@ const EventCard = ({ event }: { event: Event }) => {
           </h3>
 
           {event.registrationUrl && <SignUpCard link={event.registrationUrl} />}
-          {event.registrationUrl && (
-            <ViewMapCard link={event.registrationUrl} />
+          {event.place.mapsId && (
+            <ViewMapCard placeId={String(event.place.mapsId)} />
           )}
-          {event.registrationUrl && (
+          {event.aboutUrl && (
             <a
-              href={event.registrationUrl}
+              href={event.aboutUrl}
               className="underline c3 text-c_secondary dark:text-cd_secondary mt-3 text-center"
               target="_blank"
               rel="noopener noreferrer"

@@ -37,16 +37,15 @@
 - [Структура](#Структура)
 - 📒 [Стек](#Стек)
 - 🚀 [Запуск](#Запуск)
-    - [Web - Mini App](#Web)
-    - [Native - Mobile app](#Native)
+  - [Web - Mini App](#Web)
+  - [Native - Mobile app](#Native)
 - [Архитектура](#Архитектура)
 - [Рабочий процесс](#Рабочий-процесс)
 - [Оформление изменений](#Оформление-изменений)
-    - [Ветки](#Ветки)
-    - [Коммиты](#Коммиты)
-    - [PR](#PR)
+  - [Ветки](#Ветки)
+  - [Коммиты](#Коммиты)
+  - [PR](#PR)
 - 👨‍💻 [Contributors](#Contributors)
-
 
 # Структура
 
@@ -65,12 +64,14 @@
 - [Tailwind](https://tailwindcss.com)
 
 Для упрощения работы:
+
 - Tailwind IntelliSense ([IntelliJ IDEa](https://plugins.jetbrains.com/plugin/15260-tailwind-intellisense), [VS Code](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss))
 - [Codeium AI](https://codeium.com)
 
 # Запуск
 
 Запускать из корня:
+
 - `npm run storybook`: storybook
 - `npm run web`: запустит параллельно dev и tailwind:watch скрипты web модуля
 - `npm run native`: запустит start скрипт native модуля
@@ -78,6 +79,7 @@
 ## Web
 
 Запускать из web/
+
 - `npm run dev`
 - `npm run preview`
 - `npm run build`: сборка
@@ -85,6 +87,7 @@
 ## Native (n/a)
 
 Запускать из native/
+
 - `npm start`
 - `npx expo start`
 - `npx expo run:android`: сборка, требует android SDK и JDK
@@ -94,16 +97,16 @@
 Общий код находится в папке shared. Компоненты помещаются в папку shared/components, для каждого компонента создается история (`shared/stories/<componentName>.stories.tsx`). Истории помогают лучше и проще тестировать и понимать компоненты. Для всех значимых вариантов компонента должен быть создан отдельный шаблон. Пример:
 
 ```typescript
-import type { Meta, StoryObj } from "@storybook/react";
-import Input from "../components/controls/input";
+import type { Meta, StoryObj } from '@storybook/react';
+import Input from '../components/controls/input';
 
 const meta: Meta<typeof Input> = {
-  title: "Controls/Input",
+  title: 'Controls/Input',
   component: Input,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: "centered",
+    layout: 'centered',
   },
 };
 
@@ -112,25 +115,25 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    label: "Имя",
-    name: "firstName",
-    type: "text",
+    label: 'Имя',
+    name: 'firstName',
+    type: 'text',
   },
 };
 
 export const Email: Story = {
   args: {
-    label: "Почта",
-    name: "email",
-    type: "email",
+    label: 'Почта',
+    name: 'email',
+    type: 'email',
   },
 };
 
 export const Password: Story = {
   args: {
-    label: "Пароль",
-    name: "password",
-    type: "password",
+    label: 'Пароль',
+    name: 'password',
+    type: 'password',
   },
 };
 ```
@@ -144,26 +147,26 @@ export const Password: Story = {
 ## Ветки
 
 Ветки должны иметь название, соответствующее своему содержанию, и префикс:
-| Название ветки  | Значение ветки                              | Пример ветки    |
+| Название ветки | Значение ветки | Пример ветки |
 | --------------- | ------------------------------------------- | --------------- |
-| **fix-\***      | Исправление баг в функционале               | _fix-auth_      |
-| **feat-\***     | Добавление новой возможности                | _feat-auth_     |
-| **refactor-\*** | Рефакторинг существующего кода              | _refactor-auth_ |
+| **fix-\*** | Исправление баг в функционале | _fix-auth_ |
+| **feat-\*** | Добавление новой возможности | _feat-auth_ |
+| **refactor-\*** | Рефакторинг существующего кода | _refactor-auth_ |
 
 ## Коммиты
 
 Имя коммита должно иметь префикс в зависимости от внесенных изменений, а также указывать на измененную часть кода
-| Название ветки   | Значение ветки                              | Пример ветки                           |
+| Название ветки | Значение ветки | Пример ветки |
 | ---------------- | ------------------------------------------- | -------------------------------------- |
-| **fix: \***      | Исправление бага в функционале              | _fix: submit button in map screen_     |
-| **feat: \***     | Добавление новой возможности                | _feat: dark theme_                     |
-| **refactor: \*** | Рефакторинг существующего кода              | _refactor: home screen_                |
-| **chore: \***    | Общие действия по поддержке проекта         | _chore: update tailwind version_       |
-| **docs: \***     | Документация (например, истории storybook)  | _docs: add story for Button_           |
-| **deps: \***     | Настройка зависимостей проекта              | _deps: add Tailwind_                   |
-| **style: \***    | Нефункциональные изменения дизайна          | _style: change text color (calendar)_  |
-| **tests: \***    | Добавление/обновление тестов                | _tests: cover Button_                  |
-| **any: \***      | Все, что не подходит к предыдущему          | _any: prettify_                        |
+| **fix: \*** | Исправление бага в функционале | _fix: submit button in map screen_ |
+| **feat: \*** | Добавление новой возможности | _feat: dark theme_ |
+| **refactor: \*** | Рефакторинг существующего кода | _refactor: home screen_ |
+| **chore: \*** | Общие действия по поддержке проекта | _chore: update tailwind version_ |
+| **docs: \*** | Документация (например, истории storybook) | _docs: add story for Button_ |
+| **deps: \*** | Настройка зависимостей проекта | _deps: add Tailwind_ |
+| **style: \*** | Нефункциональные изменения дизайна | _style: change text color (calendar)_ |
+| **tests: \*** | Добавление/обновление тестов | _tests: cover Button_ |
+| **any: \*** | Все, что не подходит к предыдущему | _any: prettify_ |
 
 ## PR
 

@@ -69,7 +69,6 @@ const EventFiltersModal = (props: EventFiltersModalProps) => {
             <CrossIcon className="size-4" />
           </Button>
         </div>
-        {/* eslint-disable-next-line no-nested-ternary */}
         {query.isPending ? (
           <p>Загрузка...</p>
         ) : query.isError ? (

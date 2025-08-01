@@ -10,7 +10,6 @@ import StorageDecorator from './decorators/storage';
 const meta = {
   title: 'Common/Checkable',
   component: Checkable,
-  // @ts-expect-error subcomonents are supported badly
   subcomponents: { Radio, Checkbox },
   parameters: {
     layout: 'centered',

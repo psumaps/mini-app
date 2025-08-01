@@ -7,7 +7,6 @@ export default interface Poi {
     id: string;
     point: Point;
     indoor?: number;
-    level?: string;
     name?: string;
     ref?: string; // room number
     subclass?: string;

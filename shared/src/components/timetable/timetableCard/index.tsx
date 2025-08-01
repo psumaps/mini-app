@@ -45,10 +45,7 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
   );
 
   const textUrl = classData.teacher?.match(/(http[^"]+)/)?.[0]?.match(/\s[^]+/);
-  const url = classData.teacher
-    ?.match(/(http[^"]+)/)?.[0]
-    .replace(textUrl ? textUrl[0] : '', '')
-    .trim();
+  const teacherUrl = textUrl ? textUrl[0].trim() : undefined;
 
   const getClassColor = () => {
     switch (classData.type) {
@@ -71,22 +68,22 @@ const TimetableCard = ({ classData, navigate, icalToken }: Props) => {
         <h3 className={`${cardClassNameText} line-clamp-2 overflow-hidden`}>
           {classData.discipline}
         </h3>
-        {url ? (
+        {teacherUrl ? (
           <div className="grid grid-cols-[95%]">
             <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>
               {classData.teacher
-                .replace(url, '')
+                .replace(teacherUrl, '')
                 .replace(textUrl ? textUrl[0] : '', '')
                 .trim()}
             </div>
             <a
-              href={url}
+              href={teacherUrl}
               target="_blank"
-              onClick={() => window.open(url)}
+              onClick={() => window.open(teacherUrl)}
               className={`${cardClassNameText} underline c1 line-clamp-1`}
               rel="noreferrer"
             >
-              {url}
+              {teacherUrl}
             </a>
             {textUrl ? (
               <div className={`${cardClassNameText} c1 pb-1 pt-[0.6rem]`}>

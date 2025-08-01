@@ -1,6 +1,6 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import React, { useContext, useMemo } from 'react';
-import useIcalToken from '../../hooks/useIcalToken';
+import { useIcalToken } from '../../contexts/IcalTokenContext';
 import { NavigatorContext } from '../../models/navigator';
 import { Timetable } from '../../network/models/psu-tools/timetable';
 import SettingsIcon from '../../assets/settings.svg?react';
@@ -12,7 +12,7 @@ const FeedClasses = (
     dateFrom: Date;
   } & React.HtmlHTMLAttributes<HTMLDivElement>,
 ) => {
-  const icalTokenQuery = useIcalToken();
+  const { token, isValid } = useIcalToken();
   const navigator = useContext(NavigatorContext);
   const { classesQuery, dateFrom, ...rest } = props;
 
@@ -23,8 +23,7 @@ const FeedClasses = (
 
   return (
     <div {...rest}>
-      {/* eslint-disable-next-line no-nested-ternary */}
-      {!icalTokenQuery.data ? (
+      {!(isValid && token) ? (
         <>
           <p>Авторизация не пройдена.</p>
           <p>
@@ -38,11 +37,9 @@ const FeedClasses = (
             </button>
           </p>
         </>
-      ) : // eslint-disable-next-line no-nested-ternary
-      classesQuery.isPending ? (
+      ) : classesQuery.isPending ? (
         <p>Загрузка...</p>
-      ) : // eslint-disable-next-line no-nested-ternary
-      classesQuery.isError ? (
+      ) : classesQuery.isError ? (
         <p>Ошибка!</p>
       ) : !chosenTimetable || chosenTimetable.length === 0 ? (
         <p>Выходной!</p>
@@ -54,7 +51,7 @@ const FeedClasses = (
                 key={`${lesson.classId}`}
                 classData={lesson}
                 navigate={(s) => navigator?.navigate(s)}
-                icalToken={icalTokenQuery.data!}
+                icalToken={token}
               />
             ))}
           </React.Fragment>

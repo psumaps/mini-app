@@ -1,22 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
-import { StorageContext } from '../models/storage';
-import { getStoredIcalToken } from '../utils/readStorage';
-import useTryQueryClient from './useTryQueryClient';
+import { IcalTokenContext } from '../contexts/IcalTokenContext';
 
+// Реэкспортируем хук из контекста для обратной совместимости
 const useIcalToken = () => {
-  const queryClient = useTryQueryClient();
-  const storage = useContext(StorageContext);
-  return useQuery(
-    {
-      queryKey: ['storage', 'ical_token'],
-      queryFn: async () => getStoredIcalToken(storage!),
-      refetchOnWindowFocus: false,
-      retry: false,
-      staleTime: Infinity,
-    },
-    queryClient,
-  );
+  const context = useContext(IcalTokenContext);
+  if (!context) {
+    throw new Error('useIcalToken must be used within an IcalTokenProvider');
+  }
+  return context;
 };
 
 export default useIcalToken;

@@ -6,17 +6,12 @@ export default interface Event {
   organizers: Organizer[];
   startDatetime: string;
   endDatetime?: string;
+  aboutUrl?: string;
   registrationUrl?: string;
   registrationCloseDatetime?: string;
-  category: Category;
   tags: string[];
   cover: string;
   photos: [];
-}
-
-export interface Category {
-  id: number;
-  name: string;
 }
 
 export interface Cover {
@@ -27,6 +22,7 @@ export interface Cover {
 
 export interface Place {
   id: number;
+  mapsId: number;
   name: string;
   description: string;
   cover: Cover;
