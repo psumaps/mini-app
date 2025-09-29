@@ -2,8 +2,6 @@
 name: Build & Deploy Web to Netlify
 on:
   pull_request:
-  schedule:
-    - cron: "0 0 1,15 * *"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,8 +21,6 @@ jobs:
       - name: Install Dependencies & Build web
         run: |
           npm run build --prefix web
-        env:
-          VITE_PSU_TOOLS_KEY: ${{ secrets.VITE_PSU_TOOLS_KEY }}
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
