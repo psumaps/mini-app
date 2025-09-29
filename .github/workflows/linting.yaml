@@ -14,26 +14,26 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
       - run: npm ci && npm ci --prefix shared && npm ci --prefix web
-      - name: Get file changes
-        id: get_file_changes
-        uses: trilom/file-changes-action@v1.2.3
+      - name: Get changed files
+        id: changed
+        uses: tj-actions/changed-files@v44
         with:
-          output: ' '
+          files: |
+            **/*.{js,jsx,ts,tsx,css,md,yml,yaml,json}
 
-      - name: Echo file changes
-        id: hello
+      - name: Echo changed files
         run: |
-          echo Added files: ${{ steps.get_file_changes.outputs.files_added }}
-          echo Changed files: ${{ steps.get_file_changes.outputs.files_modified }}
-          echo Removed files: ${{ steps.get_file_changes.outputs.files_removed }}
+          echo Files: ${{ steps.changed.outputs.all_changed_files }}
 
-      - name: Prettier Checking
-        if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-        run: npx prettier --config ./.prettierrc  ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --write
+      - name: Prettier (write)
+        if: steps.changed.outputs.any_changed == 'true'
+        run: |
+          npx prettier --config ./.prettierrc.js ${{ steps.changed.outputs.all_changed_files }} --write
 
-      - name: ESLint Checking
-        if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-        run: npx eslint --config ./.eslintrc.cjs ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --fix
+      - name: ESLint (fix)
+        if: steps.changed.outputs.any_changed == 'true'
+        run: |
+          npx eslint --config ./eslint.config.js ${{ steps.changed.outputs.all_changed_files }} --max-warnings=0 --fix
 
       - name: Commit changes
         if: always()
