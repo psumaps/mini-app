@@ -18,7 +18,7 @@ import { useSharedMapContext } from '../contexts/SharedMapContext';
  * - `e=(\d+)` - переходит к событию с id
  */
 const useLocationHash = () => {
-  const { token, isValid, setToken } = useIcalToken();
+  const { jwtToken, isValid, setToken } = useIcalToken();
   const { showNotification } = useNotification();
   const { handlePoiSelect } = useMapContext();
   const { setSearch } = useSharedMapContext();
@@ -43,7 +43,7 @@ const useLocationHash = () => {
       if (hashParams.has('q')) {
         result = await PoiHandlerModule.handleIndoorByName(
           hashParams.get('q') as string,
-          token ?? undefined,
+          jwtToken ?? undefined,
           isValid,
           handlePoiSelect,
           setSearch,
@@ -51,7 +51,7 @@ const useLocationHash = () => {
       } else if (hashParams.has('i')) {
         result = await PoiHandlerModule.handleIndoorById(
           hashParams.get('i') as string,
-          token ?? undefined,
+          jwtToken ?? undefined,
           isValid,
           handlePoiSelect,
         );
@@ -69,7 +69,7 @@ const useLocationHash = () => {
 
       return result;
     },
-    [setToken, token, isValid, handlePoiSelect, setSearch],
+    [setToken, jwtToken, isValid, handlePoiSelect, setSearch],
   );
 
   /**

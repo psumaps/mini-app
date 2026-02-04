@@ -6,7 +6,7 @@ import { useNotification } from 'psumaps-shared/src/components/common/notificati
 import { useMapContext } from '~/pages/map/contexts/MapContext';
 
 const PoiHandler: React.FC = () => {
-  const { token } = useIcalToken();
+  const { jwtToken } = useIcalToken();
   const { showNotification } = useNotification();
   const { handlePoiSelect, mapRef, isMapLoaded } = useMapContext();
 
@@ -18,7 +18,7 @@ const PoiHandler: React.FC = () => {
     ) => {
       if (!(e.features![0].properties.class === 'entrance')) {
         httpClient.mapi
-          .getIndoorById(String(e.features![0].id!).slice(0, -1), token!)
+          .getIndoorById(String(e.features![0].id!).slice(0, -1), jwtToken!)
           .then((data) => {
             if (data) {
               handlePoiSelect(data);
@@ -31,12 +31,12 @@ const PoiHandler: React.FC = () => {
           });
       }
     },
-    [token, handlePoiSelect, showNotification],
+    [jwtToken, handlePoiSelect, showNotification],
   );
 
   // Регистрируем обработчики событий после загрузки карты
   useEffect(() => {
-    if (!isMapLoaded || !token) return undefined;
+    if (!isMapLoaded || !jwtToken) return undefined;
 
     const map = mapRef.current;
     if (!map) return undefined;
@@ -62,7 +62,7 @@ const PoiHandler: React.FC = () => {
         map.off('click', 'indoor-poi-rank2', handlePoiClick);
       }
     };
-  }, [isMapLoaded, mapRef, token, handlePoiClick]);
+  }, [isMapLoaded, mapRef, jwtToken, handlePoiClick]);
 
   return null; // Этот компонент не рендерит UI, только добавляет обработчики событий
 };

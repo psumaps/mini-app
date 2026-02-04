@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, { Suspense } from 'react';
 
 import { createBrowserRouter } from 'react-router-dom';
 import PageBase from '~/pages/pageBase';
@@ -7,14 +7,14 @@ const SettingsPage = React.lazy(() => import('../pages/settings'));
 const MapPage = React.lazy(() => import('~/pages/map'));
 const TimetablePage = React.lazy(() => import('~/pages/timetable'));
 const EventDescription = React.lazy(
-    () => import('~/pages/timetable/eventDescription'),
+  () => import('~/pages/timetable/eventDescription'),
 );
 
 // Suspense fallback component
 const LoadingFallback = () => (
-    <div className="flex items-center justify-center h-full w-full">
-        <div className="animate-pulse">Loading...</div>
-    </div>
+  <div className="flex items-center justify-center h-full w-full">
+    <div className="animate-pulse">Loading...</div>
+  </div>
 );
 
 const router = createBrowserRouter([
@@ -22,9 +22,9 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <PageBase>
-          <Suspense fallback={<LoadingFallback/>}>
-              <MapPage/>
-          </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <MapPage />
+        </Suspense>
       </PageBase>
     ),
   },
@@ -32,9 +32,9 @@ const router = createBrowserRouter([
     path: '/settings',
     element: (
       <PageBase>
-          <Suspense fallback={<LoadingFallback/>}>
-              <SettingsPage/>
-          </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <SettingsPage />
+        </Suspense>
       </PageBase>
     ),
   },
@@ -42,9 +42,9 @@ const router = createBrowserRouter([
     path: '/timetable',
     element: (
       <PageBase>
-          <Suspense fallback={<LoadingFallback/>}>
-              <TimetablePage/>
-          </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <TimetablePage />
+        </Suspense>
       </PageBase>
     ),
   },
@@ -52,9 +52,9 @@ const router = createBrowserRouter([
     path: '/event/:eventId',
     element: (
       <PageBase>
-          <Suspense fallback={<LoadingFallback/>}>
-              <EventDescription/>
-          </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <EventDescription />
+        </Suspense>
       </PageBase>
     ),
   },

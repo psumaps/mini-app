@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CheckSvg from '../../assets/check-circle.svg?react';
 import MinusSvg from '../../assets/minus-circle.svg?react';
 import CrossSvg from '../../assets/x-circle.svg?react';
@@ -56,7 +56,7 @@ const IcalTokenInput = ({ className }: Props) => {
   const [isManuallyValidating, setIsManuallyValidating] = useState(false);
   const [lastProcessedToken, setLastProcessedToken] = useState<string>('');
 
-  const { token, isValid, isLoading, error, setToken, clearToken } =
+  const { icalToken, isValid, isLoading, error, setToken, clearToken } =
     useIcalToken();
 
   // Эффект для отображения анимации тряски при ошибке
@@ -153,8 +153,8 @@ const IcalTokenInput = ({ className }: Props) => {
   };
 
   // Маскирование токена для отображения
-  const tokenMasked = token
-    ? `${token.substring(0, token.length / 2)}${'*'.repeat(Math.ceil(token.length / 2.0))}`
+  const tokenMasked = icalToken
+    ? `${icalToken.substring(0, icalToken.length / 2)}${'*'.repeat(Math.ceil(icalToken.length / 2.0))}`
     : '';
 
   // Определяем класс для статуса
@@ -197,7 +197,7 @@ const IcalTokenInput = ({ className }: Props) => {
         } ${animEnabled ? 'transition-all duration-200 ease-in-out' : ''} `}
       >
         <div className="overflow-hidden">
-          {isValid && token && <p>Ваш токен: {tokenMasked}</p>}
+          {isValid && icalToken && <p>Ваш токен: {tokenMasked}</p>}
           <br />
           <ClearableInput
             placeholder="Ваш токен"

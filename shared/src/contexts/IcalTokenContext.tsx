@@ -1,21 +1,22 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
-  useState,
   useEffect,
   useMemo,
-  useCallback,
+  useState,
 } from 'react';
 import type IStorage from '../models/storage';
 import httpClient from '../network/httpClient';
 
 interface IcalTokenContextType {
-  token: string | null;
+  icalToken: string | null;
+  jwtToken: string | null;
   isValid: boolean;
   isLoading: boolean;
   error: string | null;
   isServiceAvailable: boolean;
-  setToken: (token: string) => Promise<void>;
+  setToken: (icalToken: string) => Promise<void>;
   validateToken: (token: string) => Promise<boolean>;
   clearToken: () => Promise<void>;
 }
@@ -41,17 +42,45 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
   storage,
   children,
 }) => {
-  const [token, setTokenState] = useState<string | null>(null);
+  const [icalToken, setIcalTokenState] = useState<string | null>(null);
+  const [jwtToken, setJwtTokenState] = useState<string | null>(null);
   const [isValid, setIsValid] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isServiceAvailable, setIsServiceAvailable] = useState(false);
 
+  // Обмен iCal токена на JWT
+  const exchangeToken = useCallback(
+    async (icalTokenToExchange: string): Promise<string | null> => {
+      try {
+        const jwt =
+          await httpClient.auth.exchangeIcalForJwt(icalTokenToExchange);
+        setIsServiceAvailable(true);
+        setError(null);
+        return jwt;
+      } catch (err: unknown) {
+        setIsServiceAvailable(true);
+        if (err && typeof err === 'object' && 'response' in err) {
+          const axiosErr = err as { response?: { status?: number } };
+          if (axiosErr.response?.status === 401) {
+            setError('Токен не прошел проверку');
+            return null;
+          }
+        }
+        // Сетевые ошибки или таймаут
+        setError('Сервер временно недоступен');
+        setIsServiceAvailable(false);
+        return null;
+      }
+    },
+    [],
+  );
+
   // Валидация токена
   const validateToken = useCallback(
     async (tokenToValidate: string): Promise<boolean> => {
       try {
-        const result = await httpClient.mapi.validateIcal(tokenToValidate);
+        const result = await httpClient.auth.validateJwt(tokenToValidate);
 
         setIsServiceAvailable(true);
         // Обработка всех возможных результатов от mapiClient.validateIcal
@@ -82,9 +111,9 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
 
   // Установка нового токена
   const setToken = useCallback(
-    async (newToken: string): Promise<void> => {
+    async (newIcalToken: string): Promise<void> => {
       // Проверка формата токена
-      if (!newToken.match(/^\w{16}$/)) {
+      if (!newIcalToken.match(/^\w{16}$/)) {
         setError('Токен должен состоять из 16 латинских букв и цифр');
         return;
       }
@@ -93,13 +122,18 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
       setError(null);
 
       try {
-        const isTokenValid = await validateToken(newToken);
-        if (isTokenValid) {
-          await storage.set('ical_token', newToken);
-          setTokenState(newToken);
+        // Пытаемся обменять токен на JWT
+        const jwt = await exchangeToken(newIcalToken);
+
+        if (jwt) {
+          // Сохраняем оба токена
+          await storage.set('ical_token', newIcalToken);
+          await storage.set('jwt_token', jwt);
+          setIcalTokenState(newIcalToken);
+          setJwtTokenState(jwt);
           setIsValid(true);
         } else {
-          // Не очищаем токен из хранилища при ошибке валидации
+          // Обмен не удался, но токен сохраняем для повторных попыток
           setIsValid(false);
         }
       } catch (_err) {
@@ -108,14 +142,16 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
         setIsLoading(false);
       }
     },
-    [storage, validateToken],
+    [storage, exchangeToken],
   );
 
   // Очистка токена
   const clearToken = useCallback(async (): Promise<void> => {
     try {
       await storage.set('ical_token', '');
-      setTokenState(null);
+      await storage.set('jwt_token', '');
+      setIcalTokenState(null);
+      setJwtTokenState(null);
       setIsValid(false);
       setError(null);
     } catch (_err) {
@@ -127,11 +163,29 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
   useEffect(() => {
     const initializeToken = async () => {
       try {
-        const storedToken = await storage.get('ical_token');
-        if (storedToken) {
-          setTokenState(storedToken);
-          const valid = await validateToken(storedToken);
-          setIsValid(valid);
+        const storedIcalToken = await storage.get('ical_token');
+        const storedJwtToken = await storage.get('jwt_token');
+
+        if (storedIcalToken) {
+          setIcalTokenState(storedIcalToken);
+
+          // Если есть JWT - используем его
+          if (storedJwtToken) {
+            setJwtTokenState(storedJwtToken);
+            const valid = await validateToken(storedJwtToken);
+            setIsValid(valid);
+          } else {
+            // Автоматическая миграция: есть iCal, но нет JWT
+            const jwt = await exchangeToken(storedIcalToken);
+            if (jwt) {
+              await storage.set('jwt_token', jwt);
+              setJwtTokenState(jwt);
+              setIsValid(true);
+            } else {
+              // Обмен не удался, попытка будет при следующей загрузке
+              setIsValid(false);
+            }
+          }
         }
       } catch (_err) {
         setError('Ошибка при инициализации токена');
@@ -141,11 +195,12 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
     };
 
     void initializeToken();
-  }, [storage, validateToken]);
+  }, [storage, exchangeToken]);
 
   const value = useMemo(
     () => ({
-      token,
+      icalToken,
+      jwtToken,
       isValid,
       isLoading,
       error,
@@ -155,7 +210,8 @@ export const IcalTokenProvider: React.FC<IcalTokenProviderProps> = ({
       clearToken,
     }),
     [
-      token,
+      icalToken,
+      jwtToken,
       isValid,
       isLoading,
       error,

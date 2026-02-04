@@ -37,10 +37,7 @@ const registerProtocol = ({
       const url = params.url.replace(/pub/, '');
       try {
         tilesResponse = await queryClient.fetchQuery({
-          queryFn: async () =>
-            httpClient.tile.getTile(url, {
-              Authorization: `Bearer ${token}`,
-            }),
+          queryFn: async () => httpClient.tile.getTile(url),
           queryKey: ['tiles', params.url.split('tiles')[2]],
           staleTime: 12 * 60 * 60 * 1000,
         });

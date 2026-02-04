@@ -23,7 +23,7 @@ const SEARCH_DEBOUNCE_MS = 500;
 const Search = () => {
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
-  const { token } = useIcalToken();
+  const { jwtToken } = useIcalToken();
   const storage = useContext(StorageContext);
 
   const { search, popupState, setPopupState, selectedPoi } =
@@ -45,7 +45,7 @@ const Search = () => {
   const searchQuery = useQuery(
     {
       queryKey: ['search', debouncedSearch],
-      queryFn: async () => httpClient.mapi.search(debouncedSearch, token!),
+      queryFn: async () => httpClient.mapi.search(debouncedSearch, jwtToken!),
       enabled: !!debouncedSearch && popupState === 'opened',
       ...queryOptions,
     },
@@ -53,14 +53,14 @@ const Search = () => {
   );
   const amenities = useQuery({
     queryKey: ['amenities'],
-    queryFn: async () => httpClient.mapi.getAmenityList(token!),
+    queryFn: async () => httpClient.mapi.getAmenityList(jwtToken!),
     ...queryOptions,
     enabled: popupState === 'opened',
   });
   const amenityPois = useQuery({
     queryKey: ['amenity-pois', selectedAmenity],
     queryFn: async () =>
-      httpClient.mapi.getPoiByAmenity(selectedAmenity!, token!),
+      httpClient.mapi.getPoiByAmenity(selectedAmenity!, jwtToken!),
     enabled: !!selectedAmenity && popupState === 'opened',
     ...queryOptions,
   });

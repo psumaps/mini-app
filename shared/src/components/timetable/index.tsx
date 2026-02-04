@@ -21,7 +21,7 @@ const EVENTS_FEED_ID = 'feed-events';
 
 const Timetable = () => {
   const storageContext = useContext(StorageContext);
-  const { token, isValid } = useIcalToken();
+  const { icalToken, isValid } = useIcalToken();
   const { data: animEnabled } = useAnimEnabled();
   const queryClient = useQueryClient();
   const [searchValue, setSearchValue] = useState<string>('');
@@ -58,12 +58,12 @@ const Timetable = () => {
     {
       queryKey: ['classes'],
       queryFn: async () => {
-        if (!token || !isValid) {
+        if (!icalToken || !isValid) {
           throw new Error('Токен не валиден или отсутствует');
         }
-        return httpClient.ical.getTimetable({ token });
+        return httpClient.ical.getTimetable({ token: icalToken });
       },
-      enabled: isValid && !!token,
+      enabled: isValid && !!icalToken,
       retry: false,
       refetchOnWindowFocus: false,
       staleTime: 10 * 60 * 1000,

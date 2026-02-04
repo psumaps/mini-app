@@ -51,7 +51,7 @@ const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [viewState, setViewState] = useState(initialView);
   const [isBannerVisible, setIsBannerVisible] = useState(true);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const { token, isValid, isServiceAvailable } = useIcalToken();
+  const { jwtToken, isValid, isServiceAvailable } = useIcalToken();
   const queryClient = useQueryClient();
 
   const {
@@ -80,7 +80,7 @@ const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     registerProtocol({
       queryClient,
-      token: token ?? undefined,
+      token: jwtToken ?? undefined,
       isValid,
       isServiceAvailable,
       onAuthError: handleAuthError,
@@ -88,7 +88,7 @@ const MapProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
     });
     return () => removeProtocol('martin');
   }, [
-    token,
+    jwtToken,
     isValid,
     isServiceAvailable,
     queryClient,
