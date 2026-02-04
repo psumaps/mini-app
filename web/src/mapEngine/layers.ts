@@ -21,7 +21,7 @@ const commonPoi = {
     'text-offset': [0, 0.6],
     'text-padding': 2,
     'text-size': 12,
-    'text-font': ['DIN Offc Pro Medium'],
+    'text-font': ['DINPro Medium'],
   },
   paint: {
     'text-color': '#666',
@@ -226,7 +226,7 @@ const layers: LayerSpecification[] = [
       ],
       'text-max-width': 5,
       'text-size': 14,
-      'text-font': ['DIN Offc Pro Medium'],
+      'text-font': ['DINPro Medium'],
     },
     paint: {
       'text-color': '#666',
@@ -278,7 +278,7 @@ const layers: LayerSpecification[] = [
       'text-field': ['get', 'name'],
       'text-max-width': 7,
       'text-size': 16,
-      'text-font': ['DIN Offc Pro Medium'],
+      'text-font': ['DINPro Medium'],
     },
     paint: {
       'text-color': '#575656',
