@@ -1,0 +1,23 @@
+services:
+  psumaps-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_URL_IJO42_TILES: martin://tiles2.ijo42.ru/
+        VITE_URL_MAP_ASSETS: https://res.ijo42.ru/
+        VITE_URL_IJO42_MAPI: https://mapi.ijo42.ru/v2
+        VITE_URL_ICAL_ENDPOINT: https://ical.psu.ru/calendars/
+        VITE_URL_BIND_ETIS: https://student.psu.ru/
+        VITE_URL_TG_GROUP: https://t.me/psumaps
+        VITE_URL_SUPPORT: https://t.me/psumaps_sbot?start=vkmapp
+        VITE_URL_VK_APP: https://m.vk.com/app51764300
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
