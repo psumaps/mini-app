@@ -28,7 +28,7 @@ const client = {
       tokenHeader(jwtToken),
     );
     return response.data.collection.filter(
-      (item) => !!item && !badAmenities.includes(item),
+      (item) => !!item && !badAmenities.includes(item) && /[\w_]+/.test(item),
     );
   },
   getPoiByAmenity: async (amenity: string, jwtToken: string) => {
