@@ -1,4 +1,4 @@
-import {withThemeByClassName} from '@storybook/addon-themes';
+import { withThemeByClassName } from '@storybook/addon-themes';
 import '../../web/src/tw.css';
 
 /** @type { import('@storybook/react').Preview } */

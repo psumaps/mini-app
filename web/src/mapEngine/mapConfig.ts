@@ -34,8 +34,8 @@ const mapStyle: StyleSpecification = {
     },
     ...mapLayers,
   ],
-  sprite: `${import.meta.env.VITE_URL_MAP_ASSETS}assets/sprite/indoorequal`,
-  glyphs: `${import.meta.env.VITE_URL_MAP_ASSETS}assets/font/{fontstack}/{range}`,
+  sprite: `${import.meta.env.VITE_URL_MAP_ASSETS}sprite/indoorequal`,
+  glyphs: `${import.meta.env.VITE_URL_MAP_ASSETS}font/{fontstack}/{range}`,
 };
 
 export const initialView: ViewState = {

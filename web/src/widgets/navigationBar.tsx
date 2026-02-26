@@ -4,7 +4,6 @@ import React, { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import getStoredTheme from 'psumaps-shared/src/utils/readTheme';
 import MapIcon from 'psumaps-shared/src/assets/map.svg?react';
-import TimetableIcon from 'psumaps-shared/src/assets/timetable.svg?react';
 import SettingsIcon from 'psumaps-shared/src/assets/settings.svg?react';
 import { StorageContext } from 'psumaps-shared/src/models/storage';
 import { NavigatorContext } from 'psumaps-shared/src/models/navigator';
@@ -46,13 +45,14 @@ const NavigationBar = ({ className }: { className?: string }) => {
       >
         <SettingsIcon className={fill('/settings')} />
       </button>
-      <button
-        type="button"
-        onClick={() => navigator?.navigate('/timetable')}
-        aria-label="Расписание"
-      >
-        <TimetableIcon className={fill('/timetable')} />
-      </button>
+      {/*Недоступны...*/}
+      {/*<button*/}
+      {/*  type="button"*/}
+      {/*  onClick={() => navigator?.navigate('/timetable')}*/}
+      {/*  aria-label="Расписание"*/}
+      {/*>*/}
+      {/*  <TimetableIcon className={fill('/timetable')} />*/}
+      {/*</button>*/}
     </div>
   );
 };

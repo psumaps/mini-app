@@ -12,7 +12,7 @@ const FeedClasses = (
     dateFrom: Date;
   } & React.HtmlHTMLAttributes<HTMLDivElement>,
 ) => {
-  const { token, isValid } = useIcalToken();
+  const { icalToken, isValid } = useIcalToken();
   const navigator = useContext(NavigatorContext);
   const { classesQuery, dateFrom, ...rest } = props;
 
@@ -23,7 +23,7 @@ const FeedClasses = (
 
   return (
     <div {...rest}>
-      {!(isValid && token) ? (
+      {!(isValid && icalToken) ? (
         <>
           <p>Авторизация не пройдена.</p>
           <p>
@@ -51,7 +51,7 @@ const FeedClasses = (
                 key={`${lesson.classId}`}
                 classData={lesson}
                 navigate={(s) => navigator?.navigate(s)}
-                icalToken={token}
+                icalToken={icalToken}
               />
             ))}
           </React.Fragment>
